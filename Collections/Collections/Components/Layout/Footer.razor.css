@@ -1,0 +1,22 @@
+﻿.footerStyle {
+background-color: lightgray;
+color: #303030;
+}
+
+.footerStyle a {
+    color: black;
+}
+
+    .footerStyle img {
+        color: black;
+    }
+
+    .footerStyle a:hover {
+        color: #303030;
+        background-color: black;
+    }
+
+.footerStyle .bi {
+    font-size: 1.5rem;
+    padding-inline-start: 0.5rem
+}

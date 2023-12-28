@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Collections", "Collections\Collections\Collections.csproj", "{7C0FB922-9DFF-4FAC-8D61-0EAD1756E1BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Collections", "Collections\Collections\Collections.csproj", "{7C0FB922-9DFF-4FAC-8D61-0EAD1756E1BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Collections.Client", "Collections\Collections.Client\Collections.Client.csproj", "{C0DFCDBF-6549-4213-B36A-58B04F519E95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Collections.Client", "Collections\Collections.Client\Collections.Client.csproj", "{C0DFCDBF-6549-4213-B36A-58B04F519E95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

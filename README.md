@@ -1,7 +1,7 @@
 # CollectionsWebApp
 <img src="MainWindow.png" alt="MainWindow.png" height="220">
 
-<img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white" alt="c#" height="28px"> <img src="https://img.shields.io/badge/.NET8-5C2D91?style=for-the-badge&logo=&logoColor=white" alt=".NET8" height="28px"> <img src="https://img.shields.io/badge/Blazor-4a2c99?style=for-the-badge&logo=blazor&logoColor=white" alt=".Blazor" height="28px"> 
+<img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white" alt="c#" height="28px"> <img src="https://img.shields.io/badge/.NET8-5C2D91?style=for-the-badge&logo=&logoColor=white" alt=".NET8" height="28px"> <img src="https://img.shields.io/badge/Blazor-4a2c99?style=for-the-badge&logo=blazor&logoColor=white" alt=".Blazor" height="28px"> <img src="https://img.shields.io/badge/azure-blue?style=for-the-badge&logo=microsoft&logoColor=white" alt=".Azure" height="28px"> 
 
 The Collections Web App designed to automate collection management.\
 Users can create collections of items of their choice, supply them\

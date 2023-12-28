@@ -1,4 +1,24 @@
+:root {
+
+}
+
+
 html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    height: 100%;
+}
+
+#app {
+    height: 100%;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+
+/* #region Blazor Default Styles */
+/*html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
@@ -48,4 +68,6 @@ h1:focus {
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
-}
+}*/
+
+/* #endregion Blazor Default Styles */

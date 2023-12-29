@@ -70,15 +70,22 @@ else
 
     public Collection? Collection { get; set; }
 
+
+
     public List<Item>? itemsBunch;
 
     public List<Item> CreateData()
     {
         List<int> myItems = [1, 2, 3, 4, 5];
-        Collection = new Collection(1, myItems, "My Book Shelf A1", "A book shelf for my beloved books.", "Books");
+        List<Collection> collectionsList = [
+            new Collection(1, myItems, "My Book Shelf A1", "A book shelf for my beloved books.", "Books"),
+            new Collection(2, myItems, "My Book Shelf A2", "A book shelf for my good books.", "Books"),
+            new Collection(3, myItems, "My Book Shelf A3", "A book shelf for my regular books.", "Books")
+        ];
+        Collection = collectionsList[Id - 1];
         List<int> itemTags = [4, 7, 25];
         List<Item> temp = [
-        new Item(1, "Jack", itemTags, "Bob Dylan", "collection one"),
+            new Item(1, "Jack", itemTags, "Bob Dylan", "collection one"),
             new Item(2, "Book", itemTags, "David Bowie", "collection two", null, null, ""),
             new Item(3, "Rock", itemTags, "Martin L. King", "collection three"),
             new Item(4, "Glass", itemTags, "Bob Martin", "collection four"),
@@ -87,6 +94,8 @@ else
 
         return temp;
     }
+
+
 
     protected override async Task OnInitializedAsync()
     {

@@ -16,10 +16,10 @@
 
             @if (myFirstCollection is not null)
             {
-                @foreach (Item item in myFirstCollection.Items)
+                @foreach (Collection item in myFirstCollection)
                 {
                     <div class="col">
-                        <CollectionItemCard CollectionItem="item" />
+                        <CollectionCard Collection="item" />
                     </div>
                 }
             }
@@ -28,7 +28,7 @@
                 for (int i = 0; i < 10; i++)
                 {
                     <div class="col">
-                        <CollectionItemCard />
+                        <CollectionCard />
                     </div>
                 }
             }
@@ -38,25 +38,18 @@
 </div>
 
 @code {
-    private Collection? myFirstCollection;
+    private List<Collection>? myFirstCollection;
 
-    public Collection CreateData()
+    public List<Collection> CreateData()
     {
-        List<int> itemTags = [4, 7, 25];
-        Item book1 = new Item(1, "Jack", itemTags, "Bob Dylan", "collection one");
-        Item book2 = new Item(2, "Book", itemTags, "David Bowie", "collection two", null, null, "");
-        Item book3 = new Item(3, "Rock", itemTags, "Martin L. King", "collection three");
-        Item book4 = new Item(4, "Glass", itemTags, "Bob Martin", "collection four");
-        Item book5 = new Item(5, "Tree", itemTags, "Jack Daniels", "collection five");
 
-        List<Item> myItems = new();
-        myItems.Add(book1);
-        myItems.Add(book2);
-        myItems.Add(book3);
-        myItems.Add(book4);
-        myItems.Add(book5);
+        List<int> myItems = [1, 2, 3, 4, 5];
+        List<Collection> collections = [];
+        collections.Add(new Collection(1, myItems, "My Book Shelf A1", "A book shelf for my beloved books.", "Books"));
+        collections.Add(new Collection(2, myItems, "My Book Shelf A2", "A book shelf for my good books.", "Books"));
+        collections.Add(new Collection(3, myItems, "My Book Shelf A3", "A book shelf for my regular books.", "Books"));
 
-        return new Collection(myItems, "My Book Shelf A1", "A book shelf for my beloved books.", "Books");
+        return collections;
     }
 
     protected override async Task OnInitializedAsync()

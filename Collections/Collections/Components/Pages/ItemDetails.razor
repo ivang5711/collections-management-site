@@ -4,7 +4,51 @@
 
 <p>Item ID is @Id</p>
 
+@if (itemDetails is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h1>@itemDetails.Name</h1>
+    <p>@itemDetails.Author</p>
+}
+
 @code {
     [Parameter]
     public int Id { get; set; }
+
+    private Item? itemDetails;
+
+    private List<Item> itemsBunch = [];
+
+
+    public void CreateData()
+    {
+        List<int> itemTags = [4, 7, 25];
+        Item book1 = new Item(1, "Jack", itemTags, "Bob Dylan", "collection one");
+        Item book2 = new Item(2, "Book", itemTags, "David Bowie", "collection two", null, null, "");
+        Item book3 = new Item(3, "Rock", itemTags, "Martin L. King", "collection three");
+        Item book4 = new Item(4, "Glass", itemTags, "Bob Martin", "collection four");
+        Item book5 = new Item(5, "Tree", itemTags, "Jack Daniels", "collection five");
+
+
+        itemsBunch.Add(book1);
+        itemsBunch.Add(book2);
+        itemsBunch.Add(book3);
+        itemsBunch.Add(book4);
+        itemsBunch.Add(book5);
+
+    }
+
+    public Item GetItemById(int index)
+    {
+        return itemsBunch[index];
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CreateData();
+        itemDetails = await Task.Run(() => GetItemById(Id));
+    }
 }

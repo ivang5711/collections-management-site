@@ -1,17 +1,29 @@
 ﻿namespace Collections.Models;
-public partial class Item
+
+/// <summary>
+/// The class represents a collection item.
+/// </summary>
+/// <param name="id"></param>
+/// <param name="name"></param>
+/// <param name="tagIds"></param>
+/// <param name="author"></param>
+/// <param name="collection"></param>
+/// <param name="likes"></param>
+/// <param name="comments"></param>
+public partial class Item(int id, string name, List<int> tagIds, string author, string collection, Dictionary<string, bool>? likes = null, List<Comment>? comments = null)
 {
-    public int Id { get; set; }
+    public int Id { get; set; } = id;
 
-    public required string Name { get; set; }
+    public string Name { get; set; } = name;
 
-    public List<int> TagIds { get; set; } = [];
+    public List<int> TagIds { get; set; } = tagIds;
 
-    public required string Author { get; set; }
+    public string Author { get; set; } = author;
 
-    public required string Collection { get; set; }
+    public string Collection { get; set; } = collection;
 
-    public Dictionary<string, bool>? Likes { get; set; }
+    public Dictionary<string, bool>? Likes { get; set; } = likes;
 
-    public List<Comment>? Comments { get; set; }
+    public List<Comment>? Comments { get; set; } = comments;
+
 }

@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Models
 
 <PageTitle>Home</PageTitle>
 
@@ -9,7 +10,48 @@
     Welcome to your new app.
 
     <button class="btn btn-primary mt-3">Primary Button</button>
+
+    @if (myFirstCollection is not null)
+    {
+        <ul>
+            @foreach (Item item in myFirstCollection.Items)
+            {
+                <li>@item.Author</li>
+            }
+        </ul>    
+    }
+
 </div>
+
+@code {
+    private Collection? myFirstCollection;
+
+    public Collection CreateData()
+    {
+        List<int> itemTags = [ 4, 7, 25 ];
+        Item book1 = new Item(1, "Jack", itemTags, "Bob Dylan", "collection one");      
+        Item book2 = new Item(2, "Book", itemTags, "David Bowie", "collection two");
+        Item book3 = new Item(3, "Rock", itemTags, "Martin L. King", "collection three");
+        Item book4 = new Item(4, "Glass", itemTags, "Bob Martin", "collection four");
+        Item book5 = new Item(5, "Tree", itemTags, "Jack Daniels", "collection five");
+
+        List<Item> myItems = new();
+        myItems.Add(book1);
+        myItems.Add(book2);
+        myItems.Add(book3);
+        myItems.Add(book4);
+        myItems.Add(book5);
+
+        return new Collection(myItems, "My Book Shelf A1", "A book shelf for my beloved books.", "Books");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        myFirstCollection = await Task.Run(() => CreateData());
+    }
+
+
+}
 
 
 

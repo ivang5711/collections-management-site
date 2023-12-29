@@ -1,26 +1,40 @@
 ﻿@page "/"
-@using Models
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Collections home page</PageTitle>
 
-<div class="h-100 d-flex flex-column justify-content-center align-items-center">
+<div class="container-xxl py-3">
+    <div>
+        <h1 class="display-6">
+            <span class="text-danger">
+                <i class="bi bi-fire"></i>
+            </span>
+            Top 5 Largest Collections
+        </h1>
+    </div>
+    <div class="d-flex flex-column flex-md-row justify-content-between my-3">
+        <div class="row row-cols-2 row-cols-lg-4 row-cols-x1-5 g-3 justify-content-center justify-content-md-start">
 
-    <h1>Hello, world!</h1>
-
-    Welcome to your new app.
-
-    <button class="btn btn-primary mt-3">Primary Button</button>
-
-    @if (myFirstCollection is not null)
-    {
-        <ul>
-            @foreach (Item item in myFirstCollection.Items)
+            @if (myFirstCollection is not null)
             {
-                <li>@item.Author</li>
+                @foreach (Item item in myFirstCollection.Items)
+                {
+                    <div class="col">
+                        <CollectionItemCard CollectionItem="item" />
+                    </div>
+                }
             }
-        </ul>    
-    }
+            else
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    <div class="col">
+                        <CollectionItemCard />
+                    </div>
+                }
+            }
 
+        </div>
+    </div>
 </div>
 
 @code {
@@ -28,9 +42,9 @@
 
     public Collection CreateData()
     {
-        List<int> itemTags = [ 4, 7, 25 ];
-        Item book1 = new Item(1, "Jack", itemTags, "Bob Dylan", "collection one");      
-        Item book2 = new Item(2, "Book", itemTags, "David Bowie", "collection two");
+        List<int> itemTags = [4, 7, 25];
+        Item book1 = new Item(1, "Jack", itemTags, "Bob Dylan", "collection one");
+        Item book2 = new Item(2, "Book", itemTags, "David Bowie", "collection two", null, null, "");
         Item book3 = new Item(3, "Rock", itemTags, "Martin L. King", "collection three");
         Item book4 = new Item(4, "Glass", itemTags, "Bob Martin", "collection four");
         Item book5 = new Item(5, "Tree", itemTags, "Jack Daniels", "collection five");
@@ -55,4 +69,3 @@
 
 
 
- 

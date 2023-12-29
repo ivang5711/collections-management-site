@@ -1,0 +1,42 @@
+﻿@page "/collection-details/{id:int}"
+
+<h3>Collection Details</h3>
+
+<p>Collection Id is @Id</p>
+
+
+@if (collectionCurrent is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h1>@collectionCurrent.Name</h1>
+    <p>@collectionCurrent.Description</p>
+}
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Collection? collectionCurrent;
+
+    public Collection CreateData(int index)
+    {
+
+        List<int> myItems = [1, 2, 3, 4, 5];
+        List<Collection> collections = [];
+        collections.Add(new Collection(1, myItems, "My Book Shelf A1", "A book shelf for my beloved books.", "Books"));
+        collections.Add(new Collection(2, myItems, "My Book Shelf A2", "A book shelf for my good books.", "Books"));
+        collections.Add(new Collection(3, myItems, "My Book Shelf A3", "A book shelf for my regular books.", "Books"));
+
+        return collections[index - 1];
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        collectionCurrent = await Task.Run(() => CreateData(Id));
+    }
+
+}

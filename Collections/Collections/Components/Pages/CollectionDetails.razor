@@ -1,42 +1,97 @@
 ﻿@page "/collection-details/{id:int}"
 
+<PageTitle>Collection details</PageTitle>
+
 <h3>Collection Details</h3>
 
 <p>Collection Id is @Id</p>
 
 
-@if (collectionCurrent is null)
+@if (Collection is null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <h1>@collectionCurrent.Name</h1>
-    <p>@collectionCurrent.Description</p>
+    <h1>@Collection.Name</h1>
+    <p>@Collection.Description</p>
 }
+
+
+
+
+<div class="container-xxl py-3">
+    <div>
+        <h1 class="display-6">
+            <span class="text-danger">
+                <i class="bi bi-fire"></i>
+            </span>
+            Collection details
+        </h1>
+    </div>
+    <div class="d-flex flex-column flex-md-row justify-content-between my-3">
+        <div class="row row-cols-2 row-cols-lg-4 row-cols-x1-5 g-3 justify-content-center justify-content-md-start">
+
+            @if (itemsBunch is not null)
+            {
+                @foreach (Item item in itemsBunch)
+                {
+                    <div class="col">
+                        <ItemCard Item="item" />
+                    </div>
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    <div class="col">
+                        <ItemCard />
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
 
 
 @code {
     [Parameter]
     public int Id { get; set; }
 
-    private Collection? collectionCurrent;
+    public Collection? Collection { get; set; }
 
-    public Collection CreateData(int index)
+    public List<Item>? itemsBunch;
+
+    public List<Item> CreateData()
     {
-
         List<int> myItems = [1, 2, 3, 4, 5];
-        List<Collection> collections = [];
-        collections.Add(new Collection(1, myItems, "My Book Shelf A1", "A book shelf for my beloved books.", "Books"));
-        collections.Add(new Collection(2, myItems, "My Book Shelf A2", "A book shelf for my good books.", "Books"));
-        collections.Add(new Collection(3, myItems, "My Book Shelf A3", "A book shelf for my regular books.", "Books"));
+        Collection = new Collection(1, myItems, "My Book Shelf A1", "A book shelf for my beloved books.", "Books");
+        List<int> itemTags = [4, 7, 25];
+        List<Item> temp = [
+        new Item(1, "Jack", itemTags, "Bob Dylan", "collection one"),
+            new Item(2, "Book", itemTags, "David Bowie", "collection two", null, null, ""),
+            new Item(3, "Rock", itemTags, "Martin L. King", "collection three"),
+            new Item(4, "Glass", itemTags, "Bob Martin", "collection four"),
+            new Item(5, "Tree", itemTags, "Jack Daniels", "collection five")
+        ];
 
-        return collections[index - 1];
+        return temp;
     }
 
     protected override async Task OnInitializedAsync()
     {
-        collectionCurrent = await Task.Run(() => CreateData(Id));
+        CreateData();
+        itemsBunch = await Task.Run(() => CreateData());
     }
 
 }

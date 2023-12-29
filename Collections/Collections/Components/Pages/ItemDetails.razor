@@ -43,7 +43,8 @@ else
 
     public Item GetItemById(int index)
     {
-        return itemsBunch[index];
+        var k = itemsBunch.Where((x) => x.Id == index);
+        return k.First();
     }
 
     protected override async Task OnInitializedAsync()

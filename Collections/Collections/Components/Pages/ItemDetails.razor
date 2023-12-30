@@ -55,6 +55,18 @@ else
             </div>
         </div>
     </div>
+    <div class="container-xxl">
+        <div class="overview d-flex flex-column">
+            <p>@itemDetails.Author</p>
+            @if(itemDetails.TagIds.Any())
+            {
+                <div>
+                    Tags: @string.Join(", ", itemDetails.TagIds)
+                </div>
+            }
+        </div>
+
+    </div>
 }
 
 @code {

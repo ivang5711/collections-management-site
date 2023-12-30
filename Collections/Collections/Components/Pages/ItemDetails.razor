@@ -25,8 +25,8 @@ else
                             </span>
                         }
                         @{
-                            var runtime = "60 h 25 mins";
-                            var rating = "very good";
+                            var runtime = itemDetails.Collection;
+                            var rating = itemDetails.Id;
                         }
                         <span class="badge me-2 text-bg-dark">@runtime</span>
                         <span class="badge me-2 text-bg-success">
@@ -89,7 +89,7 @@ else
     public Item CreateData()
     {
         DataGenerator dg = new("en");
-        itemsBunch = dg.GenerateItems(50, 123);
+        itemsBunch = dg.GenerateItems(500, 123);
         return itemsBunch.Where((x) => x.Id == Id).First();
     }
 

@@ -56,7 +56,17 @@ else
         DataGenerator dg = new("en");
         List<Collection> Collections = dg.GenerateCollection(5, 123);
         Collection = Collections.Where((x) => x.Id == Id).First();
-        return dg.GenerateItems(50, 123);
+        List<Item> temp = dg.GenerateItems(500, 123);
+        List<Item> res = [];
+        foreach (var item in temp)
+        {
+            if (Collection.ItemsIds.Contains(item.Id))
+            {
+                res.Add(item);
+            }
+        }
+
+        return res;
     }
 
     protected override async Task OnInitializedAsync()

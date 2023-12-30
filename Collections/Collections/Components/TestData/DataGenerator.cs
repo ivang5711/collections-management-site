@@ -11,7 +11,7 @@ public class DataGenerator(string locale)
         .Rules((f, u) =>
         {
             u.Id = f.IndexFaker + 1;
-            u.ItemsIds = [.. Enumerable.Range(f.IndexFaker + 1, f.IndexFaker + 10)];
+            u.ItemsIds = Enumerable.Range((f.IndexFaker + 1) * 10, 10).ToList();
             u.TotalItems = u.ItemsIds.Count;
             u.Name = f.Commerce.ProductName();
             u.Description = f.Commerce.ProductDescription();

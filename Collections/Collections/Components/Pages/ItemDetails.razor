@@ -1,4 +1,5 @@
 ﻿@page "/item-details/{id:int}"
+@using Collections.Components.TestData
 
 @if (itemDetails is null)
 {
@@ -12,26 +13,34 @@ else
         <div class="hero-container">
             <div class="container-xxl d-flex flex-column flex-md-row">
                 <!--Item content here-->
-                <div class="flex-grow-1 d-flex align-items-center justify-content-center justify-content-md-end">
+                <div class="flex-grow-1 d-flex align-items-center
+                    justify-content-center justify-content-md-end">
                     <div class="title-container text-center text-md-end">
                         <h1 class="text-light">@itemDetails.Name</h1>
                         <h2 class="text-black">@itemDetails.Author</h2>
-                        @if(itemDetails.Likes is null)
+                        @if (itemDetails.Likes is null)
                         {
-                            <span class="badge me-2 text-bg-light">No likes so far...</span>
+                            <span class="badge me-2 text-bg-light">
+                                No likes so far...
+                            </span>
                         }
                         @{
                             var runtime = "60 h 25 mins";
                             var rating = "very good";
                         }
                         <span class="badge me-2 text-bg-dark">@runtime</span>
-                        <span class="badge me-2 text-bg-success">@rating <i class="bi bi-stars"></i></span>
+                        <span class="badge me-2 text-bg-success">
+                            @rating <i class="bi bi-stars"></i>
+                        </span>
                         <div class="item-links">
-                            <div class="d-flex justify-content-center justify-content-md-end p-3">
+                            <div class="d-flex justify-content-center
+                                justify-content-md-end p-3">
                                 @if (!string.IsNullOrEmpty(itemDetails.ImageLink))
                                 {
                                     <div class="text-center px-2">
-                                        <a href="@itemDetails.ImageLink" target="_blank" class="btn btn-outline-light rounded-pill">
+                                        <a href="@itemDetails.ImageLink"
+                                           target="_blank" class="btn
+                                            btn-outline-light rounded-pill">
                                             Website
                                         </a>
                                     </div>
@@ -40,11 +49,13 @@ else
                         </div>
                     </div>
                 </div>
-                <div class="order-last order-md-first d-flex justify-content-center">
+                <div class="order-last order-md-first d-flex
+                    justify-content-center">
                     <div class="poster-container">
-                        @if(string.IsNullOrEmpty(itemDetails.ImageLink))
+                        @if (string.IsNullOrEmpty(itemDetails.ImageLink))
                         {
-                            <img src="https://th.bing.com/th/id/OIG.gq_uOPPdJc81e_v0XAei" alt="item poster" />
+                            <img src="https://th.bing.com/th/id/OIG.gq_uOPPdJc81e_v0XAei"
+                                 alt="item poster" />
                         }
                         else
                         {
@@ -58,14 +69,13 @@ else
     <div class="container-xxl">
         <div class="overview d-flex flex-column">
             <p>@itemDetails.Author</p>
-            @if(itemDetails.TagIds.Any())
+            @if (itemDetails.TagIds.Any())
             {
                 <div>
                     Tags: @string.Join(", ", itemDetails.TagIds)
                 </div>
             }
         </div>
-
     </div>
 }
 
@@ -74,37 +84,18 @@ else
     public int Id { get; set; }
 
     private Item? itemDetails;
+    private List<Item>? itemsBunch;
 
-    private List<Item> itemsBunch = [];
-
-
-    public void CreateData()
+    public Item CreateData()
     {
-        List<int> itemTags = [4, 7, 25];
-        Item book1 = new Item(1, "Jack", itemTags, "Bob Dylan", "collection one");
-        Item book2 = new Item(2, "Book", itemTags, "David Bowie", "collection two", null, null, "https://images.manning.com/360/480/resize/book/3/cfa582b-9672-4cca-9214-30e7dd893309/Brind-HI.png");
-        Item book3 = new Item(3, "Rock", itemTags, "Martin L. King", "collection three", null, null, "https://miro.medium.com/v2/resize:fit:975/1*TyEHC0bUkSx4OJmnmaaw5w.png");
-        Item book4 = new Item(4, "Glass", itemTags, "Bob Martin", "collection four", null, null, "https://storage.googleapis.com/turbo-math.appspot.com/user-assets/gzMWmegNKSUlh64nFjBAIuqhqGr2/04-23-2023/image-to-image/image-to-image__5f419cc4305219bba97ae735b799a45d_1682284222619_1_1682284234.png");
-        Item book5 = new Item(5, "Tree", itemTags, "Jack Daniels", "collection five", null, null, "https://preview.redd.it/some-random-generated-images-v0-wyp0in77j79c1.jpg?width=640&crop=smart&auto=webp&s=e3ba595e3ac98ed2f97a084e7e06d3e463339e7b");
-
-
-        itemsBunch.Add(book1);
-        itemsBunch.Add(book2);
-        itemsBunch.Add(book3);
-        itemsBunch.Add(book4);
-        itemsBunch.Add(book5);
-
-    }
-
-    public Item GetItemById(int index)
-    {
-        var k = itemsBunch.Where((x) => x.Id == index);
-        return k.First();
+        DataGenerator dg = new("en");
+        itemsBunch = dg.GenerateItems(50, 123);
+        return itemsBunch.Where((x) => x.Id == Id).First();
     }
 
     protected override async Task OnInitializedAsync()
     {
         CreateData();
-        itemDetails = await Task.Run(() => GetItemById(Id));
+        itemDetails = await Task.Run(() => CreateData());
     }
 }

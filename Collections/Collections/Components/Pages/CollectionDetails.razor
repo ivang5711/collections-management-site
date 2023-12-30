@@ -1,4 +1,5 @@
 ﻿@page "/collection-details/{id:int}"
+@using Components.TestData 
 
 <PageTitle>Collection details</PageTitle>
 @if (Collection is null)
@@ -46,30 +47,16 @@ else
 @code {
     [Parameter]
     public int Id { get; set; }
+
     public Collection? Collection { get; set; }
     public List<Item>? itemsBunch;
 
     public List<Item> CreateData()
     {
-        List<int> myItems = [1, 2, 3, 4, 5];
-        List<Collection> collectionsList = [
-            new Collection(1, myItems, "My Book Shelf", "A book shelf for my beloved books.", "Books", "https://th.bing.com/th/id/OIP.KIe_mp4QgrwNeGYCbTYqBgHaFj?w=250&h=188&c=7&r=0&o=5&dpr=2.5&pid=1.7"),
-        new Collection(2, myItems, "Coolest books of the century", "A book shelf for my good books.", "Books", "https://th.bing.com/th/id/OIP.B_wmtUtGV5YN0nE2uTwwkwAAAA?w=136&h=203&c=7&r=0&o=5&dpr=2.5&pid=1.7"),
-        new Collection(3, myItems, "City Library", "A book shelf for my regular books.", "Books", "https://i0.wp.com/stanzaliving.wpcomstaging.com/wp-content/uploads/2022/04/c9c13-libraries-in-coimbatore.jpg?fit=1000%2C750&ssl=1"),
-        new Collection(4, myItems, "Unusual cars", "Fancy cars", "Cars", "https://www.motortrend.com/uploads/2023/03/ugly-cars-motortrend-ryan-lugo-illustration.jpg?fit=around%7C875:492"),
-        new Collection(5, myItems, "Keyboard dungeon", "Remarkable keyboards from all around the world", "Keyboards", "https://www.keychron.com/cdn/shop/files/Keyboard-buying-guide.jpg?v=1699252459&width=1400")
-    ];
-        Collection = collectionsList[Id - 1];
-        List<int> itemTags = [4, 7, 25];
-        List<Item> temp = [
-            new Item(1, "Jack", itemTags, "Bob Dylan", "collection one"),
-            new Item(2, "Book", itemTags, "David Bowie", "collection two", null, null, "https://images.manning.com/360/480/resize/book/3/cfa582b-9672-4cca-9214-30e7dd893309/Brind-HI.png"),
-            new Item(3, "Rock", itemTags, "Martin L. King", "collection three", null, null, "https://miro.medium.com/v2/resize:fit:975/1*TyEHC0bUkSx4OJmnmaaw5w.png"),
-            new Item(4, "Glass", itemTags, "Bob Martin", "collection four", null, null, "https://storage.googleapis.com/turbo-math.appspot.com/user-assets/gzMWmegNKSUlh64nFjBAIuqhqGr2/04-23-2023/image-to-image/image-to-image__5f419cc4305219bba97ae735b799a45d_1682284222619_1_1682284234.png"),
-            new Item(5, "Tree", itemTags, "Jack Daniels", "collection five", null, null, "https://preview.redd.it/some-random-generated-images-v0-wyp0in77j79c1.jpg?width=640&crop=smart&auto=webp&s=e3ba595e3ac98ed2f97a084e7e06d3e463339e7b"),
-        ];
-
-        return temp;
+        DataGenerator dg = new("en");
+        List<Collection> Collections = dg.GenerateCollection(5, 123);
+        Collection = Collections.Where((x) => x.Id == Id).First();
+        return dg.GenerateItems(50, 123);
     }
 
     protected override async Task OnInitializedAsync()

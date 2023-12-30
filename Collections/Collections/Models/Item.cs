@@ -1,20 +1,45 @@
 ﻿namespace Collections.Models;
 
-public class Item(int id, string name, List<int> tagIds, string author, string collection, Dictionary<string, bool>? likes = null, List<int>? commentsIds = null, string? imageLink = null)
+public class Item
 {
-    public int Id { get; set; } = id;
+    public Item()
+    {
+        Name = string.Empty;
+        TagIds = [];
+        Author = string.Empty;
+        Collection = string.Empty;
+        Likes = null;
+        CommentsIds = null;
+        ImageLink = null;
+    }
 
-    public string Name { get; set; } = name;
+    public Item(int id, string name, List<int> tagIds, string author,
+        string collection, Dictionary<string, bool>? likes = null,
+        List<int>? commentsIds = null, string? imageLink = null)
+    {
+        Id = id;
+        Name = name;
+        TagIds = tagIds;
+        Author = author;
+        Collection = collection;
+        Likes = likes;
+        CommentsIds = commentsIds;
+        ImageLink = imageLink;
+    }
 
-    public List<int> TagIds { get; set; } = tagIds;
+    public int Id { get; set; }
 
-    public string Author { get; set; } = author;
+    public string Name { get; set; }
 
-    public string Collection { get; set; } = collection;
+    public List<int> TagIds { get; set; }
 
-    public Dictionary<string, bool>? Likes { get; set; } = likes;
+    public string Author { get; set; }
 
-    public List<int>? CommentsIds { get; set; } = commentsIds;
+    public string Collection { get; set; }
 
-    public string? ImageLink { get; set; } = imageLink;
+    public Dictionary<string, bool>? Likes { get; set; }
+
+    public List<int>? CommentsIds { get; set; }
+
+    public string? ImageLink { get; set; }
 }

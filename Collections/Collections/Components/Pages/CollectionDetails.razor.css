@@ -1,4 +1,15 @@
-﻿.hero-bg{
+﻿.collection-container img {
+    height: 24rem;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: .5rem;
+}
+
+
+
+
+/*.hero-bg {
     background-image: var(--bg-img);
     background-size: cover;
     background-position: center;
@@ -15,7 +26,7 @@
     margin-bottom: 2rem;
 }
 
-.poster-container{
+.poster-container {
     max-height: 24rem;
     aspect-ratio: 2/3;
     position: relative;
@@ -44,3 +55,4 @@
         margin-top: 2rem;
     }
 }
+*/

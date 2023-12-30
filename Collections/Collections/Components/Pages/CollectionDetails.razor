@@ -53,10 +53,12 @@ else
     {
         List<int> myItems = [1, 2, 3, 4, 5];
         List<Collection> collectionsList = [
-            new Collection(1, myItems, "My Book Shelf A1", "A book shelf for my beloved books.", "Books", "https://th.bing.com/th/id/OIP.KIe_mp4QgrwNeGYCbTYqBgHaFj?w=250&h=188&c=7&r=0&o=5&dpr=2.5&pid=1.7"),
-            new Collection(2, myItems, "My Book Shelf A2", "A book shelf for my good books.", "Books", "https://th.bing.com/th/id/OIP.B_wmtUtGV5YN0nE2uTwwkwAAAA?w=136&h=203&c=7&r=0&o=5&dpr=2.5&pid=1.7"),
-            new Collection(3, myItems, "My Book Shelf A3", "A book shelf for my regular books.", "Books")
-        ];
+            new Collection(1, myItems, "My Book Shelf", "A book shelf for my beloved books.", "Books", "https://th.bing.com/th/id/OIP.KIe_mp4QgrwNeGYCbTYqBgHaFj?w=250&h=188&c=7&r=0&o=5&dpr=2.5&pid=1.7"),
+        new Collection(2, myItems, "Coolest books of the century", "A book shelf for my good books.", "Books", "https://th.bing.com/th/id/OIP.B_wmtUtGV5YN0nE2uTwwkwAAAA?w=136&h=203&c=7&r=0&o=5&dpr=2.5&pid=1.7"),
+        new Collection(3, myItems, "City Library", "A book shelf for my regular books.", "Books", "https://i0.wp.com/stanzaliving.wpcomstaging.com/wp-content/uploads/2022/04/c9c13-libraries-in-coimbatore.jpg?fit=1000%2C750&ssl=1"),
+        new Collection(4, myItems, "Unusual cars", "Fancy cars", "Cars", "https://www.motortrend.com/uploads/2023/03/ugly-cars-motortrend-ryan-lugo-illustration.jpg?fit=around%7C875:492"),
+        new Collection(5, myItems, "Keyboard dungeon", "Remarkable keyboards from all around the world", "Keyboards", "https://www.keychron.com/cdn/shop/files/Keyboard-buying-guide.jpg?v=1699252459&width=1400")
+    ];
         Collection = collectionsList[Id - 1];
         List<int> itemTags = [4, 7, 25];
         List<Item> temp = [

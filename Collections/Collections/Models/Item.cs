@@ -1,6 +1,6 @@
 ﻿namespace Collections.Models;
 
-public partial class Item(int id, string name, List<int> tagIds, string author, string collection, Dictionary<string, bool>? likes = null, List<Comment>? comments = null, string? imageLink = null)
+public class Item(int id, string name, List<int> tagIds, string author, string collection, Dictionary<string, bool>? likes = null, List<int>? commentsIds = null, string? imageLink = null)
 {
     public int Id { get; set; } = id;
 
@@ -14,7 +14,7 @@ public partial class Item(int id, string name, List<int> tagIds, string author, 
 
     public Dictionary<string, bool>? Likes { get; set; } = likes;
 
-    public List<Comment>? Comments { get; set; } = comments;
+    public List<int>? CommentsIds { get; set; } = commentsIds;
 
     public string? ImageLink { get; set; } = imageLink;
 }

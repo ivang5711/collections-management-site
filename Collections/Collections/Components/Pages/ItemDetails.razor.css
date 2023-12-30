@@ -1,0 +1,16 @@
+﻿.hero-bg{
+    background-image: var(--bg-img);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+.hero-container {
+    min-height: 400px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    backdrop-filter: blur(2px) brightness(.5);
+    margin-bottom: 2rem;
+}

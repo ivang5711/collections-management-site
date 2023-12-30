@@ -1,17 +1,39 @@
 ﻿namespace Collections.Models;
 
-public partial class Collection(int id, List<int> items, string name, string description, string theme, string? imageLink = null)
+public class Collection
 {
-    public int Id { get; set; } = id;
-    public List<int> Items { get; set; } = items;
+    public Collection()
+    {
+        Id = 0;
+        ItemsIds = null;
+        TotalItems = 0;
+        Name = string.Empty;
+        Description = string.Empty;
+        Theme = string.Empty;
+        ImageLink = string.Empty;
+    }
 
-    public int TotalItems { get; } = items.Count;
+    public Collection(int id, List<int> itemsIds, string name, string description, string theme, string? imageLink = null)
+    {
+        Id = id;
+        ItemsIds = itemsIds;
+        TotalItems = itemsIds.Count;
+        Name = name;
+        Description = description;
+        Theme = theme;
+        ImageLink = imageLink;
+    }
 
-    public  string Name { get; set; } = name;
+    public int Id { get; set; }
+    public List<int>? ItemsIds { get; set; }
 
-    public  string Description { get; set; } = description;
+    public int TotalItems { get; set; }
 
-    public  string Theme { get; set; } = theme;
+    public string Name { get; set; }
 
-    public string? ImageLink { get; set; } = imageLink;
+    public string Description { get; set; }
+
+    public string Theme { get; set; }
+
+    public string? ImageLink { get; set; }
 }

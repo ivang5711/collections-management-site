@@ -69,10 +69,33 @@ else
     <div class="container-xxl">
         <div class="overview d-flex flex-column">
             <p>@itemDetails.Author</p>
+
+
+        </div>
+        <div class="comment-overview d-flex flex-column flex-lg-col justify-content-between my-3">
             @if (itemDetails.TagIds.Any())
             {
-                <div>
-                    Tags: @string.Join(", ", itemDetails.TagIds)
+                <div class="comment-container">
+
+                    @if (itemsBunch is not null)
+                    {
+                        @foreach (Comment item in comments)
+                        {
+                            <div class="row row-cols-8 row-cols-lg-8 row-cols-x1-5 g-3
+                                justify-content-center justify-content-md-start my-1">
+                                <CommentCard Comment="item" />
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < 10; i++)
+                        {
+                            <div class="row">
+                                <CommentCard />
+                            </div>
+                        }
+                    }
                 </div>
             }
         </div>
@@ -85,11 +108,22 @@ else
 
     private Item? itemDetails;
     private List<Item>? itemsBunch;
+    private List<Comment>? comments = [];
 
     public Item CreateData()
     {
         DataGenerator dg = new("en");
         itemsBunch = dg.GenerateItems(500, 123);
+        var t = itemsBunch.Where((x) => x.Id == Id).First();
+        List<Comment> temp = dg.GenerateComments(500, 123);
+        foreach (var item in temp)
+        {
+            if (t.CommentsIds!.Contains(item.Id))
+            {
+                comments!.Add(item);
+            }
+        }
+
         return itemsBunch.Where((x) => x.Id == Id).First();
     }
 

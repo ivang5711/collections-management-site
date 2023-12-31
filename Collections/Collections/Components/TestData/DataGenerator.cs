@@ -29,8 +29,20 @@ public class DataGenerator(string locale)
             u.TagIds = [.. f.Make(5, () => f.Database.Random.Int(1, 6))];
             u.Author = f.Person.FullName;
             u.Collection = f.Commerce.ProductName();
+            u.CommentsIds = [.. f.Make(10, () => f.Database.Random.Int(1, 500))];
             u.ImageLink = f.Image.PicsumUrl();
         });
+
+    private readonly Faker<Comment> commentFake =
+    new Faker<Comment>(locale)
+    .StrictMode(false)
+    .Rules((f, u) =>
+    {
+        u.Id = f.IndexFaker + 1;
+        u.Name = f.Internet.UserName();
+        u.Text = f.Rant.Review();
+
+    });
 
     public List<Collection> GenerateCollection(int amount, int seed)
     {
@@ -40,5 +52,9 @@ public class DataGenerator(string locale)
     public List<Item> GenerateItems(int amount, int seed)
     {
         return itemFake.UseSeed(seed).Generate(amount);
+    }
+    public List<Comment> GenerateComments(int amount, int seed)
+    {
+        return commentFake.UseSeed(seed).Generate(amount);
     }
 }

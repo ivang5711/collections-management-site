@@ -75,17 +75,31 @@ else
         <div class="comment-overview d-flex flex-column flex-lg-col justify-content-between my-3">
             @if (itemDetails.TagIds.Any())
             {
-                <div class="comment-container">
+                <div class="comment-container pb-3">
 
                     @if (itemsBunch is not null)
                     {
                         @foreach (Comment item in comments)
                         {
                             <div class="row row-cols-8 row-cols-lg-8 row-cols-x1-5 g-3
-                                justify-content-center justify-content-md-start my-1">
+                                justify-content-center my-1">
                                 <CommentCard Comment="item" />
                             </div>
                         }
+
+                        <div class="row row-cols-8 row-cols-lg-8 row-cols-x1-5 g-3
+                                justify-content-center my-1">
+
+                            <div class="card h-100 fade-in " style="max-height: 100%; max-width: 95%;">
+                                <div class="card-body border-top bg-light">
+                                    <textarea class="form-control" placeholder="Enter your comment..." aria-label="With textarea"></textarea>
+                                </div>
+                                <div class="card-footer text-end">
+                                    <a class="btn btn-primary" href="/">Comment</a>
+                                </div>
+                            </div>
+
+                        </div>
                     }
                     else
                     {

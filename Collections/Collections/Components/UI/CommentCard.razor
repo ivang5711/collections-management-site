@@ -1,21 +1,10 @@
 ﻿@if (Comment is not null)
 {
-    <div class="card h-100 fade-in">
-@*         @if (string.IsNullOrEmpty(Comment.Name))
-        {
-            <img class="card-img-top" alt="Collection Item" src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" />
-        }
-        else
-        {
-            <img class="card-img-top" alt="Collection Item" src="@Comment.ImageLink" style="height: 24rem; max-height: 100%; max-width: 100%; object-fit: cover;" />
-        } *@
-        <div class="card-body border-top bg-light">
+    <div class="card h-100 fade-in " style="max-height: 100%; max-width: 95%;">
+        <div class="card-body border-top bg-light" >
             <h5 class="card-title">@Comment.Name</h5>
             <p class="card-text">@Comment.Text</p>
         </div>
-@*         <div class="card-footer text-end">
-            <a class="btn btn-primary" href="/item-details/@Comment.Id">Details</a>
-        </div> *@
     </div>
 }
 else

@@ -31,6 +31,7 @@ public class DataGenerator(string locale)
             u.Collection = f.Commerce.ProductName();
             u.CommentsIds = [.. f.Make(10, () => f.Database.Random.Int(1, 500))];
             u.ImageLink = f.Image.PicsumUrl();
+            u.Likes = GenerateLikes(124, 123);
         });
 
     private readonly Faker<Comment> commentFake =
@@ -44,6 +45,30 @@ public class DataGenerator(string locale)
 
     });
 
+    private static readonly Faker<Dictionary<string, bool>> likesFake =
+        new Faker<Dictionary<string, bool>>()
+        .StrictMode(false)
+        .Rules((f, u) =>
+        {
+            u.Add(f.Person.Random.Word(), true);
+            u.Add(f.Person.Random.Word(), true);
+            u.Add(f.Person.Random.Word(), true);
+            u.Add(f.Person.Random.Word(), true);
+            u.Add(f.Person.Random.Word(), true);
+            u.Add(f.Person.Random.Word(), true);
+            u.Add(f.Person.Random.Word(), true);
+            u.Add(f.Person.Random.Word(), true);
+            u.Add(f.Person.Random.Word(), true);
+            u.Add(f.Person.Random.Word(), true);
+            u.Add(f.Person.Random.Word(), true);
+            u.Add(f.Person.Random.Word(), true);
+            u.Add(f.Person.Random.Word(), true);
+            u.Add(f.Person.Random.Word(), true);
+            u.Add(f.Person.Random.Word(), true);
+            u.Add(f.Person.Random.Word(), true);
+
+        });
+
     public List<Collection> GenerateCollection(int amount, int seed)
     {
         return collectionFake.UseSeed(seed).Generate(amount);
@@ -56,5 +81,10 @@ public class DataGenerator(string locale)
     public List<Comment> GenerateComments(int amount, int seed)
     {
         return commentFake.UseSeed(seed).Generate(amount);
+    }
+
+    public static Dictionary<string, bool> GenerateLikes(int amount, int seed)
+    {
+        return likesFake.UseSeed(seed).Generate();
     }
 }

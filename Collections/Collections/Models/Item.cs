@@ -25,6 +25,7 @@ public class Item
         Likes = likes;
         CommentsIds = commentsIds;
         ImageLink = imageLink;
+        LikesTotal = Likes?.Keys.Count > 0 ? Likes!.Keys.Count : 0;
     }
 
     public int Id { get; set; }
@@ -42,4 +43,6 @@ public class Item
     public List<int>? CommentsIds { get; set; }
 
     public string? ImageLink { get; set; }
+
+    public int LikesTotal { get; set; }
 }

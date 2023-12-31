@@ -18,7 +18,7 @@ else
                     <div class="title-container text-center text-md-end">
                         <h1 class="text-light">@itemDetails.Name</h1>
                         <h2 class="text-black">@itemDetails.Author</h2>
-                        @if (itemDetails.Likes is null)
+                        @if (itemDetails.Likes?.Keys.Count == 0)
                         {
                             <span class="badge me-2 text-bg-light">
                                 No likes so far...
@@ -26,11 +26,11 @@ else
                         }
                         @{
                             var runtime = itemDetails.Collection;
-                            var rating = itemDetails.Id;
+                            var rating = itemDetails.Likes!.Keys.Count;
                         }
                         <span class="badge me-2 text-bg-dark">@runtime</span>
                         <span class="badge me-2 text-bg-success">
-                            @rating <i class="bi bi-stars"></i>
+                            <i class="bi bi-hand-thumbs-up"></i> @rating
                         </span>
                         <div class="item-links">
                             <div class="d-flex justify-content-center

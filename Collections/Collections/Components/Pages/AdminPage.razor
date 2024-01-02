@@ -1,38 +1,37 @@
 ﻿@page "/admin"
 
-<PageTitle>Collections home page</PageTitle>
+<PageTitle>Admin dashboard</PageTitle>
 <div class="container-xxl py-3">
-    <h3>AdminPage</h3>
     <form method="post">
-        <div class="d-flex column flex-md-row justify-content-md-start">
-            <div class="row row-cols-1 row-cols-md-5 col-md-12 gap-1 gap-md-2">
-                <button class="btn btn-outline-dark btn-sm col-md-1"
-                        asp-formaction="Block" name="Block" type="submit" value="true">
-                    <i class="bi bi-lock-fill"></i> Block
-                </button>
-                <button class="btn btn-outline-dark btn-sm col-md-1"
-                        asp-formaction="Unblock" name="Unblock" type="submit" value="true">
-                    <i class="bi bi-unlock-fill"></i> Unblock
-                </button>
-                <button class="btn btn-outline-dark btn-sm text-nowrap col-md-2"
-                        asp-formaction="AddToAdmins" name="AddToAdmins" type="submit"
-                        value="true">
-                    <i class="bi bi-person-fill-add"></i> Add to admins
-                </button>
-                <button class="btn btn-outline-dark btn-sm text-nowrap col-md-2 "
-                        asp-formaction="RemoveFromAdmins" name="RemoveFromAdmins" type="submit"
-                        value="true">
-                    <i class="bi bi-person-fill-dash"></i> Remove from admins
-                </button>
-                <button class="btn btn-danger btn-sm col-md-1"
-                        asp-formaction="Delete" name="Delete" type="submit"
-                        value="true">
-                    <i class="bi bi-trash3-fill"></i>
-                </button>
-            </div>
+        <div class="d-flex justify-content-start m-0 row col-md row-cols-md-auto gap-1">
+            <button class="btn btn-outline-dark btn-sm text-nowrap"
+                    asp-formaction="Block" name="Block"
+                    type="submit" value="true">
+                <i class="bi bi-lock-fill"></i> Block
+            </button>
+            <button class="btn btn-outline-dark btn-sm text-nowrap"
+                    asp-formaction="Unblock"
+                    name="Unblock" type="submit" value="true">
+                <i class="bi bi-unlock-fill"></i> Unblock
+            </button>
+            <button class="btn btn-outline-dark btn-sm text-nowrap"
+                    asp-formaction="AddToAdmins"
+                    name="AddToAdmins" type="submit" value="true">
+                <i class="bi bi-person-fill-add"></i> Add to admins
+            </button>
+            <button class="btn btn-outline-dark btn-sm text-nowrap"
+                    asp-formaction="RemoveFromAdmins"
+                    name="RemoveFromAdmins" type="submit" value="true">
+                <i class="bi bi-person-fill-dash"></i> Remove from admins
+            </button>
+            <button class="btn btn-danger btn-sm text-nowrap "
+                    asp-formaction="Delete" name="Delete"
+                    type="submit" value="true">
+                <i class="bi bi-trash3-fill"></i>
+            </button>
         </div>
         <div class="d-flex table-responsive pt-3">
-            <table class="table table-hover table-striped table-bordered">
+            <table class="table table-hover table-striped table-bordered rounded-2 overflow-hidden">
                 <thead class="table-secondary">
                     <tr>
                         <th scope="col">
@@ -48,8 +47,12 @@
                         <th scope="col">Id</th>
                         <th scope="col">Name</th>
                         <th scope="col">E-mail</th>
-                        <th scope="col" class="text-end">Last login time (UTC)</th>
-                        <th scope="col" class="text-end">Registration time (UTC)</th>
+                        <th scope="col" class="text-end">
+                            Last login time (UTC)
+                        </th>
+                        <th scope="col" class="text-end">
+                            Registration time (UTC)
+                        </th>
                         <th scope="col">Role</th>
                         <th scope="col">Status</th>
                     </tr>
@@ -61,7 +64,8 @@
                             <td>
                                 <div class="form-check">
                                     <input asp-formaction="RequestResult"
-                                           class="form-check-input" type="checkbox"
+                                           class="form-check-input"
+                                           type="checkbox"
                                            name="row" value="44"
                                            id="flexCheck@(i)">
                                     <label class="form-check-label"
@@ -109,13 +113,16 @@
 
                             @if ("Blocked" == "Blocked")
                             {
-                                <td class="text-danger">Model.UsersStatus[i]</td>
+                                <td class="text-danger">
+                                    Model.UsersStatus[i]
+                                </td>
                             }
                             else if ("text" == "Active")
                             {
-                                <td class="text-success">Model.UsersStatus[i]</td>
+                                <td class="text-success">
+                                    Model.UsersStatus[i]
+                                </td>
                             }
-
                         </tr>
                     }
                 </tbody>
@@ -123,7 +130,6 @@
         </div>
     </form>
 </div>
-
 <script>
     function toggle(source) {
         checkboxes = document.getElementsByName('row');
@@ -132,9 +138,6 @@
         }
     }
 </script>
-
-
-
 
 @code {
 

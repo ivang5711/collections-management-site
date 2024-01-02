@@ -42,7 +42,6 @@ public class DataGenerator(string locale)
         u.Id = f.IndexFaker + 1;
         u.Name = f.Internet.UserName();
         u.Text = f.Rant.Review();
-
     });
 
     private static readonly Faker<Dictionary<string, bool>> likesFake =
@@ -66,7 +65,20 @@ public class DataGenerator(string locale)
             u.Add(f.Person.Random.Word(), true);
             u.Add(f.Person.Random.Word(), true);
             u.Add(f.Person.Random.Word(), true);
+        });
 
+    private readonly Faker<PersonModel> userFake =
+        new Faker<PersonModel>(locale)
+        .StrictMode(false)
+        .Rules((f, u) =>
+        {
+            u.Id = f.IndexFaker + 1;
+            u.Name = f.Person.FullName;
+            u.Email = f.Person.Email;
+            u.RegistrationDate = f.Person.DateOfBirth;
+            u.LastLoginDate = f.Date.Between(DateTime.MinValue, DateTime.Now);
+            u.Status = f.Random.Bool();
+            u.IsAdmin = f.Random.Bool();
         });
 
     public List<Collection> GenerateCollection(int amount, int seed)
@@ -78,6 +90,7 @@ public class DataGenerator(string locale)
     {
         return itemFake.UseSeed(seed).Generate(amount);
     }
+
     public List<Comment> GenerateComments(int amount, int seed)
     {
         return commentFake.UseSeed(seed).Generate(amount);
@@ -87,4 +100,10 @@ public class DataGenerator(string locale)
     {
         return likesFake.UseSeed(seed).Generate();
     }
+
+    public List<PersonModel> GenerateUsers(int amount, int seed)
+    {
+        return userFake.UseSeed(seed).Generate(amount);
+    }
+
 }

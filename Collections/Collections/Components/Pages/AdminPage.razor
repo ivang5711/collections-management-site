@@ -1,4 +1,5 @@
 ﻿@page "/admin"
+@using Components.TestData
 
 <PageTitle>Admin dashboard</PageTitle>
 <div class="container-xxl py-3">
@@ -58,7 +59,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (int i = 0; i < 5; i++)
+                    @for (int i = 0; i < users.Count(); i++)
                     {
                         <tr>
                             <td>
@@ -73,54 +74,74 @@
                                     </label>
                                 </div>
                             </td>
-                            @if ("text" == "Blocked")
+                            @if (users[i].Status == false)
                             {
                                 <th scope="row"
                                     class="text-secondary text-opacity-50">
-                                    (i + 1)
+                                    @(i + 1)
                                 </th>
                                 <td class="text-secondary text-opacity-50">
-                                    Model.UserNames[i]
+                                    @users[i].Name
                                 </td>
                                 <td class="text-secondary text-opacity-50">
-                                    Model.UsersEmail[i]
+                                    @users[i].Email
                                 </td>
                                 <td class="text-secondary text-opacity-50 text-end">
-                                    Model.UsersLastLogin[i]
+                                    @users[i].LastLoginDate
                                 </td>
                                 <td class="text-secondary text-opacity-50 text-end">
-                                    Standard
+                                    @users[i].RegistrationDate
                                 </td>
-                                <td class="text-secondary text-opacity-50 text-end">
-                                    Model.UsersRegistrationTime[i]
-                                </td>
+
+                                @if (users[i].IsAdmin == true)
+                                {
+                                    <td class="text-secondary text-opacity-50 text-end">
+                                        Admin
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="text-secondary text-opacity-50 text-end">
+                                        Standard
+                                    </td>
+                                }
                             }
                             else
                             {
                                 <th scope="row">@(i + 1)</th>
-                                <td>Model.UserNames[i]</td>
-                                <td>Model.UsersEmail[i]</td>
+                                <td>@users[i].Name</td>
+                                <td>@users[i].Email</td>
                                 <td class="text-end">
-                                    Model.UsersLastLogin[i]
+                                    @users[i].LastLoginDate
                                 </td>
                                 <td class="text-end">
-                                    Model.UsersRegistrationTime[i]
+                                    @users[i].RegistrationDate
                                 </td>
-                                <td class="text-end">
-                                    Standard
-                                </td>
+                                @if (users[i].IsAdmin == true)
+                                {
+                                    <td class="text-end">
+                                        Admin
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="text-end">
+                                        Standard
+                                    </td>
+                                }
+                                
                             }
 
-                            @if ("Blocked" == "Blocked")
+                            @if (users[i].Status == false)
                             {
                                 <td class="text-danger">
-                                    Model.UsersStatus[i]
+                                    Blocked
                                 </td>
                             }
-                            else if ("text" == "Active")
+                            else if (users[i].Status == true)
                             {
                                 <td class="text-success">
-                                    Model.UsersStatus[i]
+                                    Active
                                 </td>
                             }
                         </tr>
@@ -140,5 +161,19 @@
 </script>
 
 @code {
+    public List<PersonModel> users = [];
+
+
+    public List<PersonModel> CreateData()
+    {
+        DataGenerator dg = new("en");
+        return dg.GenerateUsers(10, 123);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CreateData();
+        users = await Task.Run(() => CreateData());
+    }
 
 }

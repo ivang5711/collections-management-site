@@ -8,24 +8,56 @@
             <span class="text-danger">
                 <i class="bi bi-fire"></i>
             </span>
+            Recently added items
+        </h1>
+    </div>
+    <div class="d-flex flex-column flex-md-row justify-content-between my-3">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 row-cols-xl-5 g-3
+            justify-content-center">
+            @if (collections is not null)
+            {
+                @foreach (Item item in items!)
+                {
+                    <div class="col">
+                        <RecentlyAddedItems Item="item" />
+                    </div>
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    <div class="col">
+                        <RecentlyAddedItems />
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+    <div>
+        <h1 class="display-6">
+            <span class="text-danger">
+                <i class="bi bi-fire"></i>
+            </span>
             Top 5 Collections
         </h1>
     </div>
     <div class="d-flex flex-column flex-md-row justify-content-between my-3">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 row-cols-xl-5 g-3
             justify-content-center">
-            @if (myFirstCollection is not null)
+            @if (collections is not null)
             {
-                @foreach (Collection item in myFirstCollection)
+                @foreach (Collection collection in collections)
                 {
                     <div class="col">
-                        <TopCollections Collection="item" />
+                        <TopCollections Collection="collection" />
                     </div>
                 }
             }
             else
             {
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     <div class="col">
                         <TopCollections />
@@ -38,7 +70,8 @@
 </div>
 
 @code {
-    private List<Collection>? myFirstCollection;
+    private List<Collection>? collections;
+    private List<Item>? items;
     public List<Collection> CreateData()
     {
         DataGenerator fakeCollections = new("en");
@@ -46,8 +79,15 @@
         return fakeCollections.GenerateCollection(5, seed);
     }
 
+    public List<Item> CreateItems()
+    {
+        DataGenerator fakeItems = new("en");
+        return fakeItems.GenerateItems(5, 558769);
+    }
+
     protected override async Task OnInitializedAsync()
     {
-        myFirstCollection = await Task.Run(() => CreateData());
+        collections = await Task.Run(() => CreateData());
+        items = await Task.Run(() => CreateItems());
     }
 }

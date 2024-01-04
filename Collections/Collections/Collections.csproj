@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Components\UI\RecentItems.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Collections.Client\Collections.Client.csproj" />
     <PackageReference Include="Azure.Identity" Version="1.10.4" />
     <PackageReference Include="Bogus" Version="35.2.0" />

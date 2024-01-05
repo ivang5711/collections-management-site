@@ -1,13 +1,13 @@
-﻿<script src="https://cdn.jsdelivr.net/npm/TagCloud@2.2.0/dist/TagCloud.min.js"></script>
-<span class="content"></span>
-<script>
+function runTag() {
+
+
     var texts = [
         '3D', 'TagCloud', 'JavaScript',
         'CSS3', 'Animation', 'Interactive',
         'Mouse', 'Rolling', 'Sphere',
         '6KB', 'v2.x',
     ];
-    var tc = TagCloud('.content', texts);
+    //var tc = TagCloud('.content', texts);
     // console.log(tc);
     var color = '#FF5733';
     document.querySelector('.content').style.color = color;
@@ -19,6 +19,7 @@
             // your code here
         }
     });
+}
 
     // switch style
     function toDefault() { document.body.classList.remove('light'); }
@@ -46,5 +47,3 @@
         last.destroy();
         otherTcs.pop();
     }
-
-</script>

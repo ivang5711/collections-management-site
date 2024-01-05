@@ -1,3 +1,21 @@
+// Called when the script first gets loaded on the page.
+export function onLoad() {
+    console.log('Load');
+    runTag();
+}
+
+// Called when an enhanced page update occurs, plus once immediately after
+// the initial load.
+export function onUpdate() {
+    console.log('Update');
+    runTag();
+}
+
+// Called when an enhanced page update removes the script from the page.
+export function onDispose() {
+    console.log('Dispose');
+}
+
 function runTag() {
 
 

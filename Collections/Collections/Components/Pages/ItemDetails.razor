@@ -72,6 +72,8 @@ else
 
 
         </div>
+
+        <AuthorizeView>
         <div class="comment-overview d-flex flex-column flex-lg-col justify-content-between my-3">
             @if (itemDetails.TagIds.Any())
             {
@@ -113,6 +115,7 @@ else
                 </div>
             }
         </div>
+        </AuthorizeView>
     </div>
 }
 

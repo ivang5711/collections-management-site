@@ -9,6 +9,7 @@
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject UserManager<ApplicationUser> _UserManager
 
 <PageTitle>Log in</PageTitle>
 
@@ -92,7 +93,13 @@
         var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
         {
+            var k = await SignInManager.UserManager.FindByNameAsync(Input.Email);
+            k!.LastLoginDate = DateTime.Now;
+            var re = await _UserManager.UpdateAsync(k);
+
+
             Logger.LogInformation("User logged in.");
+            
             RedirectManager.RedirectTo(ReturnUrl);
         }
         else if (result.RequiresTwoFactor)

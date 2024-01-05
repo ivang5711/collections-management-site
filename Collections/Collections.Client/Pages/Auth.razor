@@ -2,13 +2,21 @@
 
 @using Microsoft.AspNetCore.Authorization
 
-@attribute [Authorize]
-@rendermode InteractiveAuto
+@attribute [Authorize(Roles = "Member, Locked, Admin")]
+@rendermode InteractiveServer
 
 <PageTitle>Auth</PageTitle>
 
 <h1>You are authenticated</h1>
 
-<AuthorizeView>
-    Hello @context.User.Identity?.Name!
+<AuthorizeView Roles = "Member" >
+    Hello @context.User.Identity?.Name! You are user. Welcome!
+</AuthorizeView>
+
+<AuthorizeView Roles ="Admin">
+    Hello @context.User.Identity?.Name! You are an Admin! Congrats!
+</AuthorizeView>
+
+<AuthorizeView Roles="Locked">
+    Hello @context.User.Identity?.Name! You Locked!
 </AuthorizeView>

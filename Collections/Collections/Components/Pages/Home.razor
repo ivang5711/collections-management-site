@@ -1,5 +1,13 @@
 ﻿@page "/"
 
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<ApplicationUser> _UserManager
+@inject RoleManager<IdentityRole> _RoleManager
+@inject SignInManager<ApplicationUser> _SignInManager
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject NavigationManager _navigationManager
+
 <PageTitle>Collections home page</PageTitle>
 <div class="container-xxl py-3">
     <div>
@@ -99,6 +107,21 @@
 
     protected override async Task OnInitializedAsync()
     {
+        string roleBlocked = "Blocked";
+        var authenticationState = Task.Run(() => _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
+        var currentUser = Task.Run(() => _UserManager.GetUserAsync(authenticationState.User)).Result;
+        if (currentUser is not null)
+        {
+            var userInRoleBlocked = Task.Run(() => _UserManager.IsInRoleAsync(currentUser, roleBlocked)).Result;
+            var userIsBlocked = currentUser.LockoutEnd is not null;
+            if (userInRoleBlocked || userIsBlocked)
+            {
+                await _SignInManager.SignOutAsync();
+                _navigationManager.NavigateTo("/Account/Login");
+                Console.WriteLine("Not Admin!");
+            }
+        }
+
         collections = await Task.Run(() => CreateData());
         items = await Task.Run(() => CreateItems());
     }

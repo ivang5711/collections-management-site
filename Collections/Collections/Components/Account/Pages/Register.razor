@@ -14,6 +14,7 @@
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject RoleManager<IdentityRole> _RoleManager
 
 <PageTitle>Register</PageTitle>
 
@@ -75,6 +76,22 @@
         user.RegistrationDate = DateTime.Now;
         user.LastLoginDate = user.RegistrationDate;
         var result = await UserManager.CreateAsync(user, Input.Password);
+
+        string roleAdmin = "Admin";
+        string roleMember = "Member";
+        string roleBlocked = "Blocked";
+        List<string> roles = [roleAdmin, roleMember, roleBlocked];
+        foreach (var item in roles)
+        {
+            var roleExist = await _RoleManager.RoleExistsAsync(item);
+            if (!roleExist)
+            {
+                var roleResult = await _RoleManager.CreateAsync(new IdentityRole(item));
+            }
+        }
+
+        var resultMember = Task.Run(() => UserManager.AddToRoleAsync(user, roleMember)).Result;
+        var resultAdmin = Task.Run(() => UserManager.AddToRoleAsync(user, roleAdmin)).Result;
 
         if (!result.Succeeded)
         {

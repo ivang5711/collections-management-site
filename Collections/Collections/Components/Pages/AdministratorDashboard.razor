@@ -10,7 +10,11 @@
 @inject NavigationManager _navigationManager
 @rendermode InteractiveServer
 
-@attribute [Authorize(Roles = "Member, Locked, Admin")]
+@attribute [Authorize(Roles = "Admin")]
+
+<AuthorizeView Roles="Member">
+    Hello @context.User.Identity?.Name! You are user. Welcome!
+</AuthorizeView>
 
 <AuthorizeView Roles="Admin">
     Hello @context.User.Identity?.Name! You are an Admin! Congrats!
@@ -211,6 +215,7 @@
     private const string roleLocked = "Locked";
     private const string roleMember = "Member";
     private const string roleAdmin = "Admin";
+    private const string roleBlocked = "Blocked";
     private readonly List<string> roles = [roleLocked, roleMember];
     private const string roleLockedMessage = "Blocked";
     private const string roleMemberMessage = "Active";
@@ -278,7 +283,8 @@
         var us = Task.Run(() => _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
         var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;
         var ew = Task.Run(() => _UserManager.IsInRoleAsync(tryy, roleAdmin)).Result;
-        if (!ew)
+        var io = tryy.LockoutEnd is not null;
+        if (!ew || io)
         {
             await _SignInManager.SignOutAsync();
             _navigationManager.NavigateTo("/Account/Login");
@@ -371,7 +377,8 @@
     private void BlockAUser(ApplicationUser user)
     {
         user.LockoutEnd = DateTime.MaxValue;
-        _ = _UserManager.SetLockoutEndDateAsync(user, DateTime.MaxValue);
+        var ted = Task.Run(() =>  _UserManager.SetLockoutEndDateAsync(user, DateTime.MaxValue)).Result;
+        var res = Task.Run(() => _UserManager.AddToRoleAsync(user, roleBlocked)).Result;
         Console.WriteLine($"User {user.UserName} blocked");
     }
 
@@ -395,7 +402,8 @@
     private void UnblockAUser(ApplicationUser user)
     {
         user.LockoutEnd = null;
-        _ = _UserManager.SetLockoutEndDateAsync(user, null);
+        var ted = Task.Run(() =>  _UserManager.SetLockoutEndDateAsync(user, null)).Result;
+        var re = Task.Run(() => _UserManager.RemoveFromRoleAsync(user, roleBlocked)).Result;
         Console.WriteLine($"User {user.UserName} unblocked");
     }
 

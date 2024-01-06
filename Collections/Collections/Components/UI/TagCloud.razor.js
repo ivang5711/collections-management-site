@@ -11,7 +11,9 @@ document.querySelector('.content').style.color = color;
 let rootEl = document.querySelector('.content');
 rootEl.addEventListener('click', function clickEventHandler(e) {
     if (e.target.className === 'tagcloud--item') {
-        window.open(`https://www.bing.com/search?q=${e.target.innerText}`, '_blank');
+        window.open(
+            `https://www.bing.com/search?q=${e.target.innerText}`,
+            '_blank');
     }
 });
 

@@ -13,7 +13,8 @@ public class Collection
         ImageLink = string.Empty;
     }
 
-    public Collection(int id, List<int> itemsIds, string name, string description, string theme, string? imageLink = null)
+    public Collection(int id, List<int> itemsIds, string name,
+        string description, string theme, string? imageLink = null)
     {
         Id = id;
         ItemsIds = itemsIds;

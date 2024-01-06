@@ -12,10 +12,7 @@
 @attribute [RequireAntiforgeryToken]
 @attribute [Authorize(Roles = "Admin")]
 
-
-
 <AuthorizeView Roles="Admin">
-
     <PageTitle>Administrator dashboard</PageTitle>
     <div class="container-xxl py-3">
         <form method="post" @onsubmit="Submit" @formname="starship-plain-form">
@@ -215,8 +212,6 @@
             }
         }
     </script>
-
-
 </AuthorizeView>
 
 @code {

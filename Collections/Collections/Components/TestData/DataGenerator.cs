@@ -11,7 +11,8 @@ public class DataGenerator(string locale)
         .Rules((f, u) =>
         {
             u.Id = f.IndexFaker + 1;
-            u.ItemsIds = Enumerable.Range((f.IndexFaker + 1) * 10, 10).ToList();
+            u.ItemsIds = Enumerable.Range((f.IndexFaker + 1) * 10, 10)
+                .ToList();
             u.TotalItems = u.ItemsIds.Count;
             u.Name = f.Commerce.ProductName();
             u.Description = f.Commerce.ProductDescription();
@@ -29,7 +30,8 @@ public class DataGenerator(string locale)
             u.TagIds = [.. f.Make(5, () => f.Database.Random.Int(1, 6))];
             u.Author = f.Person.FullName;
             u.Collection = f.Commerce.ProductName();
-            u.CommentsIds = [.. f.Make(10, () => f.Database.Random.Int(1, 500))];
+            u.CommentsIds = [.. f.Make(10, () => f.Database
+                .Random.Int(1, 500))];
             u.ImageLink = f.Image.PicsumUrl();
             u.Likes = GenerateLikes(124, 123);
         });
@@ -105,5 +107,4 @@ public class DataGenerator(string locale)
     {
         return userFake.UseSeed(seed).Generate(amount);
     }
-
 }

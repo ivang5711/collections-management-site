@@ -1,11 +1,11 @@
-var texts = [
+let texts = [
     '3D', 'TagCloud', 'JavaScript',
     'CSS3', 'Animation', 'Interactive',
     'Mouse', 'Rolling', 'Sphere',
     '6KB', 'v2.x',
 ];
-var tc = TagCloud('.content', texts);
-var color = '#FF5733';
+let tc = TagCloud('.content', texts);
+let color = '#FF5733';
 document.querySelector('.content').style.color = color;
 
 let rootEl = document.querySelector('.content');
@@ -30,14 +30,14 @@ function removeTag() {
     texts.pop();
     tc.update(texts);
 }
-var otherTcs = [];
+let otherTcs = [];
 // create and destroy tagcloud
 function toCreate() {
     if (otherTcs.length >= 3) return;
     otherTcs.push(TagCloud('.content', texts));
 }
 function toDestroy() {
-    var last = otherTcs[otherTcs.length - 1];
+    let last = otherTcs[otherTcs.length - 1];
     if (!last) return;
     last.destroy();
     otherTcs.pop();

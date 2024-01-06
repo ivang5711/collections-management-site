@@ -2,15 +2,18 @@
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Identity;
 @using Collections.Data
+@using Microsoft.AspNetCore.Antiforgery;
 @inject UserManager<ApplicationUser> _UserManager
 @inject RoleManager<IdentityRole> _RoleManager
 @inject SignInManager<ApplicationUser> _SignInManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager _navigationManager
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
+@attribute [RequireAntiforgeryToken]
 @attribute [Authorize(Roles = "Admin")]
 
 <AuthorizeView Roles="Admin">
+
     <PageTitle>Administrator dashboard</PageTitle>
     <div class="container-xxl py-3">
         <form method="post" @onsubmit="Submit" @formname="starship-plain-form">
@@ -199,6 +202,7 @@
                     </div>
                 </div>
             }
+            <AntiforgeryToken />
         </form>
     </div>
     <script>
@@ -209,6 +213,8 @@
             }
         }
     </script>
+
+
 </AuthorizeView>
 
 @code {

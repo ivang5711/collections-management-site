@@ -347,6 +347,66 @@
         {
             Console.WriteLine($"{item.Name} - {item.IsChecked}");
         }
+
+
+
+
+
+        var us = Task.Run(() =>
+            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
+        var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;
+        var ew = Task.Run(() =>
+            _UserManager.IsInRoleAsync(tryy, roleAdmin)).Result;
+        var io = tryy.LockoutEnd is not null;
+        if (!ew || io)
+        {
+            var de = Task.Run(() => _SignInManager.SignOutAsync());
+            _navigationManager.NavigateTo("/Account/Login");
+            Console.WriteLine("Not Admin!");
+        }
+
+        GetUsers();
+        int i = 0;
+        viewUsers.Clear();
+        foreach (var user in users)
+        {
+            var t = user.LockoutEnd;
+            _UserManager.SetLockoutEndDateAsync(user, t).Wait();
+            ViewUser viewUser = new();
+            viewUser.Id = ++i;
+            viewUser.Name = user.UserName ?? "no name provided";
+            viewUser.Email = user.Email ?? "no Email provided";
+            viewUser.LastLoginDate = user.LastLoginDate.ToString();
+            viewUser.RegistrationDate = user.RegistrationDate.ToString();
+            string viewRole = string.Empty;
+            if (Task.Run(() =>
+                _UserManager.IsInRoleAsync(user, roleAdmin)).Result)
+            {
+                viewRole = roleAdmin;
+            }
+            else if (Task.Run(() =>
+                _UserManager.IsInRoleAsync(user, roleMember)).Result)
+            {
+                viewRole = roleMember;
+            }
+
+            viewUser.Role = viewRole;
+            if (user.LockoutEnd is null)
+            {
+                viewUser.Status = roleMemberMessage;
+            }
+            else
+            {
+                viewUser.Status = roleLockedMessage;
+            }
+
+            viewUsers.Add(viewUser);
+        }
+
+
+
+
+
     }
 
     public void SelectAll()
@@ -367,7 +427,7 @@
 
     void RefreshPage()
     {
-        _navigationManager.Refresh(true);
+        _navigationManager.Refresh();
     }
 
     private void BlockUser()
@@ -503,7 +563,8 @@
 
     private void GetUsers()
     {
-        users = new List<ApplicationUser>();
+        // users = new List<ApplicationUser>();
+        users.Clear();
         var user = _UserManager.Users.AsEnumerable();
         foreach (var item in user)
         {

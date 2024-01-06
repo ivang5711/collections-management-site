@@ -8,8 +8,7 @@
 @inject SignInManager<ApplicationUser> _SignInManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager _navigationManager
-@rendermode @(new InteractiveServerRenderMode(false))
-@attribute [RequireAntiforgeryToken]
+@rendermode @(new InteractiveServerRenderMode(true))
 @attribute [Authorize(Roles = "Admin")]
 
 <AuthorizeView Roles="Admin">
@@ -299,9 +298,27 @@
         var io = tryy.LockoutEnd is not null;
         if (!ew || io)
         {
-            await _SignInManager.SignOutAsync();
+             _ = Task.Run(() => _SignInManager.SignOutAsync());
             _navigationManager.NavigateTo("/Account/Login");
             Console.WriteLine("Not Admin!");
+        }
+
+        string roleBlocked = "Blocked";
+        var authenticationState = Task.Run(() =>
+            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
+        var currentUser = Task.Run(() =>
+            _UserManager.GetUserAsync(authenticationState.User)).Result;
+        if (currentUser is not null)
+        {
+            var userInRoleBlocked = Task.Run(() =>
+                _UserManager.IsInRoleAsync(currentUser, roleBlocked)).Result;
+            var userIsBlocked = currentUser.LockoutEnd is not null;
+            if (userInRoleBlocked || userIsBlocked)
+            {
+                await _SignInManager.SignOutAsync();
+                _navigationManager.NavigateTo("/Account/Login");
+                Console.WriteLine("Not Admin!");
+            }
         }
 
         GetUsers();
@@ -360,10 +377,31 @@
         var io = tryy.LockoutEnd is not null;
         if (!ew || io)
         {
-            var de = Task.Run(() => _SignInManager.SignOutAsync());
+            _ = Task.Run(() => _SignInManager.SignOutAsync());
             _navigationManager.NavigateTo("/Account/Login");
             Console.WriteLine("Not Admin!");
         }
+
+
+        string roleBlocked = "Blocked";
+        var authenticationState = Task.Run(() =>
+            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
+        var currentUser = Task.Run(() =>
+            _UserManager.GetUserAsync(authenticationState.User)).Result;
+        if (currentUser is not null)
+        {
+            var userInRoleBlocked = Task.Run(() =>
+                _UserManager.IsInRoleAsync(currentUser, roleBlocked)).Result;
+            var userIsBlocked = currentUser.LockoutEnd is not null;
+            if (userInRoleBlocked || userIsBlocked)
+            {
+                _ = Task.Run( () => _SignInManager.SignOutAsync());
+                _navigationManager.NavigateTo("/Account/Login");
+                Console.WriteLine("Not Admin!");
+            }
+        }
+
+
 
         GetUsers();
         int i = 0;
@@ -445,6 +483,12 @@
         }
 
         RefreshPage();
+
+
+
+
+
+
     }
 
     private void BlockAUser(ApplicationUser user)
@@ -454,6 +498,16 @@
             .SetLockoutEndDateAsync(user, DateTime.MaxValue)).Result;
         var res = Task.Run(() => _UserManager
             .AddToRoleAsync(user, roleBlocked)).Result;
+
+        var us = Task.Run(() => _AuthenticationStateProvider
+            .GetAuthenticationStateAsync()).Result;
+        var t = us.User;
+        if (user.UserName == t.Identity!.Name)
+        {
+            _navigationManager.Refresh(true);
+            _ = Task.Run(() => _SignInManager.SignOutAsync());
+        }
+
     }
 
     private void UnblockUser()
@@ -533,8 +587,9 @@
         var t = us.User;
         if (user.UserName == t.Identity!.Name)
         {
+            _navigationManager.Refresh(true);
             Console.WriteLine("Got it!");
-            Task.Run(() => _SignInManager.SignOutAsync());
+            _ = Task.Run(() => _SignInManager.SignOutAsync());
         }
     }
 
@@ -557,7 +612,7 @@
 
     private void DeleteAUser(ApplicationUser user)
     {
-        _UserManager.DeleteAsync(user);
+        _ = Task.Run(() => _UserManager.DeleteAsync(user));
         Console.WriteLine($"User {user.UserName} deleted");
     }
 

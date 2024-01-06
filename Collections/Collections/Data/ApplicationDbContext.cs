@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Collections.Data
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
+    public class ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options)
+        : IdentityDbContext<ApplicationUser>(options)
     {
     }
 }

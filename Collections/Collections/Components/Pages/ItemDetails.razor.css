@@ -1,4 +1,4 @@
-﻿.hero-bg{
+﻿.hero-bg {
     background-image: var(--bg-img);
     background-size: cover;
     background-position: center;
@@ -15,7 +15,7 @@
     margin-bottom: 2rem;
 }
 
-.poster-container{
+.poster-container {
     max-height: 24rem;
     aspect-ratio: 2/3;
     position: relative;
@@ -66,6 +66,4 @@
         margin-left: calc((24rem * .666) + 4rem);
         margin-top: 2rem;
     }
-
-
 }

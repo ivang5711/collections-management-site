@@ -8,622 +8,221 @@
 @inject SignInManager<ApplicationUser> _SignInManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager _navigationManager
-@rendermode @(new InteractiveServerRenderMode(true))
+@rendermode @(new InteractiveServerRenderMode(false))
 @attribute [Authorize(Roles = "Admin")]
 
 <AuthorizeView Roles="Admin">
     <PageTitle>Administrator dashboard</PageTitle>
-    <div class="container-xxl py-3">
-        <form method="post" @onsubmit="Submit" @formname="starship-plain-form">
-            <div class="d-flex justify-content-start m-0 row col-md
+
+
+    @if (ViewUsers.Count < 1)
+    {
+        <div class="d-flex justify-content-center">
+            <p><em>Loading...</em></p>
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container-xxl py-3">
+            <form method="post" @onsubmit="Submit" @formname="starship-plain-form">
+                <div class="d-flex justify-content-start m-0 row col-md
                         row-cols-md-auto gap-1">
-                <button @onclick="BlockUser"
-                        class="btn btn-outline-dark btn-sm text-nowrap"
-                        asp-formaction="Block" name="Block"
-                        type="submit" value="true">
-                    <i class="bi bi-lock-fill"></i> Block
-                </button>
-                <button @onclick="UnblockUser"
-                        class="btn btn-outline-dark btn-sm text-nowrap"
-                        asp-formaction="Unblock"
-                        name="Unblock" type="submit" value="true">
-                    <i class="bi bi-unlock-fill"></i> Unblock
-                </button>
-                <button @onclick="AddUserToAdmins"
-                        class="btn btn-outline-dark btn-sm text-nowrap"
-                        asp-formaction="AddToAdmins"
-                        name="AddToAdmins" type="submit" value="true">
-                    <i class="bi bi-person-fill-add"></i> Add to admins
-                </button>
-                <button @onclick="RemoveUserFromAdmins"
-                        class="btn btn-outline-dark btn-sm text-nowrap"
-                        asp-formaction="RemoveFromAdmins"
-                        name="RemoveFromAdmins" type="submit" value="true">
-                    <i class="bi bi-person-fill-dash"></i> Remove from admins
-                </button>
-                <button @onclick="RequestDelete"
-                        class="btn btn-danger btn-sm text-nowrap"
-                        asp-formaction="Delete" name="Delete"
-                        type="submit" value="true">
-                    <i class="bi bi-trash3-fill"></i>
-                </button>
-            </div>
-            <div class="d-flex table-responsive pt-3">
-                <table class="table table-hover table-striped table-bordered
+                    <button @onclick="BlockUser"
+                            class="btn btn-outline-dark btn-sm text-nowrap"
+                            asp-formaction="Block" name="Block"
+                            type="submit" value="true">
+                        <i class="bi bi-lock-fill"></i> Block
+                    </button>
+                    <button @onclick="UnblockUser"
+                            class="btn btn-outline-dark btn-sm text-nowrap"
+                            asp-formaction="Unblock"
+                            name="Unblock" type="submit" value="true">
+                        <i class="bi bi-unlock-fill"></i> Unblock
+                    </button>
+                    <button @onclick="AddUserToAdmins"
+                            class="btn btn-outline-dark btn-sm text-nowrap"
+                            asp-formaction="AddToAdmins"
+                            name="AddToAdmins" type="submit" value="true">
+                        <i class="bi bi-person-fill-add"></i> Add to admins
+                    </button>
+                    <button @onclick="RemoveUserFromAdmins"
+                            class="btn btn-outline-dark btn-sm text-nowrap"
+                            asp-formaction="RemoveFromAdmins"
+                            name="RemoveFromAdmins" type="submit" value="true">
+                        <i class="bi bi-person-fill-dash"></i> Remove from admins
+                    </button>
+                    <button @onclick="RequestDelete"
+                            class="btn btn-danger btn-sm text-nowrap"
+                            asp-formaction="Delete" name="Delete"
+                            type="submit" value="true">
+                        <i class="bi bi-trash3-fill"></i>
+                    </button>
+                </div>
+                <div class="d-flex table-responsive pt-3">
+                    <table class="table table-hover table-striped table-bordered
                               rounded-2 overflow-hidden">
-                    <thead class="table-secondary">
-                        <tr>
-                            <th scope="col">
-                                <div class="form-check">
-
-                                    <input type="checkbox" value="test"
-                                           checked="@ticked"
-                                           @onchange="SelectAll" />
-                                </div>
-                            </th>
-                            <th scope="col">Id</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">E-mail</th>
-                            <th scope="col" class="text-end">
-                                Last login time (UTC)
-                            </th>
-                            <th scope="col" class="text-end">
-                                Registration time (UTC)
-                            </th>
-                            <th scope="col">Role</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in viewUsers)
-                        {
+                        <thead class="table-secondary">
                             <tr>
-                                <td>
+                                <th scope="col">
                                     <div class="form-check">
-                                        <input type="checkbox" name="row"
-                                               @bind="@item.IsChecked" />
+
+                                        <input type="checkbox" value="test"
+                                               checked="@Ticked"
+                                               @onchange="SelectAll" />
                                     </div>
-                                </td>
-                                @if (@item.Status == "Blocked")
-                                {
-                                    <th scope="row"
-                                        class="text-secondary text-opacity-50">
-                                        @(item.Id)
-                                    </th>
-                                    <td class="text-secondary text-opacity-50">
-                                        @item.Name
-                                    </td>
-                                    <td class="text-secondary text-opacity-50">
-                                        @item.Email
-                                    </td>
-                                    <td class="text-secondary text-opacity-50
-                                               text-end">
-                                        @item.LastLoginDate
-                                    </td>
-                                    <td class="text-secondary text-opacity-50
-                                               text-end">
-                                        @item.RegistrationDate
-                                    </td>
-
-                                    @if (item.Role == "Admin")
-                                    {
-                                        <td class="text-secondary
-                                                   text-opacity-50 text-start">
-                                            Admin
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td class="text-secondary
-                                                   text-opacity-50 text-start">
-                                            Regular User
-                                        </td>
-                                    }
-                                }
-                                else
-                                {
-                                    <th scope="row">@(item.Id)</th>
-                                    <td>@item.Name</td>
-                                    <td>@item.Email</td>
-                                    <td class="text-end">
-                                        @item.LastLoginDate
-                                    </td>
-                                    <td class="text-end">
-                                        @item.RegistrationDate
-                                    </td>
-                                    @if (item.Role == "Admin")
-                                    {
-                                        <td class="text-start">
-                                            Admin
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td class="text-start">
-                                            Regular User
-                                        </td>
-                                    }
-                                }
-
-                                @if (@item.Status == "Blocked")
-                                {
-                                    <td class="text-danger text-start">
-                                        Blocked
-                                    </td>
-                                }
-                                else if (true == true)
-                                {
-                                    <td class="text-success text-start">
-                                        Active
-                                    </td>
-                                }
+                                </th>
+                                <th scope="col">Id</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">E-mail</th>
+                                <th scope="col" class="text-end">
+                                    Last login time (UTC)
+                                </th>
+                                <th scope="col" class="text-end">
+                                    Registration time (UTC)
+                                </th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Status</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            @if (DeleteRequested)
-            {
-                <div class="modal modal-backdrop" tabindex="-1"
-                     style="display:block" role="dialog">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Confirm deletion</h5>
-                                <button type="button" class="btn-close"
-                                        @onclick="CloseModal"
-                                        data-bs-dismiss="modal"
-                                        aria-label="Close">
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>
-                                    This operation deletes selected
-                                    users permanently.
-                                </p>
-                                <p>Do you want to proceed?</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button"
-                                        class="btn btn-secondary"
-                                        data-bs-dismiss="modal"
-                                        @onclick="CloseModal">
-                                    Cancel
-                                </button>
-                                <button type="submit"
-                                        class="btn btn-outline-danger"
-                                        @onclick="AcceptDelete">
-                                    Delete
-                                </button>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewUsers)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="row"
+                                                   @bind="@item.IsChecked" />
+                                        </div>
+                                    </td>
+                                    @if (@item.Status == "Blocked")
+                                    {
+                                        <th scope="row"
+                                            class="text-secondary text-opacity-50">
+                                            @(item.Id)
+                                        </th>
+                                        <td class="text-secondary text-opacity-50">
+                                            @item.Name
+                                        </td>
+                                        <td class="text-secondary text-opacity-50">
+                                            @item.Email
+                                        </td>
+                                        <td class="text-secondary text-opacity-50
+                                               text-end">
+                                            @item.LastLoginDate
+                                        </td>
+                                        <td class="text-secondary text-opacity-50
+                                               text-end">
+                                            @item.RegistrationDate
+                                        </td>
+
+                                        @if (item.Role == "Admin")
+                                        {
+                                            <td class="text-secondary
+                                                   text-opacity-50 text-start">
+                                                Admin
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-secondary
+                                                   text-opacity-50 text-start">
+                                                Regular User
+                                            </td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <th scope="row">@(item.Id)</th>
+                                        <td>@item.Name</td>
+                                        <td>@item.Email</td>
+                                        <td class="text-end">
+                                            @item.LastLoginDate
+                                        </td>
+                                        <td class="text-end">
+                                            @item.RegistrationDate
+                                        </td>
+                                        @if (item.Role == "Admin")
+                                        {
+                                            <td class="text-start">
+                                                Admin
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-start">
+                                                Regular User
+                                            </td>
+                                        }
+                                    }
+
+                                    @if (@item.Status == "Blocked")
+                                    {
+                                        <td class="text-danger text-start">
+                                            Blocked
+                                        </td>
+                                    }
+                                    else if (true == true)
+                                    {
+                                        <td class="text-success text-start">
+                                            Active
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                @if (DeleteRequested)
+                {
+                    <div class="modal modal-backdrop" tabindex="-1"
+                         style="display:block" role="dialog">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Confirm deletion</h5>
+                                    <button type="button" class="btn-close"
+                                            @onclick="CloseModal"
+                                            data-bs-dismiss="modal"
+                                            aria-label="Close">
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        This operation deletes selected
+                                        users permanently.
+                                    </p>
+                                    <p>Do you want to proceed?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button"
+                                            class="btn btn-secondary"
+                                            data-bs-dismiss="modal"
+                                            @onclick="CloseModal">
+                                        Cancel
+                                    </button>
+                                    <button type="submit"
+                                            class="btn btn-outline-danger"
+                                            @onclick="AcceptDelete">
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
+                <AntiforgeryToken />
+            </form>
+        </div>
+        <script>
+            function toggle(source) {
+                checkboxes = document.getElementsByName('row');
+                for (var i = 0, n = checkboxes.length; i < n; i++) {
+                    checkboxes[i].checked = source.checked;
+                }
             }
-            <AntiforgeryToken />
-        </form>
-    </div>
-    <script>
-        function toggle(source) {
-            checkboxes = document.getElementsByName('row');
-            for (var i = 0, n = checkboxes.length; i < n; i++) {
-                checkboxes[i].checked = source.checked;
-            }
-        }
-    </script>
+        </script>
+    }
 </AuthorizeView>
-
-@code {
-    public bool DeleteRequested { get; set; } = false;
-    public bool CheckAll { get; set; } = false;
-    public List<ViewUser> viewUsers = [];
-    private List<string> userNames = [];
-    private List<string> usersLastLogin = [];
-    private List<string> usersRegistrationTime = [];
-    private const string roleLocked = "Locked";
-    private const string roleMember = "Member";
-    private const string roleAdmin = "Admin";
-    private const string roleBlocked = "Blocked";
-    private readonly List<string> roles = [roleLocked, roleMember];
-    private const string roleLockedMessage = "Blocked";
-    private const string roleMemberMessage = "Active";
-    private const string blockButtonName = "Block";
-    private const string unblockButtonName = "Unblock";
-    private const string deleteButtonName = "Delete";
-    private const string tableRowName = "row";
-    private const string dateTimeViewFormatString =
-        "HH':'mm':'ss, d MMM, yyyy";
-    private const string claimTypeRegistrationDateTime =
-        "RegistrationDateTime";
-    private const string claimTypeLastLogin = "LastLogin";
-    private const string claimTypePersonName = "PersonName";
-    private List<ApplicationUser> users = [];
-    public bool ticked = false;
-    public List<string> UsersEmail { get; set; } = [];
-    public List<string> UsersStatus { get; set; } = [];
-
-    public List<string> UserNames
-    {
-        get => userNames;
-        set => userNames = value;
-    }
-
-    public List<string> UsersLastLogin
-    {
-        get => usersLastLogin;
-        set => usersLastLogin = value;
-    }
-
-    public List<string> UsersRegistrationTime
-    {
-        get => usersRegistrationTime;
-        set => usersRegistrationTime = value;
-    }
-
-    [BindProperty]
-    public List<string> RequestResult { get; set; } = [];
-
-    [BindProperty]
-    public bool Block { get; set; } = false;
-
-    [BindProperty]
-    public bool Unblock { get; set; } = false;
-
-    [BindProperty]
-    public bool Delete { get; set; } = false;
-
-    void CloseModal()
-    {
-        DeleteRequested = false;
-    }
-
-    public void RequestDelete()
-    {
-        DeleteRequested = true;
-    }
-
-    public void AcceptDelete()
-    {
-        DeleteRequested = false;
-        DeleteUser();
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        var us = Task.Run(() =>
-            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;
-        var ew = Task.Run(() =>
-            _UserManager.IsInRoleAsync(tryy, roleAdmin)).Result;
-        var io = tryy.LockoutEnd is not null;
-        if (!ew || io)
-        {
-             _ = Task.Run(() => _SignInManager.SignOutAsync());
-            _navigationManager.NavigateTo("/Account/Login");
-            Console.WriteLine("Not Admin!");
-        }
-
-        string roleBlocked = "Blocked";
-        var authenticationState = Task.Run(() =>
-            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        var currentUser = Task.Run(() =>
-            _UserManager.GetUserAsync(authenticationState.User)).Result;
-        if (currentUser is not null)
-        {
-            var userInRoleBlocked = Task.Run(() =>
-                _UserManager.IsInRoleAsync(currentUser, roleBlocked)).Result;
-            var userIsBlocked = currentUser.LockoutEnd is not null;
-            if (userInRoleBlocked || userIsBlocked)
-            {
-                await _SignInManager.SignOutAsync();
-                _navigationManager.NavigateTo("/Account/Login");
-                Console.WriteLine("Not Admin!");
-            }
-        }
-
-        GetUsers();
-        int i = 0;
-        foreach (var user in users)
-        {
-            var t = user.LockoutEnd;
-            _UserManager.SetLockoutEndDateAsync(user, t).Wait();
-            ViewUser viewUser = new();
-            viewUser.Id = ++i;
-            viewUser.Name = user.UserName ?? "no name provided";
-            viewUser.Email = user.Email ?? "no Email provided";
-            viewUser.LastLoginDate = user.LastLoginDate.ToString();
-            viewUser.RegistrationDate = user.RegistrationDate.ToString();
-            string viewRole = string.Empty;
-            if (await _UserManager.IsInRoleAsync(user, roleAdmin))
-            {
-                viewRole = roleAdmin;
-            }
-            else if (await _UserManager.IsInRoleAsync(user, roleMember))
-            {
-                viewRole = roleMember;
-            }
-
-            viewUser.Role = viewRole;
-            if (user.LockoutEnd is null)
-            {
-                viewUser.Status = roleMemberMessage;
-            }
-            else
-            {
-                viewUser.Status = roleLockedMessage;
-            }
-
-            viewUsers.Add(viewUser);
-        }
-    }
-
-    private void Submit()
-    {
-        Console.WriteLine("Form Button PRESSED!!!");
-        foreach (var item in viewUsers)
-        {
-            Console.WriteLine($"{item.Name} - {item.IsChecked}");
-        }
-
-
-
-
-
-        var us = Task.Run(() =>
-            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;
-        var ew = Task.Run(() =>
-            _UserManager.IsInRoleAsync(tryy, roleAdmin)).Result;
-        var io = tryy.LockoutEnd is not null;
-        if (!ew || io)
-        {
-            _ = Task.Run(() => _SignInManager.SignOutAsync());
-            _navigationManager.NavigateTo("/Account/Login");
-            Console.WriteLine("Not Admin!");
-        }
-
-
-        string roleBlocked = "Blocked";
-        var authenticationState = Task.Run(() =>
-            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        var currentUser = Task.Run(() =>
-            _UserManager.GetUserAsync(authenticationState.User)).Result;
-        if (currentUser is not null)
-        {
-            var userInRoleBlocked = Task.Run(() =>
-                _UserManager.IsInRoleAsync(currentUser, roleBlocked)).Result;
-            var userIsBlocked = currentUser.LockoutEnd is not null;
-            if (userInRoleBlocked || userIsBlocked)
-            {
-                _ = Task.Run( () => _SignInManager.SignOutAsync());
-                _navigationManager.NavigateTo("/Account/Login");
-                Console.WriteLine("Not Admin!");
-            }
-        }
-
-
-
-        GetUsers();
-        int i = 0;
-        viewUsers.Clear();
-        foreach (var user in users)
-        {
-            var t = user.LockoutEnd;
-            _UserManager.SetLockoutEndDateAsync(user, t).Wait();
-            ViewUser viewUser = new();
-            viewUser.Id = ++i;
-            viewUser.Name = user.UserName ?? "no name provided";
-            viewUser.Email = user.Email ?? "no Email provided";
-            viewUser.LastLoginDate = user.LastLoginDate.ToString();
-            viewUser.RegistrationDate = user.RegistrationDate.ToString();
-            string viewRole = string.Empty;
-            if (Task.Run(() =>
-                _UserManager.IsInRoleAsync(user, roleAdmin)).Result)
-            {
-                viewRole = roleAdmin;
-            }
-            else if (Task.Run(() =>
-                _UserManager.IsInRoleAsync(user, roleMember)).Result)
-            {
-                viewRole = roleMember;
-            }
-
-            viewUser.Role = viewRole;
-            if (user.LockoutEnd is null)
-            {
-                viewUser.Status = roleMemberMessage;
-            }
-            else
-            {
-                viewUser.Status = roleLockedMessage;
-            }
-
-            viewUsers.Add(viewUser);
-        }
-
-
-
-
-
-    }
-
-    public void SelectAll()
-    {
-        CheckAll = !CheckAll;
-        foreach (var item in viewUsers)
-        {
-            if (CheckAll)
-            {
-                item.IsChecked = true;
-            }
-            else
-            {
-                item.IsChecked = false;
-            }
-        }
-    }
-
-    void RefreshPage()
-    {
-        _navigationManager.Refresh();
-    }
-
-    private void BlockUser()
-    {
-        var vu = viewUsers.Where(x => x.IsChecked == true).ToList();
-        List<ApplicationUser> names = [];
-        foreach (var item in vu)
-        {
-            names.Add(users.Where(x => x.UserName == item.Name).First());
-        }
-
-        foreach (var item in names)
-        {
-            BlockAUser(item);
-        }
-
-        RefreshPage();
-
-
-
-
-
-
-    }
-
-    private void BlockAUser(ApplicationUser user)
-    {
-        user.LockoutEnd = DateTime.MaxValue;
-        var ted = Task.Run(() => _UserManager
-            .SetLockoutEndDateAsync(user, DateTime.MaxValue)).Result;
-        var res = Task.Run(() => _UserManager
-            .AddToRoleAsync(user, roleBlocked)).Result;
-
-        var us = Task.Run(() => _AuthenticationStateProvider
-            .GetAuthenticationStateAsync()).Result;
-        var t = us.User;
-        if (user.UserName == t.Identity!.Name)
-        {
-            _navigationManager.Refresh(true);
-            _ = Task.Run(() => _SignInManager.SignOutAsync());
-        }
-
-    }
-
-    private void UnblockUser()
-    {
-        var vu = viewUsers.Where(x => x.IsChecked == true).ToList();
-        List<ApplicationUser> names = [];
-        foreach (var item in vu)
-        {
-            names.Add(users.Where(x => x.UserName == item.Name).First());
-        }
-
-        foreach (var item in names)
-        {
-            UnblockAUser(item);
-        }
-
-        RefreshPage();
-    }
-
-    private void UnblockAUser(ApplicationUser user)
-    {
-        user.LockoutEnd = null;
-        var ted = Task.Run(() => _UserManager
-            .SetLockoutEndDateAsync(user, null)).Result;
-        var re = Task.Run(() => _UserManager
-            .RemoveFromRoleAsync(user, roleBlocked)).Result;
-    }
-
-    private void AddUserToAdmins()
-    {
-        var vu = viewUsers.Where(x => x.IsChecked == true).ToList();
-        List<ApplicationUser> names = [];
-        foreach (var item in vu)
-        {
-            names.Add(users.Where(x => x.UserName == item.Name).First());
-        }
-
-        foreach (var item in names)
-        {
-            AddAUserToAdmins(item);
-        }
-
-        RefreshPage();
-    }
-
-    private void AddAUserToAdmins(ApplicationUser user)
-    {
-
-        var res = Task.Run(() => _UserManager
-            .AddToRoleAsync(user, roleAdmin)).Result;
-    }
-
-    private void RemoveUserFromAdmins()
-    {
-        var vu = viewUsers.Where(x => x.IsChecked == true).ToList();
-        List<ApplicationUser> names = [];
-        foreach (var item in vu)
-        {
-            names.Add(users.Where(x => x.UserName == item.Name).First());
-        }
-
-        foreach (var item in names)
-        {
-            RemoveAUserFromAdmins(item);
-        }
-
-        RefreshPage();
-    }
-
-    private void RemoveAUserFromAdmins(ApplicationUser user)
-    {
-
-        var res = Task.Run(() => _UserManager
-            .RemoveFromRoleAsync(user, roleAdmin)).Result;
-        var us = Task.Run(() => _AuthenticationStateProvider
-            .GetAuthenticationStateAsync()).Result;
-        var t = us.User;
-        if (user.UserName == t.Identity!.Name)
-        {
-            _navigationManager.Refresh(true);
-            Console.WriteLine("Got it!");
-            _ = Task.Run(() => _SignInManager.SignOutAsync());
-        }
-    }
-
-    private void DeleteUser()
-    {
-        var vu = viewUsers.Where(x => x.IsChecked == true).ToList();
-        List<ApplicationUser> names = [];
-        foreach (var item in vu)
-        {
-            names.Add(users.Where(x => x.UserName == item.Name).First());
-        }
-
-        foreach (var item in names)
-        {
-            DeleteAUser(item);
-        }
-
-        RefreshPage();
-    }
-
-    private void DeleteAUser(ApplicationUser user)
-    {
-        _ = Task.Run(() => _UserManager.DeleteAsync(user));
-        Console.WriteLine($"User {user.UserName} deleted");
-    }
-
-    private void GetUsers()
-    {
-        // users = new List<ApplicationUser>();
-        users.Clear();
-        var user = _UserManager.Users.AsEnumerable();
-        foreach (var item in user)
-        {
-            users.Add(item);
-        }
-    }
-}

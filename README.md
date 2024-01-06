@@ -22,7 +22,7 @@ You can check out a test version <a href="https://task-test-react.azurewebsites.
 <details>
   <summary><i>UI Screenshots</i></summary>
 
-<img src="welcome.png" alt="welcome.png" width="600">
+<img src="img/admin.png" alt="admin.png" width="600">
 <img src="game.png" alt="game.png" width="600">
 <img src="help-table.png" alt="help-table.png" width="600">
 <img src="game-played.png" alt="game-played.png" width="600">

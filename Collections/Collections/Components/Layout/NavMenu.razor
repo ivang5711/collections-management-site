@@ -1,52 +1,65 @@
 ﻿@implements IDisposable
 @inject NavigationManager NavigationManager
 
-<nav class="navbar navbar-expand-lg navStyle align-items-center" data-bs-theme="light">
+<nav class="navbar navbar-expand-lg navStyle align-items-center"
+     data-bs-theme="light">
     <div class="container-xxl">
-        <a href="/" class="me-3 navbar-text nav-link" data-enhance-nav="false" style="text-decoration:none">
+        <a href="/" class="me-3 navbar-text nav-link" data-enhance-nav="false"
+           style="text-decoration:none">
             <img src="/stack.svg" height="50" />
             <span style="font-size: 1rem">COLLECTIONS</span>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarBM" aria-expanded="false" aria-label="toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarBM" aria-expanded="false"
+                aria-label="toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarBM">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <NavLink class="nav-link" data-enhance-nav="false" href="/" Match="NavLinkMatch.All">
-                        <i class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></i> Home
+                    <NavLink class="nav-link" data-enhance-nav="false"
+                             href="/" Match="NavLinkMatch.All">
+                        <i class="bi bi-house-door-fill-nav-menu"
+                           aria-hidden="true"></i> Home
                     </NavLink>
                 </li>
                 <li class="nav-item">
                     <NavLink class="nav-link" href="counter">
-                        <i class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></i> Counter
+                        <i class="bi bi-plus-square-fill-nav-menu"
+                           aria-hidden="true"></i> Counter
                     </NavLink>
                 </li>
                 <AuthorizeView Roles="Admin">
                     <li class="nav-item">
                         <NavLink class="nav-link" href="admin">
-                            <span class="bi bi-gear-nav-menu" aria-hidden="true"></span> Admin Dashboard
+                            <span class="bi bi-gear-nav-menu"
+                                  aria-hidden="true"></span> Admin Dashboard
                         </NavLink>
                     </li>
                 </AuthorizeView>
                 <li class="nav-item">
                     <NavLink class="nav-link" href="auth">
-                        <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
+                        <span class="bi bi-lock-nav-menu"
+                              aria-hidden="true"></span> Auth Required
                     </NavLink>
                 </li>
                 <AuthorizeView>
                     <Authorized>
                         <li class="nav-item">
                             <NavLink class="nav-link" href="Account/Manage">
-                                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                                <span class="bi bi-person-fill-nav-menu"
+                                      aria-hidden="true">
+                                </span> @context.User.Identity?.Name
                             </NavLink>
                         </li>
                         <li class="nav-item">
                             <form action="Account/Logout" method="post">
                                 <AntiforgeryToken />
-                                <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                                <input type="hidden" name="ReturnUrl"
+                                       value="@currentUrl" />
                                 <button type="submit" class="nav-link">
-                                    <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
+                                    <span class="bi bi-arrow-bar-left-nav-menu"
+                                          aria-hidden="true"></span> Logout
                                 </button>
                             </form>
                         </li>
@@ -54,12 +67,14 @@
                     <NotAuthorized>
                         <li class="nav-item">
                             <NavLink class="nav-link" href="Account/Register">
-                                <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
+                                <span class="bi bi-person-nav-menu"
+                                      aria-hidden="true"></span> Register
                             </NavLink>
                         </li>
                         <li class="nav-item">
                             <NavLink class="nav-link" href="Account/Login">
-                                <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
+                                <span class="bi bi-person-badge-nav-menu"
+                                      aria-hidden="true"></span> Login
                             </NavLink>
                         </li>
                     </NotAuthorized>
@@ -74,7 +89,8 @@
 
     protected override void OnInitialized()
     {
-        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        currentUrl = NavigationManager
+            .ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
     }
 
@@ -89,4 +105,3 @@
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
 }
-

@@ -1,5 +1,7 @@
 using Collections.Data;
 using Collections.Models;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.AspNetCore.Identity;
 
 namespace Collections.Components.Pages;
 
@@ -32,11 +34,16 @@ public partial class AdministratorDashboard
         var ew = Task.Run(() =>
             _UserManager.IsInRoleAsync(tryy, roleAdmin)).Result;
         var io = tryy.LockoutEnd is not null;
-        if (!ew || io)
+        if (!ew)
         {
             _ = Task.Run(() => _SignInManager.SignOutAsync());
             _navigationManager.NavigateTo("/Account/Login");
-            Console.WriteLine("Not Admin!");
+        }
+
+        if (io)
+        {
+            _ = Task.Run(() => _SignInManager.SignOutAsync());
+            _navigationManager.NavigateTo("/Account/Login");
         }
 
         string roleBlocked = "Blocked";
@@ -96,43 +103,42 @@ public partial class AdministratorDashboard
     private void GetUsers()
     {
         Users.Clear();
-        Task.Delay(1000);
         Users.AddRange(_UserManager.Users.AsEnumerable());
     }
 
     private void Submit()
     {
-        
-        var us = Task.Run(() =>
-            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;
-        var ew = Task.Run(() =>
-            _UserManager.IsInRoleAsync(tryy, roleAdmin)).Result;
-        var io = tryy.LockoutEnd is not null;
-        if (!ew || io)
-        {
-            _ = Task.Run(() => _SignInManager.SignOutAsync());
-            _navigationManager.NavigateTo("/Account/Login");
-            Console.WriteLine("Not Admin!");
-        }
 
-        string roleBlocked = "Blocked";
-        var authenticationState = Task.Run(() =>
-            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        var currentUser = Task.Run(() =>
-            _UserManager.GetUserAsync(authenticationState.User)).Result;
-        if (currentUser is not null)
-        {
-            var userInRoleBlocked = Task.Run(() =>
-                _UserManager.IsInRoleAsync(currentUser, roleBlocked)).Result;
-            var userIsBlocked = currentUser.LockoutEnd is not null;
-            if (userInRoleBlocked || userIsBlocked)
-            {
-                _ = Task.Run(() => _SignInManager.SignOutAsync());
-                _navigationManager.NavigateTo("/Account/Login");
-                Console.WriteLine("Not Admin!");
-            }
-        }
+        //var us = Task.Run(() =>
+        //    _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
+        //var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;
+        //var ew = Task.Run(() =>
+        //    _UserManager.IsInRoleAsync(tryy, roleAdmin)).Result;
+        //var io = tryy.LockoutEnd is not null;
+        //if (!ew || io)
+        //{
+        //    _ = Task.Run(() => _SignInManager.SignOutAsync());
+        //    _navigationManager.NavigateTo("/Account/Login");
+        //    Console.WriteLine("Not Admin!");
+        //}
+
+        //string roleBlocked = "Blocked";
+        //var authenticationState = Task.Run(() =>
+        //    _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
+        //var currentUser = Task.Run(() =>
+        //    _UserManager.GetUserAsync(authenticationState.User)).Result;
+        //if (currentUser is not null)
+        //{
+        //    var userInRoleBlocked = Task.Run(() =>
+        //        _UserManager.IsInRoleAsync(currentUser, roleBlocked)).Result;
+        //    var userIsBlocked = currentUser.LockoutEnd is not null;
+        //    if (userInRoleBlocked || userIsBlocked)
+        //    {
+        //        _ = Task.Run(() => _SignInManager.SignOutAsync());
+        //        _navigationManager.NavigateTo("/Account/Login");
+        //        Console.WriteLine("Not Admin!");
+        //    }
+        //}
 
         GetUsers();
         int i = 0;
@@ -310,8 +316,9 @@ public partial class AdministratorDashboard
         var t = us.User;
         if (user.UserName == t.Identity!.Name)
         {
-            _navigationManager.Refresh(true);
             _ = Task.Run(() => _SignInManager.SignOutAsync());
+            _ = _SignInManager.SignOutAsync();
+            _navigationManager.Refresh(true);
         }
     }
 
@@ -328,11 +335,11 @@ public partial class AdministratorDashboard
 
     private void DeleteUser()
     {
-        var vu = ViewUsers.Where(x => x.IsChecked == true).ToList();
+        var vu = ViewUsers.Where(x => x.IsChecked).ToList();
         List<ApplicationUser> names = [];
         foreach (var item in vu)
         {
-            names.Add(Users.Where(x => x.UserName == item.Name).First());
+            names.Add(Users.First(x => x.UserName == item.Name));
         }
 
         foreach (var item in names)
@@ -346,5 +353,6 @@ public partial class AdministratorDashboard
     private void DeleteAUser(ApplicationUser user)
     {
         _ = Task.Run(() => _UserManager.DeleteAsync(user));
+
     }
 }

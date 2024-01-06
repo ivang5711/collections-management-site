@@ -1,6 +1,5 @@
 ﻿@page "/admin"
 @using Microsoft.AspNetCore.Authorization;
-
 @using Microsoft.AspNetCore.Identity;
 @using Collections.Data
 @inject UserManager<ApplicationUser> _UserManager
@@ -9,57 +8,56 @@
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager _navigationManager
 @rendermode InteractiveServer
-
 @attribute [Authorize(Roles = "Admin")]
-
-<AuthorizeView Roles="Member">
-    Hello @context.User.Identity?.Name! You are user. Welcome!
-</AuthorizeView>
-
-<AuthorizeView Roles="Admin">
-    Hello @context.User.Identity?.Name! You are an Admin! Congrats!
-</AuthorizeView>
 
 <AuthorizeView Roles="Admin">
     <PageTitle>Administrator dashboard</PageTitle>
     <div class="container-xxl py-3">
         <form method="post" @onsubmit="Submit" @formname="starship-plain-form">
-            <div class="d-flex justify-content-start m-0 row col-md row-cols-md-auto gap-1">
-                <button @onclick="BlockUser" class="btn btn-outline-dark btn-sm text-nowrap"
+            <div class="d-flex justify-content-start m-0 row col-md
+                        row-cols-md-auto gap-1">
+                <button @onclick="BlockUser"
+                        class="btn btn-outline-dark btn-sm text-nowrap"
                         asp-formaction="Block" name="Block"
                         type="submit" value="true">
                     <i class="bi bi-lock-fill"></i> Block
                 </button>
-                <button @onclick="UnblockUser" class="btn btn-outline-dark btn-sm text-nowrap"
+                <button @onclick="UnblockUser"
+                        class="btn btn-outline-dark btn-sm text-nowrap"
                         asp-formaction="Unblock"
                         name="Unblock" type="submit" value="true">
                     <i class="bi bi-unlock-fill"></i> Unblock
                 </button>
-                <button @onclick="AddUserToAdmins" class="btn btn-outline-dark btn-sm text-nowrap"
+                <button @onclick="AddUserToAdmins"
+                        class="btn btn-outline-dark btn-sm text-nowrap"
                         asp-formaction="AddToAdmins"
                         name="AddToAdmins" type="submit" value="true">
                     <i class="bi bi-person-fill-add"></i> Add to admins
                 </button>
-                <button @onclick="RemoveUserFromAdmins" class="btn btn-outline-dark btn-sm text-nowrap"
+                <button @onclick="RemoveUserFromAdmins"
+                        class="btn btn-outline-dark btn-sm text-nowrap"
                         asp-formaction="RemoveFromAdmins"
                         name="RemoveFromAdmins" type="submit" value="true">
                     <i class="bi bi-person-fill-dash"></i> Remove from admins
                 </button>
-                <button @onclick="RequestDelete" class="btn btn-danger btn-sm text-nowrap "
+                <button @onclick="RequestDelete"
+                        class="btn btn-danger btn-sm text-nowrap"
                         asp-formaction="Delete" name="Delete"
                         type="submit" value="true">
                     <i class="bi bi-trash3-fill"></i>
                 </button>
             </div>
             <div class="d-flex table-responsive pt-3">
-                <table class="table table-hover table-striped table-bordered rounded-2 overflow-hidden">
+                <table class="table table-hover table-striped table-bordered
+                              rounded-2 overflow-hidden">
                     <thead class="table-secondary">
                         <tr>
                             <th scope="col">
                                 <div class="form-check">
 
                                     <input type="checkbox" value="test"
-                                           checked="@ticked" @onchange="SelectAll" />
+                                           checked="@ticked"
+                                           @onchange="SelectAll" />
                                 </div>
                             </th>
                             <th scope="col">Id</th>
@@ -81,18 +79,8 @@
                             <tr>
                                 <td>
                                     <div class="form-check">
-                                        @* <input @bind="item.IsChecked"
-                                    @bind:event="onchange"
-                                    asp-formaction="RequestResult"
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    name="row" value="44"
-                                    id="flexCheck@(item.Id)">
-                                    <label class="form-check-label"
-                                    for="flexCheckDefault">
-                                    </label> *@
-                                        <input type="checkbox" name="row" @bind="@item.IsChecked" />
-
+                                        <input type="checkbox" name="row"
+                                               @bind="@item.IsChecked" />
                                     </div>
                                 </td>
                                 @if (@item.Status == "Blocked")
@@ -107,22 +95,26 @@
                                     <td class="text-secondary text-opacity-50">
                                         @item.Email
                                     </td>
-                                    <td class="text-secondary text-opacity-50 text-end">
+                                    <td class="text-secondary text-opacity-50
+                                               text-end">
                                         @item.LastLoginDate
                                     </td>
-                                    <td class="text-secondary text-opacity-50 text-end">
+                                    <td class="text-secondary text-opacity-50
+                                               text-end">
                                         @item.RegistrationDate
                                     </td>
 
                                     @if (item.Role == "Admin")
                                     {
-                                        <td class="text-secondary text-opacity-50 text-start">
+                                        <td class="text-secondary
+                                                   text-opacity-50 text-start">
                                             Admin
                                         </td>
                                     }
                                     else
                                     {
-                                        <td class="text-secondary text-opacity-50 text-start">
+                                        <td class="text-secondary
+                                                   text-opacity-50 text-start">
                                             Regular User
                                         </td>
                                     }
@@ -171,20 +163,37 @@
             </div>
             @if (DeleteRequested)
             {
-                <div class="modal modal-backdrop" tabindex="-1" style="display:block" role="dialog">
+                <div class="modal modal-backdrop" tabindex="-1"
+                     style="display:block" role="dialog">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">Confirm deletion</h5>
-                                <button type="button" class="btn-close" @onclick="CloseModal" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close"
+                                        @onclick="CloseModal"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                </button>
                             </div>
                             <div class="modal-body">
-                                <p>This operation deletes selected users permanently.</p>
+                                <p>
+                                    This operation deletes selected
+                                    users permanently.
+                                </p>
                                 <p>Do you want to proceed?</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="CloseModal">Cancel</button>
-                                <button type="submit" class="btn btn-outline-danger" @onclick="AcceptDelete">Delete</button>
+                                <button type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal"
+                                        @onclick="CloseModal">
+                                    Cancel
+                                </button>
+                                <button type="submit"
+                                        class="btn btn-outline-danger"
+                                        @onclick="AcceptDelete">
+                                    Delete
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -200,10 +209,7 @@
             }
         }
     </script>
-
 </AuthorizeView>
-
-
 
 @code {
     public bool DeleteRequested { get; set; } = false;
@@ -223,8 +229,10 @@
     private const string unblockButtonName = "Unblock";
     private const string deleteButtonName = "Delete";
     private const string tableRowName = "row";
-    private const string dateTimeViewFormatString = "HH':'mm':'ss, d MMM, yyyy";
-    private const string claimTypeRegistrationDateTime = "RegistrationDateTime";
+    private const string dateTimeViewFormatString =
+        "HH':'mm':'ss, d MMM, yyyy";
+    private const string claimTypeRegistrationDateTime =
+        "RegistrationDateTime";
     private const string claimTypeLastLogin = "LastLogin";
     private const string claimTypePersonName = "PersonName";
     private List<ApplicationUser> users = [];
@@ -280,9 +288,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var us = Task.Run(() => _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
+        var us = Task.Run(() =>
+            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
         var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;
-        var ew = Task.Run(() => _UserManager.IsInRoleAsync(tryy, roleAdmin)).Result;
+        var ew = Task.Run(() =>
+            _UserManager.IsInRoleAsync(tryy, roleAdmin)).Result;
         var io = tryy.LockoutEnd is not null;
         if (!ew || io)
         {
@@ -377,9 +387,10 @@
     private void BlockAUser(ApplicationUser user)
     {
         user.LockoutEnd = DateTime.MaxValue;
-        var ted = Task.Run(() =>  _UserManager.SetLockoutEndDateAsync(user, DateTime.MaxValue)).Result;
-        var res = Task.Run(() => _UserManager.AddToRoleAsync(user, roleBlocked)).Result;
-        Console.WriteLine($"User {user.UserName} blocked");
+        var ted = Task.Run(() => _UserManager
+            .SetLockoutEndDateAsync(user, DateTime.MaxValue)).Result;
+        var res = Task.Run(() => _UserManager
+            .AddToRoleAsync(user, roleBlocked)).Result;
     }
 
     private void UnblockUser()
@@ -402,9 +413,10 @@
     private void UnblockAUser(ApplicationUser user)
     {
         user.LockoutEnd = null;
-        var ted = Task.Run(() =>  _UserManager.SetLockoutEndDateAsync(user, null)).Result;
-        var re = Task.Run(() => _UserManager.RemoveFromRoleAsync(user, roleBlocked)).Result;
-        Console.WriteLine($"User {user.UserName} unblocked");
+        var ted = Task.Run(() => _UserManager
+            .SetLockoutEndDateAsync(user, null)).Result;
+        var re = Task.Run(() => _UserManager
+            .RemoveFromRoleAsync(user, roleBlocked)).Result;
     }
 
     private void AddUserToAdmins()
@@ -427,8 +439,8 @@
     private void AddAUserToAdmins(ApplicationUser user)
     {
 
-        var res = Task.Run(() => _UserManager.AddToRoleAsync(user, roleAdmin)).Result;
-        Console.WriteLine($"User {user.UserName} Added to Admins + {res.Succeeded.ToString()}");
+        var res = Task.Run(() => _UserManager
+            .AddToRoleAsync(user, roleAdmin)).Result;
     }
 
     private void RemoveUserFromAdmins()
@@ -451,15 +463,16 @@
     private void RemoveAUserFromAdmins(ApplicationUser user)
     {
 
-        var res = Task.Run(() => _UserManager.RemoveFromRoleAsync(user, roleAdmin)).Result;
-        var us = Task.Run(() => _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
+        var res = Task.Run(() => _UserManager
+            .RemoveFromRoleAsync(user, roleAdmin)).Result;
+        var us = Task.Run(() => _AuthenticationStateProvider
+            .GetAuthenticationStateAsync()).Result;
         var t = us.User;
         if (user.UserName == t.Identity!.Name)
         {
             Console.WriteLine("Got it!");
             Task.Run(() => _SignInManager.SignOutAsync());
         }
-        Console.WriteLine($"User {user.UserName} Removed from Admins + {res.Succeeded.ToString()}");
     }
 
     private void DeleteUser()

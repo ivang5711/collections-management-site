@@ -1,5 +1,4 @@
 ﻿@page "/"
-
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Identity;
 @inject UserManager<ApplicationUser> _UserManager
@@ -30,8 +29,8 @@
         </h1>
     </div>
     <div class="d-flex flex-column flex-md-row justify-content-between my-3">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 row-cols-xl-5 g-3
-            justify-content-center">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5
+                    row-cols-xl-5 g-3 justify-content-center">
             @if (collections is not null)
             {
                 @foreach (Item item in items!)
@@ -62,8 +61,8 @@
         </h1>
     </div>
     <div class="d-flex flex-column flex-md-row justify-content-between my-3">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 row-cols-xl-5 g-3
-            justify-content-center">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5
+                    row-cols-xl-5 g-3 justify-content-center">
             @if (collections is not null)
             {
                 @foreach (Collection collection in collections)
@@ -87,8 +86,6 @@
     </div>
 </div>
 
-
-
 @code {
     private List<Collection>? collections;
     private List<Item>? items;
@@ -108,11 +105,14 @@
     protected override async Task OnInitializedAsync()
     {
         string roleBlocked = "Blocked";
-        var authenticationState = Task.Run(() => _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        var currentUser = Task.Run(() => _UserManager.GetUserAsync(authenticationState.User)).Result;
+        var authenticationState = Task.Run(() =>
+            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
+        var currentUser = Task.Run(() =>
+            _UserManager.GetUserAsync(authenticationState.User)).Result;
         if (currentUser is not null)
         {
-            var userInRoleBlocked = Task.Run(() => _UserManager.IsInRoleAsync(currentUser, roleBlocked)).Result;
+            var userInRoleBlocked = Task.Run(() =>
+                _UserManager.IsInRoleAsync(currentUser, roleBlocked)).Result;
             var userIsBlocked = currentUser.LockoutEnd is not null;
             if (userInRoleBlocked || userIsBlocked)
             {

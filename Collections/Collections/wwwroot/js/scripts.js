@@ -19,8 +19,8 @@ function runMe() {
     var layout = d3.layout.cloud()
         .size([500, 250])
         .words(words2.map(function (d) {
-                return { text: d, size: 10 + Math.random() * 90, test: "haha" };
-            }))
+            return { text: d, size: 10 + Math.random() * 90, test: "haha" };
+        }))
         .padding(5)
         .rotate(function () { return ~~(Math.random() * 2) * 90; })
         .font("Impact")
@@ -55,7 +55,6 @@ function runMe() {
     }
 }
 
-
 function createAlert() {
     alert("Hey this is an alert!");
 }
@@ -70,4 +69,11 @@ function setElementTextById(id, text) {
 
 function focusOnElement(element) {
     element.focus();
+}
+
+function toggle(source) {
+    checkboxes = document.getElementsByName('row');
+    for (var i = 0, n = checkboxes.length; i < n; i++) {
+        checkboxes[i].checked = source.checked;
+    }
 }

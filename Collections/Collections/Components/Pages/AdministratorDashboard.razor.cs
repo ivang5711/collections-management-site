@@ -1,7 +1,7 @@
 using Collections.Data;
 using Collections.Models;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.JSInterop;
+
 
 namespace Collections.Components.Pages;
 
@@ -27,7 +27,7 @@ public partial class AdministratorDashboard
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         var us = Task.Run(() =>
             _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
         var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;

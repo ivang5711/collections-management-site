@@ -1,31 +1,31 @@
 ﻿@page "/item-details/{id:int}"
 
-@if (itemDetails is null)
+@if (_itemDetails is null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <PageTitle>@itemDetails.Name</PageTitle>
+    <PageTitle>@_itemDetails.Name</PageTitle>
     <!--Page banner-->
-    <div class="hero-bg" style="@($"--bg-img: url({itemDetails.ImageLink})")">
+    <div class="hero-bg" style="@($"--bg-img: url({_itemDetails.ImageLink})")">
         <div class="hero-container">
             <div class="container-xxl d-flex flex-column flex-md-row">
                 <!--Item content here-->
                 <div class="flex-grow-1 d-flex align-items-center
                     justify-content-center justify-content-md-end">
                     <div class="title-container text-center text-md-end">
-                        <h1 class="text-light">@itemDetails.Name</h1>
-                        <h2 class="text-black">@itemDetails.Author</h2>
-                        @if (itemDetails.Likes?.Keys.Count == 0)
+                        <h1 class="text-light">@_itemDetails.Name</h1>
+                        <h2 class="text-black">@_itemDetails.Author</h2>
+                        @if (_itemDetails.Likes?.Keys.Count == 0)
                         {
                             <span class="badge me-2 text-bg-light">
                                 No likes so far...
                             </span>
                         }
                         @{
-                            var runtime = itemDetails.Collection;
-                            var rating = itemDetails.Likes!.Keys.Count;
+                            var runtime = _itemDetails.Collection;
+                            var rating = _itemDetails.Likes!.Keys.Count;
                         }
                         <span class="badge me-2 text-bg-dark">@runtime</span>
                         <span class="badge me-2 text-bg-success">
@@ -34,10 +34,10 @@ else
                         <div class="item-links">
                             <div class="d-flex justify-content-center
                                 justify-content-md-end p-3">
-                                @if (!string.IsNullOrEmpty(itemDetails.ImageLink))
+                                @if (!string.IsNullOrEmpty(_itemDetails.ImageLink))
                                 {
                                     <div class="text-center px-2">
-                                        <a href="@itemDetails.ImageLink"
+                                        <a href="@_itemDetails.ImageLink"
                                            target="_blank" class="btn
                                             btn-outline-light rounded-pill">
                                             Website
@@ -51,14 +51,14 @@ else
                 <div class="order-last order-md-first d-flex
                     justify-content-center">
                     <div class="poster-container">
-                        @if (string.IsNullOrEmpty(itemDetails.ImageLink))
+                        @if (string.IsNullOrEmpty(_itemDetails.ImageLink))
                         {
                             <img src="https://th.bing.com/th/id/OIG.gq_uOPPdJc81e_v0XAei"
                                  alt="item poster" />
                         }
                         else
                         {
-                            <img src="@itemDetails.ImageLink"
+                            <img src="@_itemDetails.ImageLink"
                                  alt="item poster" />
                         }
                     </div>
@@ -68,21 +68,17 @@ else
     </div>
     <div class="container-xxl">
         <div class="overview d-flex flex-column">
-            <p>@itemDetails.Author</p>
-
-
+            <p>@_itemDetails.Author</p>
         </div>
-
         <AuthorizeView>
             <div class="comment-overview d-flex flex-column flex-lg-col
                         justify-content-between my-3">
-                @if (itemDetails.TagIds.Any())
+                @if (_itemDetails.TagIds.Any())
                 {
                     <div class="comment-container pb-3">
-
-                        @if (itemsBunch is not null)
+                        @if (_itemsBunch is not null)
                         {
-                            @foreach (Comment item in comments)
+                            @foreach (Comment item in _comments)
                             {
                                 <div class="row row-cols-8 row-cols-lg-8
                                             row-cols-x1-5 g-3
@@ -94,14 +90,13 @@ else
                             <div class="row row-cols-8 row-cols-lg-8
                                         row-cols-x1-5 g-3
                                         justify-content-center my-1">
-
                                 <div class="card h-100 fade-in"
                                      style="max-height: 100%; max-width: 95%;">
                                     <div class="card-body border-top bg-light">
                                         <textarea class="form-control"
-                                            placeholder="Enter your comment..."
-                                            aria-label="With textarea">
-                                        </textarea>
+                                                  placeholder="Enter your comment..."
+                                                  aria-label="With textarea">
+                                                    </textarea>
                                     </div>
                                     <div class="card-footer text-end">
                                         <a class="btn btn-primary" href="/">
@@ -109,7 +104,6 @@ else
                                         </a>
                                     </div>
                                 </div>
-
                             </div>
                         }
                         else
@@ -126,35 +120,4 @@ else
             </div>
         </AuthorizeView>
     </div>
-}
-
-@code {
-    [Parameter]
-    public int Id { get; set; }
-    private Item? itemDetails;
-    private List<Item>? itemsBunch;
-    private List<Comment>? comments = [];
-
-    public Item CreateData()
-    {
-        DataGenerator dg = new("en");
-        itemsBunch = dg.GenerateItems(500, 123);
-        var t = itemsBunch.Where((x) => x.Id == Id).First();
-        List<Comment> temp = dg.GenerateComments(500, 123);
-        foreach (var item in temp)
-        {
-            if (t.CommentsIds!.Contains(item.Id))
-            {
-                comments!.Add(item);
-            }
-        }
-
-        return itemsBunch.Where((x) => x.Id == Id).First();
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        CreateData();
-        itemDetails = await Task.Run(() => CreateData());
-    }
 }

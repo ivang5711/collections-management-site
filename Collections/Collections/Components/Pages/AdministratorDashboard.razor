@@ -9,6 +9,7 @@
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager _navigationManager
 @rendermode @(new InteractiveServerRenderMode(false))
+@inject IJSRuntime JsRuntime
 @attribute [Authorize(Roles = "Admin")]
 
 <AuthorizeView Roles="Admin">
@@ -67,9 +68,18 @@
                                 <th scope="col">
                                     <div class="form-check">
 
-                                        <input type="checkbox" value="test"
-                                               checked="@Ticked"
-                                               @onchange="SelectAll" />
+
+                                        <input class="form-check-input text-body"
+                                        type="checkbox" onClick="toggle(this)"
+                                               @ref="InputToToggle"
+                                        @onchange="SelectAll"
+                                        value="" id="flexCheckDefault">
+                                        <label class="form-check-label"
+                                               for="flexCheckDefault">
+                                        </label>
+
+
+
                                     </div>
                                 </th>
                                 <th scope="col">Id</th>
@@ -214,13 +224,5 @@
                 <AntiforgeryToken />
             </form>
         </div>
-        <script>
-            function toggle(source) {
-                checkboxes = document.getElementsByName('row');
-                for (var i = 0, n = checkboxes.length; i < n; i++) {
-                    checkboxes[i].checked = source.checked;
-                }
-            }
-        </script>
     }
 </AuthorizeView>

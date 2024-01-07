@@ -1,5 +1,6 @@
 using Collections.Data;
 using Collections.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
 
@@ -19,11 +20,18 @@ public partial class AdministratorDashboard
     private const string claimTypeRegistrationDateTime =
         "RegistrationDateTime";
 
+    ElementReference InputToToggle;
+
     private bool DeleteRequested { get; set; } = false;
     private bool CheckAll { get; set; } = false;
     private List<ApplicationUser> Users { get; set; } = [];
     private bool Ticked { get; set; } = false;
     private List<ViewUser> ViewUsers { get; set; } = [];
+
+    async Task ToggleMe()
+    {
+        await JsRuntime.InvokeVoidAsync("toggleIt", InputToToggle);
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -176,8 +184,13 @@ public partial class AdministratorDashboard
             }
 
             ViewUsers.Add(viewUser);
+
+            if (CheckAll)
+            {
+                CheckAll = !CheckAll;
+                _ = ToggleMe();
+            }
         }
-        Ticked = false;
     }
 
     private void CloseModal()

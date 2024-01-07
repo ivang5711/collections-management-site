@@ -6,10 +6,6 @@
 <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
 <script type="text/javascript" src="https://cdn.rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js"></script>
 
-<div class="h-50 w-50 d-flex align-items-center justify-content-center">
-    <div id="world-cloud"></div>
-</div>
-
 <h1>JS Interop</h1>
 
 <h3>Create alert</h3>
@@ -33,9 +29,22 @@
 
 <button class="btn btn-danger" @onclick="Focus">Focus!</button>
 
+<br />
+
+<input type="checkbox" @ref="InputToToggle" />
+
+<button class="btn btn-danger" @onclick="ToggleMe">Focus!</button>
+
+
 @code {
     string questionText = string.Empty;
     ElementReference InputToFocus;
+    ElementReference InputToToggle;
+
+    async Task ToggleMe()
+    {
+        await JsRuntime.InvokeVoidAsync("toggleIt", InputToToggle);
+    }
 
     async Task Focus()
     {

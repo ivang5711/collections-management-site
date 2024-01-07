@@ -70,10 +70,19 @@ function setElementTextById(id, text) {
 function focusOnElement(element) {
     element.focus();
 }
-
-function toggle(source) {
-    checkboxes = document.getElementsByName('row');
-    for (var i = 0, n = checkboxes.length; i < n; i++) {
-        checkboxes[i].checked = source.checked;
+function toggleIt(element) {
+    element.focus();
+    if (element.checked) {
+        element.checked = false;
+    }
+    else {
+        element.checked = true;
     }
 }
+
+//function toggle(source) {
+//    checkboxes = document.getElementsByName('row');
+//    for (var i = 0, n = checkboxes.length; i < n; i++) {
+//        checkboxes[i].checked = source.checked;
+//    }
+//}

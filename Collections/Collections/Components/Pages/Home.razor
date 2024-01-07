@@ -11,7 +11,7 @@
 <div class="container-xxl py-3">
     <div class="d-flex flex-column flex-md-row justify-content-center my-3">
         <WelcomeText />
-        <WordCloud WordsImport="wordsToShow"/>
+        <WordCloud WordsImport="WordsToShow" />
     </div>
     <div>
         <h1 class="display-6">
@@ -78,68 +78,3 @@
         </div>
     </div>
 </div>
-
-@code {
-    private List<Collection>? collections;
-    private List<Item>? items;
-    private List<Tag>? tagsGenerated;
-    private List<string> wordsToShow { get; set; } = [
-        "Books",
-        "Cars",
-        "Music",
-        "Motorcycles",
-        "Computer games",
-        "Paintings",
-        "Food",
-        "Travel"
-    ];
-
-    public List<Collection> CreateData()
-    {
-        DataGenerator fakeCollections = new("en");
-        int seed = 123;
-        return fakeCollections.GenerateCollection(5, seed);
-    }
-
-    public List<Item> CreateItems()
-    {
-        DataGenerator fakeItems = new("en");
-        return fakeItems.GenerateItems(5, 558769);
-    }
-
-    public List<Tag> CreateTags()
-    {
-        DataGenerator fakeTags = new("en");
-        return fakeTags.GenerateTags(10, 321);
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        string roleBlocked = "Blocked";
-        var authenticationState = Task.Run(() =>
-            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        var currentUser = Task.Run(() =>
-            _UserManager.GetUserAsync(authenticationState.User)).Result;
-        if (currentUser is not null)
-        {
-            var userInRoleBlocked = Task.Run(() =>
-                _UserManager.IsInRoleAsync(currentUser, roleBlocked)).Result;
-            var userIsBlocked = currentUser.LockoutEnd is not null;
-            if (userInRoleBlocked || userIsBlocked)
-            {
-                await _SignInManager.SignOutAsync();
-                _navigationManager.NavigateTo("/Account/Login");
-                Console.WriteLine("Not Admin!");
-            }
-        }
-
-        collections = await Task.Run(() => CreateData());
-        items = await Task.Run(() => CreateItems());
-        tagsGenerated = await Task.Run(() => CreateTags());
-        wordsToShow.Clear();
-        foreach (var tag in tagsGenerated)
-        {
-            wordsToShow.Add(tag.Name);
-        }
-    }
-}

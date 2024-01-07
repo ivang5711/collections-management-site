@@ -1,12 +1,24 @@
-﻿function runMe() {
+﻿let words2 = [
+    "man",
+    "woman",
+    "dog",
+    "cat",
+    "bird",
+    "snake",
+    "rain",
+    "earth"
+];
+
+function setWords(words) {
+    words2 = words;
+}
+
+function runMe() {
     var fill = d3.scale.category20();
 
     var layout = d3.layout.cloud()
         .size([500, 250])
-        .words([
-            "Hello", "world", "normally", "you", "want", "more", "words",
-            "than", "this", "Hello", "world", "normally", "you", "want", "more", "words",
-            "than", "this"].map(function (d) {
+        .words(words2.map(function (d) {
                 return { text: d, size: 10 + Math.random() * 90, test: "haha" };
             }))
         .padding(5)

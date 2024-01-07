@@ -83,6 +83,15 @@ public class DataGenerator(string locale)
             u.IsAdmin = f.Random.Bool();
         });
 
+    private readonly Faker<Tag> tagFake =
+        new Faker<Tag>(locale)
+        .StrictMode(false)
+        .Rules((f, u) =>
+        {
+            u.Id = f.IndexFaker + 1;
+            u.Name = f.Lorem.Word();
+        });
+
     public List<Collection> GenerateCollection(int amount, int seed)
     {
         return collectionFake.UseSeed(seed).Generate(amount);
@@ -106,5 +115,9 @@ public class DataGenerator(string locale)
     public List<PersonModel> GenerateUsers(int amount, int seed)
     {
         return userFake.UseSeed(seed).Generate(amount);
+    }
+    public List<Tag> GenerateTags(int amount, int seed)
+    {
+        return tagFake.UseSeed(seed).Generate(amount);
     }
 }

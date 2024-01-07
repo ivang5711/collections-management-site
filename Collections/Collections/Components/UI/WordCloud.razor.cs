@@ -10,7 +10,6 @@ public partial class WordCloud
 
     protected override void OnAfterRender(bool firstRender)
     {
-        
 
         if (firstRender)
         {

@@ -35,7 +35,6 @@ public partial class AdministratorDashboard
 
     protected override async Task OnInitializedAsync()
     {
-
         var us = Task.Run(() =>
             _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
         var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;
@@ -54,7 +53,6 @@ public partial class AdministratorDashboard
             _navigationManager.NavigateTo("/Account/Login");
         }
 
-        string roleBlocked = "Blocked";
         var authenticationState = Task.Run(() =>
             _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
         var currentUser = Task.Run(() =>
@@ -106,6 +104,7 @@ public partial class AdministratorDashboard
 
             ViewUsers.Add(viewUser);
         }
+
     }
 
     private void GetUsers()
@@ -114,40 +113,8 @@ public partial class AdministratorDashboard
         Users.AddRange(_UserManager.Users.AsEnumerable());
     }
 
-    private void Submit()
+    private async Task Submit()
     {
-
-        //var us = Task.Run(() =>
-        //    _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        //var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;
-        //var ew = Task.Run(() =>
-        //    _UserManager.IsInRoleAsync(tryy, roleAdmin)).Result;
-        //var io = tryy.LockoutEnd is not null;
-        //if (!ew || io)
-        //{
-        //    _ = Task.Run(() => _SignInManager.SignOutAsync());
-        //    _navigationManager.NavigateTo("/Account/Login");
-        //    Console.WriteLine("Not Admin!");
-        //}
-
-        //string roleBlocked = "Blocked";
-        //var authenticationState = Task.Run(() =>
-        //    _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        //var currentUser = Task.Run(() =>
-        //    _UserManager.GetUserAsync(authenticationState.User)).Result;
-        //if (currentUser is not null)
-        //{
-        //    var userInRoleBlocked = Task.Run(() =>
-        //        _UserManager.IsInRoleAsync(currentUser, roleBlocked)).Result;
-        //    var userIsBlocked = currentUser.LockoutEnd is not null;
-        //    if (userInRoleBlocked || userIsBlocked)
-        //    {
-        //        _ = Task.Run(() => _SignInManager.SignOutAsync());
-        //        _navigationManager.NavigateTo("/Account/Login");
-        //        Console.WriteLine("Not Admin!");
-        //    }
-        //}
-
         GetUsers();
         int i = 0;
         ViewUsers.Clear();
@@ -184,12 +151,12 @@ public partial class AdministratorDashboard
             }
 
             ViewUsers.Add(viewUser);
+        }
 
-            if (CheckAll)
-            {
-                CheckAll = !CheckAll;
-                _ = ToggleMe();
-            }
+        if (CheckAll)
+        {
+            CheckAll = !CheckAll;
+            await ToggleMe();
         }
     }
 

@@ -28,7 +28,7 @@ public class Item
         LikesTotal = Likes?.Keys.Count > 0 ? Likes!.Keys.Count : 0;
     }
 
-    public int Id { get; set; }
+    public required int Id { get; set; }
 
     public string Name { get; set; }
 

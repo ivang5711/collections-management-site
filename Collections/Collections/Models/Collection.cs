@@ -5,7 +5,7 @@ public class Collection
     public Collection()
     {
         Id = 0;
-        ItemsIds = null;
+        ItemsIds = [];
         TotalItems = 0;
         Name = string.Empty;
         Description = string.Empty;
@@ -26,7 +26,7 @@ public class Collection
     }
 
     public int Id { get; set; }
-    public List<int>? ItemsIds { get; set; }
+    public List<int> ItemsIds { get; set; }
 
     public int TotalItems { get; set; }
 

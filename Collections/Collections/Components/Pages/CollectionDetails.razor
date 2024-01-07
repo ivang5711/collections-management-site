@@ -2,7 +2,7 @@
 @using Components.TestData
 
 <PageTitle>Collection details</PageTitle>
-@if (Collection is null)
+@if (collection is null)
 {
     <p><em>Loading...</em></p>
 }
@@ -14,7 +14,7 @@ else
                 <span class="text-danger">
                     <i class="bi bi-fire"></i>
                 </span>
-                @Collection.Name
+                @collection.Name
             </h1>
         </div>
         <div class="d-flex flex-column flex-md-row
@@ -44,34 +44,3 @@ else
     </div>
 }
 
-@code {
-    [Parameter]
-    public int Id { get; set; }
-
-    public Collection? Collection { get; set; }
-    public List<Item>? itemsBunch;
-
-    public List<Item> CreateData()
-    {
-        DataGenerator dg = new("en");
-        List<Collection> Collections = dg.GenerateCollection(5, 123);
-        Collection = Collections.Where((x) => x.Id == Id).First();
-        List<Item> temp = dg.GenerateItems(500, 123);
-        List<Item> res = [];
-        foreach (var item in temp)
-        {
-            if (Collection.ItemsIds.Contains(item.Id))
-            {
-                res.Add(item);
-            }
-        }
-
-        return res;
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        CreateData();
-        itemsBunch = await Task.Run(() => CreateData());
-    }
-}

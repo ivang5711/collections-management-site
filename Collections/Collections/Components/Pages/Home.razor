@@ -82,6 +82,7 @@
 @code {
     private List<Collection>? collections;
     private List<Item>? items;
+    private List<Tag>? tagsGenerated;
     private List<string> wordsToShow { get; set; } = [
         "Books",
         "Cars",
@@ -106,6 +107,12 @@
         return fakeItems.GenerateItems(5, 558769);
     }
 
+    public List<Tag> CreateTags()
+    {
+        DataGenerator fakeTags = new("en");
+        return fakeTags.GenerateTags(10, 321);
+    }
+
     protected override async Task OnInitializedAsync()
     {
         string roleBlocked = "Blocked";
@@ -128,5 +135,11 @@
 
         collections = await Task.Run(() => CreateData());
         items = await Task.Run(() => CreateItems());
+        tagsGenerated = await Task.Run(() => CreateTags());
+        wordsToShow.Clear();
+        foreach (var tag in tagsGenerated)
+        {
+            wordsToShow.Add(tag.Name);
+        }
     }
 }

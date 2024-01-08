@@ -34,12 +34,16 @@
 <input type="checkbox" @ref="InputToToggle" />
 
 <button class="btn btn-danger" @onclick="ToggleMe">Focus!</button>
+<div>
+    <button class="btn btn-success" style="opacity: 0" @ref="InputToFade">fade me</button>
+</div>
 
 
 @code {
     string questionText = string.Empty;
     ElementReference InputToFocus;
     ElementReference InputToToggle;
+    ElementReference InputToFade;
 
     async Task ToggleMe()
     {
@@ -49,6 +53,12 @@
     async Task Focus()
     {
         await JsRuntime.InvokeVoidAsync("focusOnElement", InputToFocus);
+    }
+
+    async Task Fade()
+    {
+        await JsRuntime.InvokeVoidAsync("unfade", InputToFade);
+
     }
 
     async Task AskQuestion()
@@ -69,6 +79,7 @@
         if (firstRender)
         {
             JsRuntime.InvokeVoidAsync("runMe");
+            _ = Fade();
         }
     }
 

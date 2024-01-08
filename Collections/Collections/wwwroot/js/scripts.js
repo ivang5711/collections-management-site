@@ -42,6 +42,7 @@ function runMe() {
             .enter().append("text")
             .style("font-size", function (d) { return d.size + "px"; })
             .style("font-family", "Impact")
+            .style("background-color", "red")
             .style("fill", function (d, i) { return fill(i); })
             .attr("text-anchor", "middle")
             .attr("transform", function (d) {
@@ -49,9 +50,9 @@ function runMe() {
             })
             .text(function (d) { return d.text; })
             .on("click", function (d, i) {
-                window.open(urlMy += d.text)
+                window.open(urlMy += d.text);
             })
-            ;
+            .start();
     }
 }
 
@@ -78,4 +79,17 @@ function toggleIt(element) {
     else {
         element.checked = true;
     }
+}
+
+function unfade(element) {
+    let op = 0.1;  // initial opacity
+    element.style.display = 'block';
+    let timer = setInterval(function () {
+        if (op >= 1) {
+            clearInterval(timer);
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op += op * 0.1;
+    }, 10);
 }

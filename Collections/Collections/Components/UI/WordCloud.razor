@@ -3,6 +3,14 @@
 
 <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
 <script type="text/javascript" src="https://cdn.rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js"></script>
+<style>
+    text:hover {
+        opacity: .75;
+        border: solid;
+        border-width: 5px;
+        
+    }
+</style>
 <div class="h-100 w-100 d-flex align-items-center justify-content-center">
-    <div id="world-cloud"></div>
+    <div style="opacity: 0" @ref="InputToFade" type="text" role="button" id="world-cloud"></div>
 </div>

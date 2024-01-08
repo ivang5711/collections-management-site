@@ -29,25 +29,25 @@
             <form method="post" @onsubmit="Submit" @formname="starship-plain-form">
                 <div class="d-flex justify-content-start m-0 row col-md
                         row-cols-md-auto gap-1">
-                    <button @onclick="BlockUser"
+                    <button @onclick="SubmitBlockUser"
                             class="btn btn-outline-dark btn-sm text-nowrap"
                             asp-formaction="Block" name="Block"
                             type="submit" value="true">
                         <i class="bi bi-lock-fill"></i> Block
                     </button>
-                    <button @onclick="UnblockUser"
+                    <button @onclick="SubmitUnblockUser"
                             class="btn btn-outline-dark btn-sm text-nowrap"
                             asp-formaction="Unblock"
                             name="Unblock" type="submit" value="true">
                         <i class="bi bi-unlock-fill"></i> Unblock
                     </button>
-                    <button @onclick="AddUserToAdmins"
+                    <button @onclick="SubmitAddToAdmins"
                             class="btn btn-outline-dark btn-sm text-nowrap"
                             asp-formaction="AddToAdmins"
                             name="AddToAdmins" type="submit" value="true">
                         <i class="bi bi-person-fill-add"></i> Add to admins
                     </button>
-                    <button @onclick="RemoveUserFromAdmins"
+                    <button @onclick="SubmitRemoveFromAdmins"
                             class="btn btn-outline-dark btn-sm text-nowrap"
                             asp-formaction="RemoveFromAdmins"
                             name="RemoveFromAdmins" type="submit" value="true">
@@ -56,7 +56,7 @@
                     <button @onclick="RequestDelete"
                             class="btn btn-danger btn-sm text-nowrap"
                             asp-formaction="Delete" name="Delete"
-                            type="button" value="true">
+                            type="submit" value="true">
                         <i class="bi bi-trash3-fill"></i>
                     </button>
                 </div>
@@ -69,8 +69,8 @@
                                     <div class="form-check">
                                         <input type="checkbox" onClick="toggle(this)"
                                                @ref="InputToToggle"
-                                        @onchange="SelectAll"
-                                        value="" id="flexCheckDefault">
+                                               @onchange="SelectAll"
+                                               value="" id="flexCheckDefault">
                                     </div>
                                 </th>
                                 <th scope="col">Id</th>
@@ -204,7 +204,7 @@
                                     </button>
                                     <button type="submit"
                                             class="btn btn-outline-danger"
-                                            @onclick="AcceptDelete">
+                                            @onclick="SetLoadingOnDelete">
                                         Delete
                                     </button>
                                 </div>
@@ -216,24 +216,15 @@
                 {
                     <div class="modal modal-backdrop" tabindex="-1"
                          style="display:block" role="dialog">
-                        <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-dialog modal-sm modal-dialog-centered">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Confirm deletion</h5>
-                                    <button type="button" class="btn-close"
-                                            @onclick="CloseModal"
-                                            data-bs-dismiss="modal"
-                                            aria-label="Close">
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="spinner-border" role="status">
-                                        <span class="visually-hidden">Loading...</span>
+                                <div class="d-flex modal-body align-items-center justify-content-center">
+                                    <div class="d-flex align-items-center">
+                                        <strong class="pe-2">Loading...</strong>
+                                        <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    
-                                </div>
+
                             </div>
                         </div>
                     </div>

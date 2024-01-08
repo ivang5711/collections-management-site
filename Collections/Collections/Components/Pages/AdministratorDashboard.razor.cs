@@ -114,10 +114,56 @@ public partial class AdministratorDashboard
         Users.AddRange(_UserManager.Users.AsEnumerable());
     }
 
+    public void SubmitBlockUser()
+    {
+        SubmitRequested = true;
+        BlockUser();
+    }
+
+    public void SubmitUnblockUser()
+    {
+        SubmitRequested = true;
+        UnblockUser();
+    }
+
+    public void SubmitAddToAdmins()
+    {
+        SubmitRequested = true;
+        AddUserToAdmins();
+    }
+
+    public void SubmitRemoveFromAdmins()    
+    {
+        SubmitRequested = true;
+        RemoveUserFromAdmins();
+    }
+
+    private void SubmitDeleteUser()
+    {
+        DeleteRequested = false;
+        SubmitRequested = true;
+        DeleteUser();
+    }
+
+    private void SetLoadingOnDelete()
+    {
+        DeleteRequested = false;
+        SubmitRequested = true;
+    }
+
+    private void RequestDelete()
+    {
+        DeleteRequested = true;
+    }
+
     private async Task Submit()
     {
+        if (DeleteRequested)
+        {
+            SubmitDeleteUser();
+        }
+
         ViewUsers.Clear();
-        //SubmitRequested = true;
         GetUsers();
         int i = 0;
         foreach (var user in Users)
@@ -153,7 +199,7 @@ public partial class AdministratorDashboard
             }
 
             ViewUsers.Add(viewUser);
-            //Thread.Sleep(300);
+            Thread.Sleep(300);
         }
 
         if (CheckAll)
@@ -161,6 +207,8 @@ public partial class AdministratorDashboard
             CheckAll = !CheckAll;
             await ToggleMe();
         }
+
+        SubmitRequested = false;
     }
 
     private void CloseModal()
@@ -203,7 +251,7 @@ public partial class AdministratorDashboard
             BlockAUser(item);
         }
 
-        RefreshPage();
+        //RefreshPage();
     }
 
     private void BlockAUser(ApplicationUser user)
@@ -305,16 +353,9 @@ public partial class AdministratorDashboard
         }
     }
 
-    private void RequestDelete()
-    {
-        DeleteRequested = true;
-    }
 
-    private void AcceptDelete()
-    {
-        DeleteRequested = false;
-        DeleteUser();
-    }
+
+
 
     private void DeleteUser()
     {
@@ -330,11 +371,12 @@ public partial class AdministratorDashboard
             DeleteAUser(item);
         }
 
-        RefreshPage();
+        //RefreshPage();
     }
 
     private void DeleteAUser(ApplicationUser user)
     {
         _ = Task.Run(() => _UserManager.DeleteAsync(user)).Result;
+        Thread.Sleep(1000);
     }
 }

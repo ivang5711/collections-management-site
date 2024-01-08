@@ -118,68 +118,31 @@ public partial class AdministratorDashboard
     {
         ViewUsers.Clear();
         //SubmitRequested = true;
-        //GetUsers();
+        GetUsers();
         int i = 0;
-        //foreach (var user in Users)
-        //{
-        //    var t = user.LockoutEnd;
-        //    _UserManager.SetLockoutEndDateAsync(user, t).Wait();
-        //    ViewUser viewUser = new();
-        //    viewUser.Id = ++i;
-        //    viewUser.Name = user.UserName ?? "no name provided";
-        //    viewUser.Email = user.Email ?? "no Email provided";
-        //    viewUser.LastLoginDate = user.LastLoginDate.ToString();
-        //    viewUser.RegistrationDate = user.RegistrationDate.ToString();
-        //    string viewRole = string.Empty;
-        //    if (Task.Run(() =>
-        //        _UserManager.IsInRoleAsync(user, roleAdmin)).Result)
-        //    {
-        //        viewRole = roleAdmin;
-        //    }
-        //    else if (Task.Run(() =>
-        //        _UserManager.IsInRoleAsync(user, roleMember)).Result)
-        //    {
-        //        viewRole = roleMember;
-        //    }
-
-        //    viewUser.Role = viewRole;
-        //    if (user.LockoutEnd is null)
-        //    {
-        //        viewUser.Status = roleMemberMessage;
-        //    }
-        //    else
-        //    {
-        //        viewUser.Status = roleLockedMessage;
-        //    }
-
-        //    ViewUsers.Add(viewUser);
-        //    //Thread.Sleep(300);
-        //}
-
-        foreach (var user in _UserManager.Users)
+        foreach (var user in Users)
         {
             var t = user.LockoutEnd;
             _UserManager.SetLockoutEndDateAsync(user, t).Wait();
-            ViewUser viewUser = new()
-            {
-                Id = ++i,
-                Name = user.UserName ?? "no name provided",
-                Email = user.Email ?? "no Email provided",
-                LastLoginDate = user.LastLoginDate.ToString(),
-                RegistrationDate = user.RegistrationDate.ToString()
-            };
+            ViewUser viewUser = new();
+            viewUser.Id = ++i;
+            viewUser.Name = user.UserName ?? "no name provided";
+            viewUser.Email = user.Email ?? "no Email provided";
+            viewUser.LastLoginDate = user.LastLoginDate.ToString();
+            viewUser.RegistrationDate = user.RegistrationDate.ToString();
+            string viewRole = string.Empty;
             if (Task.Run(() =>
                 _UserManager.IsInRoleAsync(user, roleAdmin)).Result)
             {
-                viewUser.Role = roleAdmin;
+                viewRole = roleAdmin;
             }
             else if (Task.Run(() =>
                 _UserManager.IsInRoleAsync(user, roleMember)).Result)
             {
-                viewUser.Role = roleMember;
+                viewRole = roleMember;
             }
 
-            
+            viewUser.Role = viewRole;
             if (user.LockoutEnd is null)
             {
                 viewUser.Status = roleMemberMessage;
@@ -190,6 +153,7 @@ public partial class AdministratorDashboard
             }
 
             ViewUsers.Add(viewUser);
+            //Thread.Sleep(300);
         }
 
         if (CheckAll)
@@ -366,12 +330,11 @@ public partial class AdministratorDashboard
             DeleteAUser(item);
         }
 
-        _ = Submit();
+        RefreshPage();
     }
 
     private void DeleteAUser(ApplicationUser user)
     {
         _ = Task.Run(() => _UserManager.DeleteAsync(user)).Result;
-
     }
 }

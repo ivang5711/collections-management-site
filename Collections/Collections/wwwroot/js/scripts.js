@@ -14,10 +14,10 @@ function setWords(words) {
 }
 
 function runMe() {
-    var fill = d3.scale.category20();
+    let fill = d3.scale.category20();
 
-    var layout = d3.layout.cloud()
-        .size([500, 250])
+    let layout = d3.layout.cloud()
+        .size([300, 200])
         .words(words2.map(function (d) {
             return { text: d, size: 10 + Math.random() * 90, test: "haha" };
         }))

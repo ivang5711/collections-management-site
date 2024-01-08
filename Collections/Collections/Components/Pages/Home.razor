@@ -8,6 +8,8 @@
 @inject NavigationManager _navigationManager
 
 <PageTitle>Collections home page</PageTitle>
+
+@*
 <div class="container-xxl py-3">
     <div class="d-flex flex-column flex-md-row justify-content-center my-3">
         <WelcomeText />
@@ -21,6 +23,7 @@
             Recently added items
         </h1>
     </div>
+
     <div class="d-flex flex-column flex-md-row justify-content-between my-3">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5
                     row-cols-xl-5 g-3 justify-content-center">
@@ -45,6 +48,9 @@
 
         </div>
     </div>
+
+
+
     <div>
         <h1 class="display-6">
             <span class="text-danger">
@@ -53,6 +59,8 @@
             Top 5 Collections
         </h1>
     </div>
+
+
     <div class="d-flex flex-column flex-md-row justify-content-between my-3">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5
                     row-cols-xl-5 g-3 justify-content-center">
@@ -76,6 +84,189 @@
             }
 
         </div>
+    </div>
+
+</div>
+ *@
+
+
+<div class="container-xxl py-3 text-between bg-body-secondary ">
+    <div class="row align-items-start row-cols-1 row-cols-md-2 ">
+        <div class="col-md-9 order-md-first order-last ">
+            <table class="table table-sm caption-top table-hover table-striped table-bordered
+                              rounded-2 overflow-hidden">
+                <caption><h5>Top 5 collections</h5></caption>
+                <thead class="table-secondary">
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">(item.Id)</th>
+                        <td>item.Name</td>
+                        <td>item.Email</td>
+                        <td class="text-start">
+                            Admin
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">(item.Id)</th>
+                        <td>item.Name</td>
+                        <td>item.Email</td>
+                        <td class="text-start">
+                            Admin
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">(item.Id)</th>
+                        <td>item.Name</td>
+                        <td>item.Email</td>
+                        <td class="text-start">
+                            Admin
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">(item.Id)</th>
+                        <td>item.Name</td>
+                        <td>item.Email</td>
+                        <td class="text-start">
+                            Admin
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">(item.Id)</th>
+                        <td>item.Name</td>
+                        <td>item.Email</td>
+                        <td class="text-start">
+                            Admin
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex col-md-3 order-first order-md-first text-start align-items-center my-auto">
+            <div class="justify-content-center align-items-center my-auto  ">
+
+                <div class="card" style="width: auto;">
+                    <div class="card-body">
+                        <h5 class="card-title">Welcome to the Collections!</h5>
+                        <p class="card-text">
+                            Here you can enjoy your digital collection, levae comments, collect expressions and likes.
+                            <br />
+                            Moreover, on the Collections website you have access to many collections from all around the planet
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <div class="col-md-9 ">
+            <table class="table table-sm caption-top table-hover table-striped table-bordered
+                              rounded-2 overflow-hidden">
+                <caption><h5>Top 5 collections</h5></caption>
+                <thead class="table-secondary">
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">(item.Id)</th>
+                        <td>item.Name</td>
+                        <td>item.Email</td>
+                        <td class="text-start">
+                            Admin
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">(item.Id)</th>
+                        <td>item.Name</td>
+                        <td>item.Email</td>
+                        <td class="text-start">
+                            Admin
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">(item.Id)</th>
+                        <td>item.Name</td>
+                        <td>item.Email</td>
+                        <td class="text-start">
+                            Admin
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">(item.Id)</th>
+                        <td>item.Name</td>
+                        <td>item.Email</td>
+                        <td class="text-start">
+                            Admin
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">(item.Id)</th>
+                        <td>item.Name</td>
+                        <td>item.Email</td>
+                        <td class="text-start">
+                            Admin
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex col-md-3 text-start align-items-center my-auto">
+      @* 
+            <div class="justify-content-center align-items-center my-auto  ">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="justify-content-center align-items-center my-auto  ">
+                                <WordCloud WordsImport="WordsToShow" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+ *@
+
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <WordCloud WordsImport="WordsToShow" />
+                </div>
+            </div>
+
+
+
+        </div>
+
+        @*
+        <div class="col-md-3 text-center w-100 h-100" style="max-height: 100px; max-width: 100px">
+
+
+
+        <div class="justify-content-center align-items-center my-auto  ">
+        <div class="p-5 m-5" style="width:fit-content; height: fit-content;">
+        <WordCloud WordsImport="WordsToShow" />
+        </div>
+        </div>
+
+        <div class="card" style="width: auto;">
+        <div class="card-body">
+        <h5 class="card-title">Welcome to the Collections!</h5>
+        <p class="card-text">
+        Here you can enjoy your digital collection, levae comments, collect expressions and likes.
+        <br />
+        Moreover, on the Collections website you have access to many collections from all around the planet
+        </p>
+        </div>
+        </div>
+
+        </div>
+
+        *@
+
+
     </div>
 </div>
 

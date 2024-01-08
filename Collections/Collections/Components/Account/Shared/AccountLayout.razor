@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @layout Collections.Components.Layout.MainLayout
 @inject NavigationManager NavigationManager
-
+<div class="container-xxl py-3">
 @if (HttpContext is null)
 {
     <p>Loading...</p>
@@ -10,6 +10,7 @@ else
 {
     @Body
 }
+</div>
 
 @code {
     [CascadingParameter]

@@ -56,7 +56,7 @@
                     <button @onclick="RequestDelete"
                             class="btn btn-danger btn-sm text-nowrap"
                             asp-formaction="Delete" name="Delete"
-                            type="submit" value="true">
+                            type="button" value="true">
                         <i class="bi bi-trash3-fill"></i>
                     </button>
                 </div>
@@ -207,6 +207,32 @@
                                             @onclick="AcceptDelete">
                                         Delete
                                     </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (SubmitRequested)
+                {
+                    <div class="modal modal-backdrop" tabindex="-1"
+                         style="display:block" role="dialog">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Confirm deletion</h5>
+                                    <button type="button" class="btn-close"
+                                            @onclick="CloseModal"
+                                            data-bs-dismiss="modal"
+                                            aria-label="Close">
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    
                                 </div>
                             </div>
                         </div>

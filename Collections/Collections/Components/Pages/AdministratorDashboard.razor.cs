@@ -124,7 +124,11 @@ public partial class AdministratorDashboard
             viewUser.LastLoginDate = user.LastLoginDate.ToString();
             viewUser.RegistrationDate = user.RegistrationDate.ToString();
             string viewRole = string.Empty;
-            if (await _UserManager.IsInRoleAsync(user, roleAdmin))
+            if (await _UserManager.IsInRoleAsync(user, "ToRemove"))
+            {
+                viewRole = "ToRemove";
+            }
+            else if (await _UserManager.IsInRoleAsync(user, roleAdmin))
             {
                 viewRole = roleAdmin;
             }
@@ -217,7 +221,11 @@ public partial class AdministratorDashboard
             viewUser.LastLoginDate = user.LastLoginDate.ToString();
             viewUser.RegistrationDate = user.RegistrationDate.ToString();
             string viewRole = string.Empty;
-            if (Task.Run(() =>
+            if (await _UserManager.IsInRoleAsync(user, "ToRemove"))
+            {
+                viewRole = "ToRemove";
+            }
+            else if (Task.Run(() =>
                 _UserManager.IsInRoleAsync(user, roleAdmin)).Result)
             {
                 viewRole = roleAdmin;

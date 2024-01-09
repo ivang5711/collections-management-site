@@ -90,87 +90,94 @@
                         <tbody>
                             @foreach (var item in ViewUsers)
                             {
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <input type="checkbox" name="row"
-                                                   @bind="@item.IsChecked" />
-                                        </div>
-                                    </td>
-                                    @if (@item.Status == "Blocked")
-                                    {
-                                        <th scope="row"
-                                            class="text-secondary text-opacity-50">
-                                            @(item.Id)
-                                        </th>
-                                        <td class="text-secondary text-opacity-50">
-                                            @item.Name
+                                @if(item.Role == "ToRemove")
+                                {
+                                    
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <input type="checkbox" name="row"
+                                                       @bind="@item.IsChecked" />
+                                            </div>
                                         </td>
-                                        <td class="text-secondary text-opacity-50">
-                                            @item.Email
-                                        </td>
-                                        <td class="text-secondary text-opacity-50
-                                               text-end">
-                                            @item.LastLoginDate
-                                        </td>
-                                        <td class="text-secondary text-opacity-50
-                                               text-end">
-                                            @item.RegistrationDate
-                                        </td>
-
-                                        @if (item.Role == "Admin")
+                                        @if (@item.Status == "Blocked")
                                         {
-                                            <td class="text-secondary
-                                                   text-opacity-50 text-start">
-                                                Admin
+                                            <th scope="row"
+                                                class="text-secondary text-opacity-50">
+                                                @(item.Id)
+                                            </th>
+                                            <td class="text-secondary text-opacity-50">
+                                                @item.Name
                                             </td>
+                                            <td class="text-secondary text-opacity-50">
+                                                @item.Email
+                                            </td>
+                                            <td class="text-secondary text-opacity-50
+                                               text-end">
+                                                @item.LastLoginDate
+                                            </td>
+                                            <td class="text-secondary text-opacity-50
+                                               text-end">
+                                                @item.RegistrationDate
+                                            </td>
+
+                                            @if (item.Role == "Admin")
+                                            {
+                                                <td class="text-secondary
+                                                   text-opacity-50 text-start">
+                                                    Admin
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-secondary
+                                                   text-opacity-50 text-start">
+                                                    Regular User
+                                                </td>
+                                            }
                                         }
                                         else
                                         {
-                                            <td class="text-secondary
-                                                   text-opacity-50 text-start">
-                                                Regular User
+                                            <th scope="row">@(item.Id)</th>
+                                            <td>@item.Name</td>
+                                            <td>@item.Email</td>
+                                            <td class="text-end">
+                                                @item.LastLoginDate
                                             </td>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <th scope="row">@(item.Id)</th>
-                                        <td>@item.Name</td>
-                                        <td>@item.Email</td>
-                                        <td class="text-end">
-                                            @item.LastLoginDate
-                                        </td>
-                                        <td class="text-end">
-                                            @item.RegistrationDate
-                                        </td>
-                                        @if (item.Role == "Admin")
-                                        {
-                                            <td class="text-start">
-                                                Admin
+                                            <td class="text-end">
+                                                @item.RegistrationDate
                                             </td>
+                                            @if (item.Role == "Admin")
+                                            {
+                                                <td class="text-start">
+                                                    Admin
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-start">
+                                                    Regular User
+                                                </td>
+                                            }
                                         }
-                                        else
-                                        {
-                                            <td class="text-start">
-                                                Regular User
-                                            </td>
-                                        }
-                                    }
 
-                                    @if (@item.Status == "Blocked")
-                                    {
-                                        <td class="text-danger text-start">
-                                            Blocked
-                                        </td>
-                                    }
-                                    else if (true == true)
-                                    {
-                                        <td class="text-success text-start">
-                                            Active
-                                        </td>
-                                    }
-                                </tr>
+                                        @if (@item.Status == "Blocked")
+                                        {
+                                            <td class="text-danger text-start">
+                                                Blocked
+                                            </td>
+                                        }
+                                        else if (true == true)
+                                        {
+                                            <td class="text-success text-start">
+                                                Active
+                                            </td>
+                                        }
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>

@@ -46,8 +46,10 @@ public partial class AdministratorDashboard
         {
             bool userInRoleBlocked = Task.Run(() =>
                 _UserManager.IsInRoleAsync(currentUser, roleBlocked)).Result;
+            bool userInRoleAdmin = Task.Run(() =>
+                _UserManager.IsInRoleAsync(currentUser, roleAdmin)).Result;
             bool userIsBlocked = currentUser.LockoutEnd is not null;
-            if (userInRoleBlocked || userIsBlocked)
+            if (userInRoleBlocked || userIsBlocked || !userInRoleAdmin)
             {
                 await _SignInManager.SignOutAsync();
                 _navigationManager.NavigateTo(loginPageURL);
@@ -253,7 +255,7 @@ public partial class AdministratorDashboard
         if (CheckAll)
         {
             CheckAll = !CheckAll;
-            await ToggleMe();
+            //await ToggleMe();
         }
 
         SubmitRequested = false;

@@ -17,10 +17,18 @@
     <PageTitle>Administrator dashboard</PageTitle>
     @if(ViewUsers.Count < 1)
     {
-        <div class="d-flex justify-content-center">
-            <p><em>Loading...</em></p>
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
+        <div class="modal modal-backdrop" tabindex="-1"
+             style="display:block" role="dialog">
+            <div class="modal-dialog modal-sm modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="d-flex modal-body align-items-center justify-content-center">
+                        <div class="d-flex align-items-center">
+                            <strong class="pe-2">Loading...</strong>
+                            <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     }
@@ -182,44 +190,6 @@
                         </tbody>
                     </table>
                 </div>
-                @if (DeleteRequested)
-                {
-                    <div class="modal modal-backdrop" tabindex="-1"
-                         style="display:block" role="dialog">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Confirm deletion</h5>
-                                    <button type="button" class="btn-close"
-                                            @onclick="CloseModal"
-                                            data-bs-dismiss="modal"
-                                            aria-label="Close">
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>
-                                        This operation deletes selected
-                                        users permanently.
-                                    </p>
-                                    <p>Do you want to proceed?</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button"
-                                            class="btn btn-secondary"
-                                            data-bs-dismiss="modal"
-                                            @onclick="CloseModal">
-                                        Cancel
-                                    </button>
-                                    <button type="submit"
-                                            class="btn btn-outline-danger"
-                                            @onclick="SetLoadingOnDelete">
-                                        Delete
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
                 @if (SubmitRequested)
                 {
                     <div class="modal modal-backdrop" tabindex="-1"

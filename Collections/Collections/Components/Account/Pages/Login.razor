@@ -71,6 +71,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var usersBucket = await _UserManager.GetUsersInRoleAsync("ToRemove");
+        foreach(var item in usersBucket)
+        {
+            await _UserManager.DeleteAsync(item);
+        }
+
         if (HttpMethods.IsGet(HttpContext.Request.Method))
         {
             // Clear the existing external cookie to ensure a clean login process
@@ -79,6 +85,12 @@
             var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;
             if (tryy is not null)
             {
+                // if (_UserManager.IsInRoleAsync(tryy, "ToRemove").Result)
+                // {
+                //     _ = Task.Run(() => SignInManager.SignOutAsync());
+                //     _ = _UserManager.DeleteAsync(tryy).Result;
+                // }
+
                 _ = Task.Run(() => SignInManager.SignOutAsync());
                 NavigationManager.NavigateTo("/Account/Login");
             }

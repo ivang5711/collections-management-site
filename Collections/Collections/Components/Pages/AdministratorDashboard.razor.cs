@@ -46,12 +46,14 @@ public partial class AdministratorDashboard
         {
             _ = Task.Run(() => _SignInManager.SignOutAsync());
             _navigationManager.NavigateTo("/Account/Login");
+            return;
         }
 
         if (io)
         {
             _ = Task.Run(() => _SignInManager.SignOutAsync());
             _navigationManager.NavigateTo("/Account/Login");
+            return;
         }
 
         var authenticationState = Task.Run(() =>
@@ -67,7 +69,7 @@ public partial class AdministratorDashboard
             {
                 await _SignInManager.SignOutAsync();
                 _navigationManager.NavigateTo("/Account/Login");
-                Console.WriteLine("Not Admin!");
+                return;
             }
         }
 
@@ -251,7 +253,7 @@ public partial class AdministratorDashboard
             BlockAUser(item);
         }
 
-        //RefreshPage();
+        RefreshPage();
     }
 
     private void BlockAUser(ApplicationUser user)
@@ -269,6 +271,7 @@ public partial class AdministratorDashboard
         {
             _navigationManager.Refresh(true);
             _ = Task.Run(() => _SignInManager.SignOutAsync());
+            return;
         }
     }
 
@@ -350,12 +353,9 @@ public partial class AdministratorDashboard
             _ = Task.Run(() => _SignInManager.SignOutAsync());
             _ = _SignInManager.SignOutAsync();
             _navigationManager.Refresh(true);
+            return;
         }
     }
-
-
-
-
 
     private void DeleteUser()
     {
@@ -370,13 +370,27 @@ public partial class AdministratorDashboard
         {
             DeleteAUser(item);
         }
-
-        //RefreshPage();
     }
 
     private void DeleteAUser(ApplicationUser user)
     {
-        _ = Task.Run(() => _UserManager.DeleteAsync(user)).Result;
-        Thread.Sleep(1000);
+        user.LockoutEnd = DateTime.MaxValue;
+        _ = Task.Run(() => _UserManager
+            .SetLockoutEndDateAsync(user, DateTime.MaxValue)).Result;
+
+        IEnumerable<string> ro = [roleBlocked, "ToRemove"];
+
+        _ = Task.Run(() => _UserManager
+            .AddToRolesAsync(user, ro)).Result;
+
+        var us = Task.Run(() => _AuthenticationStateProvider
+            .GetAuthenticationStateAsync()).Result;
+        var t = us.User;
+        if (user.UserName == t.Identity!.Name)
+        {
+            _navigationManager.NavigateTo("/", true);
+            _ = Task.Run(() => _SignInManager.SignOutAsync());
+            return;
+        }
     }
 }

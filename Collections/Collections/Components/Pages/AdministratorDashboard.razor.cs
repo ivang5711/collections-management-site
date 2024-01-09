@@ -1,6 +1,7 @@
 using Collections.Data;
 using Collections.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 
 
@@ -13,6 +14,7 @@ public partial class AdministratorDashboard
     private const string roleBlocked = "Blocked";
     private const string roleLockedMessage = "Blocked";
     private const string roleMemberMessage = "Active";
+    private const string loginPageURL = "/Account/Login";
 
     private const string dateTimeViewFormatString =
         "HH':'mm':'ss, d MMM, yyyy";
@@ -34,44 +36,80 @@ public partial class AdministratorDashboard
         await JsRuntime.InvokeVoidAsync("toggleIt", InputToToggle);
     }
 
-    protected override async Task OnInitializedAsync()
+    private async Task<bool> CheckAuthorizationLevel()
     {
-        var us = Task.Run(() =>
+        AuthenticationState authenticationState = Task.Run(() =>
             _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;
-        var ew = Task.Run(() =>
-            _UserManager.IsInRoleAsync(tryy, roleAdmin)).Result;
-        var io = tryy.LockoutEnd is not null;
-        if (!ew)
-        {
-            _ = Task.Run(() => _SignInManager.SignOutAsync());
-            _navigationManager.NavigateTo("/Account/Login");
-            return;
-        }
-
-        if (io)
-        {
-            _ = Task.Run(() => _SignInManager.SignOutAsync());
-            _navigationManager.NavigateTo("/Account/Login");
-            return;
-        }
-
-        var authenticationState = Task.Run(() =>
-            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        var currentUser = Task.Run(() =>
+        ApplicationUser? currentUser = Task.Run(() =>
             _UserManager.GetUserAsync(authenticationState.User)).Result;
         if (currentUser is not null)
         {
-            var userInRoleBlocked = Task.Run(() =>
+            bool userInRoleBlocked = Task.Run(() =>
                 _UserManager.IsInRoleAsync(currentUser, roleBlocked)).Result;
-            var userIsBlocked = currentUser.LockoutEnd is not null;
+            bool userIsBlocked = currentUser.LockoutEnd is not null;
             if (userInRoleBlocked || userIsBlocked)
             {
                 await _SignInManager.SignOutAsync();
-                _navigationManager.NavigateTo("/Account/Login");
-                return;
+                _navigationManager.NavigateTo(loginPageURL);
+                return true;
             }
         }
+        else
+        {
+            _navigationManager.NavigateTo("/", true);
+            return true;
+        }
+
+        return false;
+    }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (await CheckAuthorizationLevel())
+        {
+            _navigationManager.NavigateTo("/", true);
+            return;
+        }
+
+        //var us = Task.Run(() =>
+        //    _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
+        //var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;
+        //var ew = Task.Run(() =>
+        //    _UserManager.IsInRoleAsync(tryy, roleAdmin)).Result;
+        //var io = tryy.LockoutEnd is not null;
+        //if (!ew)
+        //{
+        //    _ = Task.Run(() => _SignInManager.SignOutAsync());
+        //    _navigationManager.NavigateTo("/Account/Login");
+        //    return;
+        //}
+
+        //if (io)
+        //{
+        //    _ = Task.Run(() => _SignInManager.SignOutAsync());
+        //    _navigationManager.NavigateTo("/Account/Login");
+        //    return;
+        //}
+
+        //var authenticationState = Task.Run(() =>
+        //    _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
+        //var currentUser = Task.Run(() =>
+        //    _UserManager.GetUserAsync(authenticationState.User)).Result;
+        //if (currentUser is not null)
+        //{
+        //    var userInRoleBlocked = Task.Run(() =>
+        //        _UserManager.IsInRoleAsync(currentUser, roleBlocked)).Result;
+        //    var userIsBlocked = currentUser.LockoutEnd is not null;
+        //    if (userInRoleBlocked || userIsBlocked)
+        //    {
+        //        await _SignInManager.SignOutAsync();
+        //        _navigationManager.NavigateTo("/Account/Login");
+        //        return;
+        //    }
+        //}
+
 
         GetUsers();
         int i = 0;
@@ -357,6 +395,10 @@ public partial class AdministratorDashboard
         }
     }
 
+
+
+
+
     private void DeleteUser()
     {
         var vu = ViewUsers.Where(x => x.IsChecked).ToList();
@@ -370,6 +412,7 @@ public partial class AdministratorDashboard
         {
             DeleteAUser(item);
         }
+
     }
 
     private void DeleteAUser(ApplicationUser user)

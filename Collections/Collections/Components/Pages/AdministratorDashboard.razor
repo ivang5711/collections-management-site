@@ -8,13 +8,14 @@
 @inject SignInManager<ApplicationUser> _SignInManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager _navigationManager
-@rendermode @(new InteractiveServerRenderMode(false))
+@* @rendermode @(new InteractiveServerRenderMode(false)) *@
+@rendermode InteractiveServer
 @inject IJSRuntime JsRuntime
 @attribute [Authorize(Roles = "Admin")]
 
 <AuthorizeView Roles="Admin">
     <PageTitle>Administrator dashboard</PageTitle>
-    @if (ViewUsers.Count < 1)
+    @if(ViewUsers.Count < 1)
     {
         <div class="d-flex justify-content-center">
             <p><em>Loading...</em></p>

@@ -52,7 +52,7 @@ function runMe() {
             .on("click", function (d, i) {
                 window.open(urlMy += d.text);
             })
-            .start();
+            ;
     }
 }
 

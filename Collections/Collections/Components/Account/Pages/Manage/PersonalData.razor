@@ -15,10 +15,13 @@
         </p>
         <form action="Account/Manage/DownloadPersonalData" method="post">
             <AntiforgeryToken />
-            <button class="btn btn-outline-secondary" type="submit">Download</button>
+            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-cloud-download-fill"></i> Download</button>
         </form>
         <p class="pt-3">
-            <a href="Account/Manage/DeletePersonalData" class="btn btn-danger">Delete</a>
+            @* <a href="Account/Manage/DeletePersonalData" class="btn btn-danger">Delete</a> *@
+            <button href="Account/Manage/DeletePersonalData" class="btn btn-danger text-nowrap">
+                <i class="bi bi-trash3-fill"></i> Delete
+            </button>
         </p>
     </div>
 </div>

@@ -9,5 +9,7 @@ namespace Collections.Data
         public DateTime LastLoginDate { get; set; }
 
         public DateTime RegistrationDate { get; set; }
+
+        public string FullName { get; set; } = string.Empty;
     }
 }

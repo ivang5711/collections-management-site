@@ -42,15 +42,15 @@
                     <button type="submit" class="w-100 btn btn-lg btn-outline-secondary">Log in</button>
                 </div>
                 <div>
+                    @*
                     <p>
-                        <a href="Account/ForgotPassword">Forgot your password?</a>
+                    <a href="Account/ForgotPassword">Forgot your password?</a>
                     </p>
+                    *@
                     <p>
                         <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
                     </p>
-                    <p>
-                        <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
-                    </p>
+
                 </div>
             </EditForm>
         </section>
@@ -72,7 +72,7 @@
     protected override async Task OnInitializedAsync()
     {
         var usersBucket = await _UserManager.GetUsersInRoleAsync("ToRemove");
-        foreach(var item in usersBucket)
+        foreach (var item in usersBucket)
         {
             await _UserManager.DeleteAsync(item);
         }
@@ -85,12 +85,6 @@
             var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;
             if (tryy is not null)
             {
-                // if (_UserManager.IsInRoleAsync(tryy, "ToRemove").Result)
-                // {
-                //     _ = Task.Run(() => SignInManager.SignOutAsync());
-                //     _ = _UserManager.DeleteAsync(tryy).Result;
-                // }
-
                 _ = Task.Run(() => SignInManager.SignOutAsync());
                 NavigationManager.NavigateTo("/Account/Login");
             }
@@ -114,12 +108,7 @@
 
             RedirectManager.RedirectTo(ReturnUrl);
         }
-        else if (result.RequiresTwoFactor)
-        {
-            RedirectManager.RedirectTo(
-                "Account/LoginWith2fa",
-                new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
-        }
+
         else if (result.IsLockedOut)
         {
             Logger.LogWarning("User account locked out.");

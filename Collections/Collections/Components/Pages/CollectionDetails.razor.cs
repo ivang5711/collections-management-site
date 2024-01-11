@@ -1,10 +1,9 @@
-using Collections.Components.TestData;
 using Collections.Data;
 using Collections.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Collections.Components.Pages;
 
@@ -15,31 +14,34 @@ public partial class CollectionDetails
 
     private Collection? collection;
     private List<Item>? itemsBunch;
-
-    private List<Collection>? collections;
-    private List<Item> items = [];
-    private List<Tag>? tagsGenerated;
-    private readonly DataGenerator dg = new("en");
-    private const int seed = 123;
+    private ApplicationUser? ThisUser;
+    private bool newItemRequested = false;
     private const string roleBlocked = "Blocked";
     private const string loginPageURL = "/Account/Login";
-    private List<string> WordsToShow { get; set; } = [];
-    private ApplicationUser? ThisUser;
+    private string TempImg { get; set; } = string.Empty;
+
+    [SupplyParameterFromForm]
+    public ItemCandidate? Model { get; set; }
+
+    public class ItemCandidate
+    {
+        public string? ImageLink { get; set; }
+
+        [Required]
+        public int CollectionId { get; set; }
+
+        [Required]
+        public string? Name { get; set; }
+    }
 
     protected override async Task OnInitializedAsync()
     {
         await CheckAuthorizationLevel();
-
         itemsBunch = [];
-
         var t = CreateData2().ToList<Collection>();
         collection = t.First(x => x.Id == Id);
         itemsBunch.AddRange(collection.Items);
-    }
-
-    private void AddItem()
-    {
-        CreateItem();
+        Model ??= new();
     }
 
     private List<Collection> CreateData2()
@@ -47,34 +49,42 @@ public partial class CollectionDetails
         List<Collection> t;
         using (var adc = _contextFactory.CreateDbContext())
         {
-
-             t = adc.Collections
-            .Include(e => e.Theme)
-            .Include(e => e.Items)
-            .ThenInclude(e => e.Tags)
-            .Include(e => e.Items)
-            .ThenInclude(e => e.Likes)
-            .ToList();
+            t = adc.Collections
+           .Include(e => e.Theme)
+           .Include(e => e.Items)
+           .ThenInclude(e => e.Tags)
+           .Include(e => e.Items)
+           .ThenInclude(e => e.Likes)
+           .ToList();
         }
         return t;
     }
 
-    private void CreateItem()
+    private void CreateItem(ItemCandidate itemCandidate)
     {
         using (var adc = _contextFactory.CreateDbContext())
         {
             Item item = new()
             {
-                Name = "A walk in city center",
+                Name = itemCandidate.Name!,
                 CollectionId = collection!.Id,
-                ImageLink = "https://th.bing.com/th/id/OIP.ZPvEhHtbC40JGgd3XzpQ9AHaE8?rs=1&pid=ImgDetMain",
-                
-                
+                ImageLink = itemCandidate.ImageLink,
             };
 
             adc.Items.Add(item);
             adc.SaveChanges();
         }
+    }
+
+    private async Task CreateNewItem()
+    {
+        CreateItem(Model!);
+        newItemRequested = !newItemRequested;
+        Model ??= new();
+        itemsBunch = [];
+        var t = CreateData2().ToList<Collection>();
+        collection = t.First(x => x.Id == Id);
+        itemsBunch.AddRange(collection.Items);
     }
 
     private async Task CheckAuthorizationLevel()
@@ -94,5 +104,21 @@ public partial class CollectionDetails
                 _navigationManager.NavigateTo(loginPageURL);
             }
         }
+    }
+
+    private async Task SubmitNewItem()
+    {
+        Model!.ImageLink = TempImg;
+        Model!.CollectionId = collection!.Id;
+        Console.WriteLine(Model?.Name);
+        Console.WriteLine(Model?.CollectionId);
+        Console.WriteLine(Model?.ImageLink);
+        await CreateNewItem();
+        newItemRequested = false;
+    }
+
+    private void RequestNewItem()
+    {
+        newItemRequested = !newItemRequested;
     }
 }

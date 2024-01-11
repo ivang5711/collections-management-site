@@ -16,16 +16,18 @@
         <div class="collapse navbar-collapse justify-content-lg-between" id="navbarBM">
             <div>
                 <ul class="navbar-nav align-items-lg-center">
+                    <AuthorizeView>
                     <li class="nav-item">
-                        <NavLink class="nav-link text-nowrap"
+                        <NavLink class="nav-link text-nowrap me-2"
                                  href="/collections" Match="NavLinkMatch.All">
                             <i class="bi bi-box2-heart-fill-nav-menu"></i> My Collections
                         </NavLink>
                     </li>
+                    </AuthorizeView>
                     <li class="nav-item">
-                        <NavLink class="nav-link text-nowrap"
-                                 href="/allcollections">
-                            <i class="bi bi-box2-heart-fill-nav-menu"></i> See All
+                        <NavLink class="nav-link text-nowrap me-2"
+                                 href="/all">
+                            <i class="bi bi-globe2-nav-menu"></i> See All
                         </NavLink>
                     </li>
                     <li class="ps-3" >
@@ -39,7 +41,7 @@
             <span class="navbar-nav">
                 <AuthorizeView Roles="Admin">
                     <li class="nav-item">
-                        <NavLink class=" nav-link text-nowrap" href="admin">
+                        <NavLink class="nav-link text-nowrap" href="admin">
                             <span class="bi bi-gear-nav-menu"
                                   aria-hidden="true"></span>
                         </NavLink>
@@ -49,7 +51,7 @@
                     <Authorized>
                         <span class="navbar-nav">
                             <span class="nav-item">
-                                <NavLink class="nav-link text-nowrap" href="Account/Manage">
+                                <NavLink class="nav-link text-nowrap me-2" href="Account/Manage">
                                     <span class="bi bi-person-fill-nav-menu"
                                           aria-hidden="true">
                                     </span> Hello, @(context.User.Identity?.Name)!
@@ -62,7 +64,7 @@
                                     <AntiforgeryToken />
                                     <input type="hidden" name="ReturnUrl"
                                            value="@currentUrl" />
-                                    <button type="submit" class="nav-link">
+                                    <button type="submit" class="nav-link me-2">
                                         <span class="bi bi-arrow-bar-left-nav-menu"
                                               aria-hidden="true"></span> Logout
                                     </button>
@@ -73,7 +75,7 @@
                     <NotAuthorized>
                         <span class="navbar-nav">
                             <span class="nav-item">
-                                <NavLink class="nav-link text-nowrap" href="Account/Register">
+                                <NavLink class="nav-link text-nowrap me-2" href="Account/Register">
                                     <span class="bi bi-person-nav-menu"
                                           aria-hidden="true"></span> Register
                                 </NavLink>
@@ -81,7 +83,7 @@
                         </span>
                         <span class="navbar-nav">
                             <span class="nav-item">
-                                <NavLink class="nav-link text-nowrap" href="Account/Login">
+                                <NavLink class="nav-link text-nowrap me-2" href="Account/Login">
                                     <span class="bi bi-person-badge-nav-menu"
                                           aria-hidden="true"></span> Login
                                 </NavLink>

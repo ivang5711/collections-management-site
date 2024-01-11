@@ -3,6 +3,7 @@ using Collections.Data;
 using Collections.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Collections.Components.Pages;
 
@@ -35,10 +36,15 @@ public partial class Home
 
         items.AddRange(temp.Take(5));
 
-        tagsGenerated = [];
-        var k2 = adc.Tags.AsEnumerable<Tag>().ToList<Tag>();
-        tagsGenerated.AddRange(k2);
 
+        tagsGenerated = [];
+        List<Tag> k2;
+        using (var adc = _contextFactory.CreateDbContext())
+        {
+            k2 = adc.Tags.AsEnumerable<Tag>().ToList<Tag>();
+        }
+
+        tagsGenerated.AddRange(k2);
         WordsToShow.Clear();
         foreach (var tag in tagsGenerated)
         {
@@ -54,76 +60,41 @@ public partial class Home
         }
     }
 
+
+
     private void PopulateTable()
     {
         //PopulateThemes();
         //PopulateTags();
-        //CreateCollection();
+        CreateCollection();
+    }
+
+    private string GetAuthor(Collection collection)
+    {
+        string res = string.Empty;
+        using (var adc = _contextFactory.CreateDbContext())
+        {
+            res = adc.Users.First(x => x.Id == collection.ApplicationUserId).FullName;
+        }
+
+        return res;
     }
 
     private void CreateCollection()
     {
-        using (adc)
+        using (var adc = _contextFactory.CreateDbContext())
         {
             var collection = new Collection
             {
                 Name = "My awesome weekend",
                 ThemeID = 2,
                 ApplicationUserId = ThisUser!.Id,
-                Description = "Photos and memories from the summer vacation " +
-                    "to south east Asia. Wonderful landscapes and amazing views. " +
+                Description = "Photos and memories from the summer vacation 2 " +
+                    "to south east Asia. Wonderful landscapes and amazing views. 2 " +
                     "The best food in the world and much more.",
-                Items =
-                    [
-                        new Item
-                        {
-                            Name = "The Great Waterfall",
-                            ApplicationUserId = ThisUser!.Id,
-                            ImageLink = "https://images.pexels.com/photos/2406395/pexels-photo-2406395.jpeg?cs=srgb&dl=pexels-avery-nielsenwebb-2406395.jpg&fm=jpg",
-                            Comments =
-                            [
-                                new()
-                                {
-                                    ApplicationUserId = ThisUser!.Id,
-                                    Text = "This item is awesome and amazing!"
-                                },
-                                new()
-                                {
-                                    ApplicationUserId = ThisUser!.Id,
-                                    Text = "The best product on the market!!!"
-                                },
-                            ]
-                        },
-                        new Item
-                        {
-                            Name = "Street Food Gem",
-                            ApplicationUserId = ThisUser!.Id,
-                            ImageLink = "https://th.bing.com/th/id/OIP.Ju-1rTVwR5-rizOKEgLELAHaE8?rs=1&pid=ImgDetMain",
-                            Comments =
-                            [
-                                new()
-                                {
-                                    ApplicationUserId = ThisUser!.Id,
-                                    Text = "I wish to eat it every day"
-                                },
-                                new()
-                                {
-                                    ApplicationUserId = ThisUser!.Id,
-                                    Text = "Too good to be true"
-                                },
-                                new()
-                                {
-                                    ApplicationUserId = ThisUser!.Id,
-                                    Text = "It was not bad at all"
-                                },
-                            ]
-                        }
 
-                    ],
                 ImageLink = "https://1.bp.blogspot.com/-2FODK09wE9g/WZA3YXTPTJI/AAAAAAAAAQA/JMZr20FMOpYKoCGS33GQToQVO2_1y_8XgCLcBGAs/s1600/Vacation%2BPostcard%2BRecalculating.jpg",
             };
-
-            collection.TotalItems = collection.Items.Count;
 
             adc.Collections.Add(collection);
             adc.SaveChanges();
@@ -132,7 +103,7 @@ public partial class Home
 
     private void PopulateThemes()
     {
-        using (adc)
+        using (var adc = _contextFactory.CreateDbContext())
         {
             List<Theme> theme = [
                 new Theme { Name = "Movies" },
@@ -154,7 +125,7 @@ public partial class Home
 
     private void PopulateTags()
     {
-        using (adc)
+        using (var adc = _contextFactory.CreateDbContext())
         {
             List<Tag> tags = [
                 new Tag { Name = "Chicago" },
@@ -176,13 +147,18 @@ public partial class Home
 
     private List<Collection> CreateData()
     {
-        var t = adc.Collections
-        .Include(e => e.Theme)
-        .Include(e => e.Items)
-        .ThenInclude(e => e.Tags)
-        .Include(e => e.Items)
-        .ThenInclude(e => e.Likes)
-        .ToList();
+        List<Collection> t;
+        using (var adc = _contextFactory.CreateDbContext())
+        {
+            t = adc.Collections
+            .Include(e => e.Theme)
+            .Include(e => e.Items)
+            .ThenInclude(e => e.Tags)
+            .Include(e => e.Items)
+            .ThenInclude(e => e.Likes)
+            .ToList();
+        }
+
         return t;
     }
 

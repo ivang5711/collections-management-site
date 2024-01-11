@@ -6,9 +6,9 @@ namespace Collections.Models
     {
         public int Id { get; set; }
 
-        public ApplicationUser User { get; set; } = new();
+        public ApplicationUser ApplicationUser { get; set; }
 
-        public string UserId { get; set; } = string.Empty; 
+        public string ApplicationUserId { get; set; }
 
         public List<Item> Items { get; set; } = [];
 

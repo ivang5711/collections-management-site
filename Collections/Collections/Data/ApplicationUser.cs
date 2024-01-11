@@ -13,11 +13,9 @@ namespace Collections.Data
 
         public string FullName { get; set; } = string.Empty;
 
-        public List<Like> Likes { get; set; } = [];
+        public List<Like> Likes { get; } = [];
 
         public ICollection<Collection> Collections { get; } = [];
-
-        public ICollection<Item> Items { get; } = [];
 
         public ICollection<Comment> Comments { get; } = [];
     }

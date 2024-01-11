@@ -1,6 +1,14 @@
 ﻿@page "/item-details/{id:int}"
 
-@inject ApplicationDbContext adc
+@inject UserManager<ApplicationUser> _userManager
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Identity;
+@inject RoleManager<IdentityRole> _RoleManager
+@inject SignInManager<ApplicationUser> _SignInManager
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject NavigationManager _navigationManager
+@inject IDbContextFactory<ApplicationDbContext> _contextFactory
+
 
 @rendermode InteractiveServer
 
@@ -20,7 +28,7 @@ else
                     justify-content-center justify-content-md-end">
                     <div class="title-container text-center text-md-end">
                         <h1 class="text-light">@_itemDetails.Name</h1>
-                        <h2 class="text-black">@_itemDetails.ApplicationUser.FullName</h2>
+                        <h2 class="text-black">@GetAuthor(_itemDetails.CollectionId)</h2>
                         
                         <span class="badge me-2 text-bg-light">
                             id: @_itemDetails.Id
@@ -65,7 +73,9 @@ else
     </div>
     <div class="container-xxl">
         <div class="overview d-flex flex-column">
-            <p>@_itemDetails.ApplicationUser.FullName</p>
+            <h3>Author: @GetAuthor(_itemDetails.CollectionId)</h3>
+            <h5>@_itemDetails.Name</h5>
+            
         </div>
         <AuthorizeView>
             <div class="comment-overview d-flex flex-column flex-lg-col

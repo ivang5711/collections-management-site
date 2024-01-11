@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Collections.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240111021716_InitialAdd")]
-    partial class InitialAdd
+    [Migration("20240111075722_FixedUsersAdd")]
+    partial class FixedUsersAdd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -146,18 +146,20 @@ namespace Collections.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("ItemId");
 
@@ -171,10 +173,6 @@ namespace Collections.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("CollectionId")
                         .HasColumnType("int");
@@ -191,8 +189,6 @@ namespace Collections.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("CollectionId");
 
                     b.ToTable("Items", (string)null);
@@ -206,13 +202,13 @@ namespace Collections.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("ApplicationUserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Likes", (string)null);
                 });
@@ -435,43 +431,43 @@ namespace Collections.Migrations
 
             modelBuilder.Entity("Collections.Models.Comment", b =>
                 {
+                    b.HasOne("Collections.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany("Comments")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Collections.Models.Item", "Item")
                         .WithMany("Comments")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("ApplicationUser");
+
                     b.Navigation("Item");
                 });
 
             modelBuilder.Entity("Collections.Models.Item", b =>
                 {
-                    b.HasOne("Collections.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany("Items")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Collections.Models.Collection", "Collection")
                         .WithMany("Items")
                         .HasForeignKey("CollectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ApplicationUser");
-
                     b.Navigation("Collection");
                 });
 
             modelBuilder.Entity("Collections.Models.Like", b =>
                 {
-                    b.HasOne("Collections.Data.ApplicationUser", "User")
+                    b.HasOne("Collections.Data.ApplicationUser", "ApplicationUser")
                         .WithMany("Likes")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("ItemLike", b =>
@@ -559,7 +555,7 @@ namespace Collections.Migrations
                 {
                     b.Navigation("Collections");
 
-                    b.Navigation("Items");
+                    b.Navigation("Comments");
 
                     b.Navigation("Likes");
                 });

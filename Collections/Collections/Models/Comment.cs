@@ -7,14 +7,14 @@ public class Comment
 {
     public int Id { get; set; }
 
-    public Item Item { get; set; } = new();
+    public Item Item { get; set; }
 
     public int ItemId { get; set; }
 
-    public string ApplicationUserId { get; set; } = string.Empty;
+    public string ApplicationUserId { get; set; }
 
     [DeleteBehavior(DeleteBehavior.Restrict)]
-    public ApplicationUser ApplicationUser { get; set; } = new();
+    public ApplicationUser ApplicationUser { get; set; }
 
     public string Text { get; set; } = string.Empty;
 }

@@ -8,10 +8,10 @@ public class Collection
     public int Id { get; set; }
     public List<Item> Items { get; set; } = [];
 
-    public string ApplicationUserId { get; set; } = string.Empty;
+    public string ApplicationUserId { get; set; }
 
     [DeleteBehavior(DeleteBehavior.Restrict)]
-    public ApplicationUser ApplicationUser { get; set; } = new();
+    public ApplicationUser ApplicationUser { get; set; }
 
     public int TotalItems { get; set; }
 

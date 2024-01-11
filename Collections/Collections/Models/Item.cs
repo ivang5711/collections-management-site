@@ -11,12 +11,7 @@ public class Item
 
     public List<Tag> Tags { get; } = [];
 
-    public string ApplicationUserId { get; set; } = string.Empty;
-
-    [DeleteBehavior(DeleteBehavior.Restrict)]
-    public ApplicationUser ApplicationUser { get; set; } = new();
-
-    public Collection Collection { get; set; } = new();
+    public Collection Collection { get; set; }
 
     public int CollectionId { get; set; }
 

@@ -37,87 +37,102 @@ public partial class CollectionDetails
     protected override async Task OnInitializedAsync()
     {
         await CheckAuthorizationLevel();
-        itemsBunch = [];
-        var t = CreateData2().ToList<Collection>();
-        collection = t.First(x => x.Id == Id);
-        itemsBunch.AddRange(collection.Items);
+        FetchCollectionsDataFromDataSource();
         Model ??= new();
     }
 
-    private List<Collection> CreateData2()
+    private List<Collection> GetCollectionsFromDataSource()
     {
         List<Collection> t;
         using (var adc = _contextFactory.CreateDbContext())
         {
-            t = adc.Collections
-           .Include(e => e.Theme)
-           .Include(e => e.Items)
-           .ThenInclude(e => e.Tags)
-           .Include(e => e.Items)
-           .ThenInclude(e => e.Likes)
-           .ToList();
+            t =
+            [
+                .. adc.Collections
+                           .Include(e => e.Theme)
+                           .Include(e => e.Items)
+                           .ThenInclude(e => e.Tags)
+                           .Include(e => e.Items)
+                           .ThenInclude(e => e.Likes)
+,
+            ];
         }
         return t;
     }
 
     private void CreateItem(ItemCandidate itemCandidate)
     {
-        using (var adc = _contextFactory.CreateDbContext())
+        using var adc = _contextFactory.CreateDbContext();
+        Item item = new()
         {
-            Item item = new()
-            {
-                Name = itemCandidate.Name!,
-                CollectionId = collection!.Id,
-                ImageLink = itemCandidate.ImageLink,
-            };
+            Name = itemCandidate.Name!,
+            CollectionId = collection!.Id,
+            ImageLink = itemCandidate.ImageLink,
+        };
 
-            adc.Items.Add(item);
-            adc.SaveChanges();
-        }
+        adc.Items.Add(item);
+        adc.SaveChanges();
     }
 
-    private async Task CreateNewItem()
+    private void CreateNewItem()
     {
         CreateItem(Model!);
-        newItemRequested = !newItemRequested;
+        ToggleNewItemRequestStatus();
         Model ??= new();
+        FetchCollectionsDataFromDataSource();
+    }
+
+    private void FetchCollectionsDataFromDataSource()
+    {
         itemsBunch = [];
-        var t = CreateData2().ToList<Collection>();
+        var t = GetCollectionsFromDataSource().ToList<Collection>();
         collection = t.First(x => x.Id == Id);
         itemsBunch.AddRange(collection.Items);
     }
 
     private async Task CheckAuthorizationLevel()
     {
-        AuthenticationState authenticationState = Task.Run(() =>
-            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        ThisUser = Task.Run(() =>
-            _UserManager.GetUserAsync(authenticationState.User)).Result;
+        GetAuthenticationState();
         if (ThisUser is not null)
         {
-            bool userInRoleBlocked = Task.Run(() =>
-                _UserManager.IsInRoleAsync(ThisUser, roleBlocked)).Result;
-            bool userIsBlocked = ThisUser.LockoutEnd is not null;
+            GetUserBlockedStatus(out bool userInRoleBlocked, out bool userIsBlocked);
             if (userInRoleBlocked || userIsBlocked)
             {
-                await _SignInManager.SignOutAsync();
-                _navigationManager.NavigateTo(loginPageURL);
+                await LogoutCurrentUser();
             }
         }
     }
 
-    private async Task SubmitNewItem()
+    private async Task LogoutCurrentUser()
+    {
+        await _SignInManager.SignOutAsync();
+        _navigationManager.NavigateTo(loginPageURL);
+    }
+
+    private void GetUserBlockedStatus(out bool userInRoleBlocked, out bool userIsBlocked)
+    {
+        userInRoleBlocked = Task.Run(() =>
+            _UserManager.IsInRoleAsync(ThisUser!, roleBlocked)).Result;
+        userIsBlocked = ThisUser!.LockoutEnd is not null;
+    }
+
+    private void GetAuthenticationState()
+    {
+        AuthenticationState authenticationState = Task.Run(() =>
+                    _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
+        ThisUser = Task.Run(() =>
+            _UserManager.GetUserAsync(authenticationState.User)).Result;
+    }
+
+    private void SubmitNewItem()
     {
         Model!.ImageLink = TempImg;
         Model!.CollectionId = collection!.Id;
-        Console.WriteLine(Model?.Name);
-        Console.WriteLine(Model?.CollectionId);
-        Console.WriteLine(Model?.ImageLink);
-        await CreateNewItem();
+        CreateNewItem();
         newItemRequested = false;
     }
 
-    private void RequestNewItem()
+    private void ToggleNewItemRequestStatus()
     {
         newItemRequested = !newItemRequested;
     }

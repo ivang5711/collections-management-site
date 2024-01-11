@@ -20,7 +20,7 @@ else
                     justify-content-center justify-content-md-end">
                     <div class="title-container text-center text-md-end">
                         <h1 class="text-light">@_itemDetails.Name</h1>
-                        <h2 class="text-black">@_itemDetails.Author</h2>
+                        <h2 class="text-black">@_itemDetails.ApplicationUser.FullName</h2>
                         
                         <span class="badge me-2 text-bg-light">
                             id: @_itemDetails.Id
@@ -65,7 +65,7 @@ else
     </div>
     <div class="container-xxl">
         <div class="overview d-flex flex-column">
-            <p>@_itemDetails.Author</p>
+            <p>@_itemDetails.ApplicationUser.FullName</p>
         </div>
         <AuthorizeView>
             <div class="comment-overview d-flex flex-column flex-lg-col

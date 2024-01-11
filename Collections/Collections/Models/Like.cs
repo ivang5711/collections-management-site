@@ -10,7 +10,7 @@ namespace Collections.Models
 
         public string UserId { get; set; } = string.Empty; 
 
-        public Item Item { get; set; } = new();
+        public List<Item> Items { get; set; } = [];
 
     }
 }

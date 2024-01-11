@@ -28,7 +28,7 @@ public class DataGenerator(string locale)
             u.Id = f.IndexFaker + 1;
             u.Name = f.Commerce.ProductName();
             //u.TagIds = [.. f.Make(5, () => f.Database.Random.Int(1, 6))];
-            u.Author = f.Person.FullName;
+            //u.Author = f.Person.FullName;
             //u.Collection = f.Commerce.ProductName();
             //u.CommentsIds = [.. f.Make(10, () => f.Database
             //    .Random.Int(1, 500))];

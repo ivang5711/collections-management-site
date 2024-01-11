@@ -1,4 +1,7 @@
-﻿namespace Collections.Models;
+﻿using Collections.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace Collections.Models;
 
 public class Item
 {
@@ -8,7 +11,10 @@ public class Item
 
     public List<Tag> Tags { get; } = [];
 
-    public string Author { get; set; } = string.Empty;
+    public string ApplicationUserId { get; set; } = string.Empty;
+
+    [DeleteBehavior(DeleteBehavior.Restrict)]
+    public ApplicationUser ApplicationUser { get; set; } = new();
 
     public Collection Collection { get; set; } = new();
 

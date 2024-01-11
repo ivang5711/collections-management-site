@@ -1,10 +1,18 @@
-﻿namespace Collections.Models;
+﻿using Collections.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace Collections.Models;
 
 public class Collection
 {
     public int Id { get; set; }
     public List<Item> Items { get; set; } = [];
-        
+
+    public string ApplicationUserId { get; set; } = string.Empty;
+
+    [DeleteBehavior(DeleteBehavior.Restrict)]
+    public ApplicationUser ApplicationUser { get; set; } = new();
+
     public int TotalItems { get; set; }
 
     public string Name { get; set; } = string.Empty;

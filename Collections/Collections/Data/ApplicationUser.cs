@@ -1,6 +1,5 @@
 using Collections.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Collections.Data
 {
@@ -16,6 +15,8 @@ namespace Collections.Data
 
         public List<Like> Likes { get; set; } = [];
 
+        public ICollection<Collection> Collections { get; } = [];
 
+        public ICollection<Item> Items { get; } = [];
     }
 }

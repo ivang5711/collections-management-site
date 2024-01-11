@@ -105,6 +105,10 @@ namespace Collections.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -123,6 +127,8 @@ namespace Collections.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("ThemeID");
 
@@ -163,9 +169,9 @@ namespace Collections.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Author")
+                    b.Property<string>("ApplicationUserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("CollectionId")
                         .HasColumnType("int");
@@ -182,6 +188,8 @@ namespace Collections.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApplicationUserId");
+
                     b.HasIndex("CollectionId");
 
                     b.ToTable("Items", (string)null);
@@ -195,16 +203,11 @@ namespace Collections.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ItemId");
 
                     b.HasIndex("UserId");
 
@@ -243,6 +246,21 @@ namespace Collections.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Themes", (string)null);
+                });
+
+            modelBuilder.Entity("ItemLike", b =>
+                {
+                    b.Property<int>("ItemsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LikesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ItemsId", "LikesId");
+
+                    b.HasIndex("LikesId");
+
+                    b.ToTable("ItemLike");
                 });
 
             modelBuilder.Entity("ItemTag", b =>
@@ -395,11 +413,19 @@ namespace Collections.Migrations
 
             modelBuilder.Entity("Collections.Models.Collection", b =>
                 {
+                    b.HasOne("Collections.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany("Collections")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Collections.Models.Theme", "Theme")
                         .WithMany()
                         .HasForeignKey("ThemeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Theme");
                 });
@@ -417,32 +443,47 @@ namespace Collections.Migrations
 
             modelBuilder.Entity("Collections.Models.Item", b =>
                 {
+                    b.HasOne("Collections.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany("Items")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Collections.Models.Collection", "Collection")
                         .WithMany("Items")
                         .HasForeignKey("CollectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("ApplicationUser");
+
                     b.Navigation("Collection");
                 });
 
             modelBuilder.Entity("Collections.Models.Like", b =>
                 {
-                    b.HasOne("Collections.Models.Item", "Item")
-                        .WithMany("Likes")
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Collections.Data.ApplicationUser", "User")
                         .WithMany("Likes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Item");
-
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ItemLike", b =>
+                {
+                    b.HasOne("Collections.Models.Item", null)
+                        .WithMany()
+                        .HasForeignKey("ItemsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Collections.Models.Like", null)
+                        .WithMany()
+                        .HasForeignKey("LikesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ItemTag", b =>
@@ -513,6 +554,10 @@ namespace Collections.Migrations
 
             modelBuilder.Entity("Collections.Data.ApplicationUser", b =>
                 {
+                    b.Navigation("Collections");
+
+                    b.Navigation("Items");
+
                     b.Navigation("Likes");
                 });
 
@@ -524,8 +569,6 @@ namespace Collections.Migrations
             modelBuilder.Entity("Collections.Models.Item", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("Likes");
                 });
 #pragma warning restore 612, 618
         }

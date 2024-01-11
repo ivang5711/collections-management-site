@@ -5,7 +5,7 @@
 namespace Collections.Migrations
 {
     /// <inheritdoc />
-    public partial class AddAdminDashboard : Migration
+    public partial class FixTHemeNullableAdd : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

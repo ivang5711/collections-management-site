@@ -3,8 +3,9 @@
     <div class="card h-100 fade-in">
         @if (string.IsNullOrEmpty(Item.Name))
         {
-            <img class="card-img-top" alt="Collection Item"
-                 src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" />
+            <canvas class="card-img-top"
+                    style="height: 24rem; max-height: 100%;
+                      max-width: 100%; object-fit: cover;" />
         }
         else
         {

@@ -4,7 +4,11 @@ public class Comment
 {
     public int Id { get; set; }
 
-    public required string Name { get; set; }
+    public Item Item { get; set; } = new();
 
-    public required string Text { get; set; }
+    public int ItemId { get; set; }
+
+    public string Name { get; set; } = string.Empty;
+
+    public string Text { get; set; } = string.Empty;
 }

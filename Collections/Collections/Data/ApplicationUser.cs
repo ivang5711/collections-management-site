@@ -1,4 +1,6 @@
+using Collections.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Collections.Data
 {
@@ -11,5 +13,9 @@ namespace Collections.Data
         public DateTime RegistrationDate { get; set; }
 
         public string FullName { get; set; } = string.Empty;
+
+        public List<Like> Likes { get; set; } = [];
+
+
     }
 }

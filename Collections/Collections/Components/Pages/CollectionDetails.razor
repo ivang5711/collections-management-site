@@ -1,5 +1,8 @@
 ﻿@page "/collection-details/{id:int}"
 @using Components.TestData
+@inject ApplicationDbContext adc
+
+@rendermode InteractiveServer
 
 <PageTitle>Collection details</PageTitle>
 @if (collection is null)

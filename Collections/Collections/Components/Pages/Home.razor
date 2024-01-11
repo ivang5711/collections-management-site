@@ -6,6 +6,7 @@
 @inject SignInManager<ApplicationUser> _SignInManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager _navigationManager
+@inject ApplicationDbContext adc
 
 @rendermode InteractiveServer
 
@@ -89,35 +90,48 @@
     </div>
 
 </div>
- *@
 
+ *@
 
 <div class="container-xxl py-3 text-between ">
     @if (collections is not null)
     {
         <div class="row align-items-start row-cols-1 row-cols-md-2 ">
-            <div class="col-md-9 order-md-first order-last ">
-                <table class="table table-sm caption-top table-hover table-striped table-bordered
+            <div class="col-md-9 order-md-first order-last">
+                <h5>Recently added Items</h5>
+                <table class="table table-sm table-hover table-striped table-bordered
                               rounded-2 overflow-hidden">
-                    <caption><h5>Top 5 collections</h5></caption>
                     <thead class="table-secondary">
+                        <tr>
+                            <th>Id</th>
+                            <th>name</th>
+                            <th>Collection</th>
+                            <th>Author</th>
+                            <th>Link</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        @foreach (Item item in items)
-                        {
-                            <tr>
-                                <th>@item.Id</th>
-                                <td>@item.Name</td>
-                                <td>@item.Collection</td>
-                                <td>@item.Author</td>
-                            </tr>
+                        @{
+                            int i = 1;
+                            foreach (Item item in items)
+                            {
+                                <tr>
+                                    <th>@(i++)</th>
+                                    <td>@item.Name</td>
+                                    <td>@item.Collection.Name</td>
+                                    <td>@item.Author</td>
+                                    <td>
+                                        <a class="btn-sm btn-outline-secondary"
+                                           href="/item-details/@item.Id">Details</a>
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>
             </div>
             <div class="d-flex col-md-3 order-first order-md-first text-start align-items-center my-auto">
                 <div class="justify-content-center align-items-center my-auto  ">
-
                     <div class="card" style="width: auto;">
                         <div class="card-body">
                             <h5 class="card-title">Welcome to the Collections!</h5>
@@ -128,29 +142,39 @@
                             </p>
                         </div>
                     </div>
-
                 </div>
-
-
-
             </div>
         </div>
         <div class="row align-items-center">
             <div class="col-md-9 ">
-                <table class="table table-sm caption-top table-hover table-striped table-bordered
+                <h5>Top 5 collections</h5>
+                <table class="table table-sm table-hover table-striped table-bordered
                               rounded-2 overflow-hidden">
-                    <caption><h5>Top 5 collections</h5></caption>
                     <thead class="table-secondary">
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Theme</th>
+                            <th>Total Items</th>
+                            <th>Link</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        @foreach (Collection collection in collections)
-                        {
-                            <tr>
-                                <th>@collection.Id</th>
-                                <td>@collection.Name</td>
-                                <td>@collection.Theme</td>
-                                <td>@collection.TotalItems</td>
-                            </tr>
+                        @{
+                            int j = 1;
+                            foreach (Collection collection in collections)
+                            {
+                                <tr>
+                                    <th>@(j++)</th>
+                                    <td>@collection.Name</td>
+                                    <td>@collection.Theme.Name</td>
+                                    <td>@collection.TotalItems</td>
+                                    <td>
+                                        <a class="btn-sm btn-outline-secondary"
+                                           href="/collection-details/@collection.Id">Details</a>
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>
@@ -170,9 +194,10 @@
     }
 </div>
 
+
 @code {
     private List<Collection>? collections;
-    private List<Item>? items;
+    private List<Item> items = [];
     private List<Tag>? tagsGenerated;
     private readonly DataGenerator dg = new("en");
     private const int seed = 123;
@@ -184,30 +209,86 @@
     {
         await CheckAuthorizationLevel();
 
-        collections = await Task.Run(() => CreateData());
-        items = await Task.Run(() => CreateItems());
-        tagsGenerated = await Task.Run(() => CreateTags());
+        var te = await Task.Run(() => CreateData());
+        collections = te.Take(5).ToList();
+
+        List<Item> temp = [];
+
+        foreach (var t in collections)
+        {
+            t.TotalItems = t.Items.Count;
+            temp.AddRange(t.Items);
+        }
+
+        items.AddRange(temp.Take(5));
+
+        tagsGenerated = [];
+        var k2 = adc.Tags.AsEnumerable<Tag>().ToList<Tag>();
+        tagsGenerated.AddRange(k2);
+
         WordsToShow.Clear();
         foreach (var tag in tagsGenerated)
         {
             WordsToShow.Add(tag.Name);
         }
+
+        //PopulateTable();
+
+    }
+
+    private void PopulateTable()
+    {
+        using (adc)
+        {
+            var collection = new Collection
+                {
+                    Name = "My awesome collection",
+                    ThemeID = 6,
+                    Items = new List<Item>
+                    {
+                        new Item
+                        {
+                            Name = "Unusual keyboard",
+                            Author = "Logitech corp.",
+                            ImageLink = "https://th.bing.com/th/id/R.9b2a3fd769228fb57123b60d09cb25d7?rik=WrrDpbHet61rCg&riu=http%3a%2f%2fupload.wikimedia.org%2fwikipedia%2fcommons%2f9%2f9f%2fApple_(Standard)_Keyboard_M0116.jpg&ehk=%2fEGwXB3aHJoiSK0PyIntdA4oLRO0LCKPNVamfIYI5gY%3d&risl=&pid=ImgRaw&r=0",
+                            Comments = new List<Comment>
+                            {
+                                new Comment { Name = "Joe Doe", Text = "This comment is awesome and amazing!" },
+                                new Comment { Name = "Billy Jane", Text = "The best product on the market!!! No doubt!" },
+                            }
+                        }
+
+                    },
+                    ImageLink = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.nytimes.com%2Fwirecutter%2Freviews%2Fthe-best-bluetooth-keyboard%2F&psig=AOvVaw0KxCHDSN3VGHnV0nEis_oT&ust=1705006685182000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCNi6soDb04MDFQAAAAAdAAAAABAQ",
+
+                };
+
+            adc.Collections.Add(collection);
+            adc.SaveChanges();
+        }
     }
 
     private List<Collection> CreateData()
     {
-        return dg.GenerateCollection(5, seed);
+        var t = adc.Collections
+        .Include(e => e.Theme)
+        .Include(e => e.Items)
+        .ThenInclude(e => e.Tags)
+        .Include(e => e.Items)
+        .ThenInclude(e => e.Likes)
+        .ToList();
+        return t;
     }
 
-    private List<Item> CreateItems()
-    {
-        return dg.GenerateItems(5, seed * 100);
-    }
+    // private List<Item> CreateItems()
+    // {
+    //     return dg.GenerateItems(1, seed * 100);
+    // }
 
-    private List<Tag> CreateTags()
-    {
-        return dg.GenerateTags(30, seed);
-    }
+    // private List<Tag> CreateTags()
+    // {
+    //     return dg.GenerateTags(30, seed);
+    // }
 
     private async Task CheckAuthorizationLevel()
     {

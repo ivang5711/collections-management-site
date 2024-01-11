@@ -1,10 +1,11 @@
 ﻿@if (Collection is not null)
 {
     <div class="card h-100 fade-in">
-        @if (string.IsNullOrEmpty(Collection.Name))
+        @if (string.IsNullOrWhiteSpace(@Collection.ImageLink))
         {
-            <img class="card-img-top" alt="Collection Item"
-                 src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" />
+            <canvas class="card-img-top"
+                    style="background-color: lightgray; height: 24rem; max-height: 100%;
+                      max-width: 100%; object-fit: cover;" />
         }
         else
         {
@@ -12,10 +13,11 @@
                  src="@Collection.ImageLink"
                  style="height: 12rem; max-height: 100%; max-width: 100%;
                         object-fit: cover;" />
+
         }
         <div class="card-body border-top bg-light">
             <h5 class="card-title">@Collection.Name</h5>
-            <p class="card-text">@Collection.Theme</p>
+            <p class="card-text">@Collection.Theme.Name</p>
         </div>
         <div class="card-footer text-end">
             <a class="btn btn-primary"

@@ -2,47 +2,23 @@
 
 public class Item
 {
-    public Item()
-    {
-        Name = string.Empty;
-        TagIds = [];
-        Author = string.Empty;
-        Collection = string.Empty;
-        Likes = null;
-        CommentsIds = null;
-        ImageLink = null;
-    }
+    public int Id { get; set; }
 
-    public Item(int id, string name, List<int> tagIds, string author,
-        string collection, Dictionary<string, bool>? likes = null,
-        List<int>? commentsIds = null, string? imageLink = null)
-    {
-        Id = id;
-        Name = name;
-        TagIds = tagIds;
-        Author = author;
-        Collection = collection;
-        Likes = likes;
-        CommentsIds = commentsIds;
-        ImageLink = imageLink;
-        LikesTotal = Likes?.Keys.Count > 0 ? Likes!.Keys.Count : 0;
-    }
+    public string Name { get; set; } = string.Empty;
 
-    public required int Id { get; set; }
+    public List<Tag> Tags { get; } = [];
 
-    public string Name { get; set; }
+    public string Author { get; set; } = string.Empty;
 
-    public List<int> TagIds { get; set; }
+    public Collection Collection { get; set; } = new();
 
-    public string Author { get; set; }
+    public int CollectionId { get; set; }
 
-    public string Collection { get; set; }
+    public List<Like> Likes { get; set; } = [];
 
-    public Dictionary<string, bool>? Likes { get; set; }
+    public List<Comment> Comments { get; set; } = [];
 
-    public List<int>? CommentsIds { get; set; }
-
-    public string? ImageLink { get; set; }
+    public string? ImageLink { get; set; } = null;
 
     public int LikesTotal { get; set; }
 }

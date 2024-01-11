@@ -1,5 +1,8 @@
 ﻿@page "/item-details/{id:int}"
 
+@inject ApplicationDbContext adc
+
+
 @if (_itemDetails is null)
 {
     <p><em>Loading...</em></p>
@@ -17,19 +20,16 @@ else
                     <div class="title-container text-center text-md-end">
                         <h1 class="text-light">@_itemDetails.Name</h1>
                         <h2 class="text-black">@_itemDetails.Author</h2>
-                        @if (_itemDetails.Likes?.Keys.Count == 0)
+                        @if (_itemDetails.Likes.Count == 0 )
                         {
                             <span class="badge me-2 text-bg-light">
                                 No likes so far...
                             </span>
                         }
-                        @{
-                            var runtime = _itemDetails.Collection;
-                            var rating = _itemDetails.Likes!.Keys.Count;
-                        }
-                        <span class="badge me-2 text-bg-dark">@runtime</span>
+
+                        <span class="badge me-2 text-bg-dark">@_itemDetails.Collection.Theme.Name</span>
                         <span class="badge me-2 text-bg-success">
-                            <i class="bi bi-hand-thumbs-up"></i> @rating
+                            <i class="bi bi-hand-thumbs-up"></i> @_itemDetails.Likes.Count
                         </span>
                         <div class="item-links">
                             <div class="d-flex justify-content-center
@@ -73,7 +73,7 @@ else
         <AuthorizeView>
             <div class="comment-overview d-flex flex-column flex-lg-col
                         justify-content-between my-3">
-                @if (_itemDetails.TagIds.Any())
+                @if (_itemDetails.Comments.Count != 0)
                 {
                     <div class="comment-container pb-3">
                         @if (_itemsBunch is not null)

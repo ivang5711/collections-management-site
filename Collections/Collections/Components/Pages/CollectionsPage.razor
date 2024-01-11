@@ -8,65 +8,74 @@
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager _navigationManager
 @inject IDbContextFactory<ApplicationDbContext> _contextFactory
+@using System.ComponentModel.DataAnnotations
+@inject ILogger<CollectionsPage> Logger
 
 @rendermode InteractiveServer
 
 <PageTitle>My Collections</PageTitle>
 
-<AuthorizeView>
-    <div class="container-xxl py-3 ">
-        @if (!newCollectionRequested)
-        {
-            <h3>My Collections</h3>
-            <div class="pb-2 d-flex justify-content-start m-0 row col-md
+@* <AuthorizeView> *@
+<div class="container-xxl py-3 ">
+    @if (!newCollectionRequested)
+    {
+        <h3>My Collections</h3>
+        <div class="pb-2 d-flex justify-content-start m-0 row col-md
                         row-cols-md-auto gap-1">
-                <button @onclick="RequestNewCollection"
-                        class="btn btn-outline-success btn-sm text-nowrap"
-                        asp-formaction="Block" name="Block"
-                        type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                    <i class="bi bi-plus-square"></i> New Collection
-                </button>
-            </div>
-        }
+            <button @onclick="RequestNewCollection"
+                    class="btn btn-outline-success btn-sm text-nowrap"
+                    asp-formaction="Block" name="Block"
+                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                <i class="bi bi-plus-square"></i> New Collection
+            </button>
+        </div>
+    }
 
-        @if (newCollectionRequested)
-        {
-            <div class="d-flex justify-content-center py-5">
-                <div class="card mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
-                    <div class="row g-0">
-                        @if (string.IsNullOrWhiteSpace(TempImg))
-                        {
+    @if (newCollectionRequested)
+    {
+        <div class="d-flex justify-content-center py-5">
+            <div class="card mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
+                <div class="row g-0">
+                    @if (string.IsNullOrWhiteSpace(TempImg))
+                    {
 
-                            <div class="col-md-4">
-                                <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" />
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="col-md-4">
-                                <img src="@TempImg" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
-                            </div>
-                        }
-                        <div class="col-md-8">
+                        <div class="col-md-4">
+                            <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-4">
+                            <img src="@TempImg" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
+                        </div>
+                    }
+                    <div class="col-md-8">
+                        <EditForm Model="@Model" OnValidSubmit="@Submit" FormName="Starship2">
                             <div class="card-body">
                                 <h5 class="card-title">Create New Collection</h5>
                                 <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
                                 <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                                 <div class="px-5 py-2">
-                                    <input type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Name..." />
-                                    <input type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Description" />
-                                    <input type="text" @bind="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection photo (optional)..." />
-                                    <select class="form-select-lg  w-100 my-2">
-                                        <option class="text-center">
-                                            1112
-                                        </option>
-                                        <option class="text-center">
-                                            dwew
-                                        </option>
-                                        <option class="text-center">
-                                            gwegwegw ww
-                                        </option>
-                                    </select>
+                                    <DataAnnotationsValidator />
+                                    <ValidationSummary />
+                                    Identifier:
+                                    <InputText @bind-Value="Model!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Name..." />
+                                    <InputText @bind-Value="Model.Description" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Description" />
+                                    <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection photo (optional)..." />
+                                    <InputSelect class="form-select form-select" aria-label=".form-select example" @bind-Value="Model.ThemeId">
+                                        @if (Themes is null)
+                                        {
+                                            <option selected value="">None</option>
+                                        }
+                                        else
+                                        {
+                                            @foreach (var t in Themes)
+                                            {
+                                                <option value="@t.Id">@t.Name</option>
+                                            }
+                                        }
+
+                                    </InputSelect>
                                 </div>
                             </div>
                             <span class="pb-2 pe-3 d-flex justify-content-end m-3 row col-md
@@ -74,237 +83,61 @@
                                 <button @onclick="RequestNewCollection"
                                         class="btn btn-outline-secondary text-nowrap"
                                         asp-formaction="Block" name="Block"
-                                        type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                        type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                     <i class="bi bi-plus-square"></i> Close
                                 </button>
-                                <button @onclick="RequestNewCollection"
-                                        class="btn btn-outline-success text-nowrap"
-                                        asp-formaction="Block" name="Block"
+                                <button class="btn btn-outline-success text-nowrap"
                                         type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                     <i class="bi bi-plus-square"></i> Create
                                 </button>
                             </span>
-
-                        </div>
+                        </EditForm>
                     </div>
                 </div>
             </div>
-        }
-        @if (collections is not null)
-        {
-            <div class="d-flex justify-content-center">
-                <table class="table table-sm table-hover table-striped table-bordered
+        </div>
+    }
+    @if (collections is not null)
+    {
+        <div class="d-flex justify-content-center">
+            <table class="table table-sm table-hover table-striped table-bordered
                               rounded-2 overflow-hidden" style="box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
-                    <thead class="table-secondary">
-                        <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>Theme</th>
-                            <th>Total Items</th>
-                            <th>Link</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{
-                            int j = 1;
-                            foreach (Collection collection in collections)
-                            {
-                                <tr>
-                                    <th>@(j++)</th>
-                                    <td>@collection.Name</td>
-                                    <td>@collection.Theme!.Name</td>
-                                    <td>@collection.TotalItems</td>
-                                    <td>
-                                        <a class="btn-sm btn-outline-secondary"
-                                           href="/collection-details/@collection.Id">Details</a>
-                                    </td>
-                                </tr>
-                            }
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Theme</th>
+                        <th>Total Items</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int j = 1;
+                        foreach (Collection collection in collections)
+                        {
+                            <tr>
+                                <th>@(j++)</th>
+                                <td>@collection.Name</td>
+                                <td>@collection.Theme!.Name</td>
+                                <td>@collection.TotalItems</td>
+                                <td>
+                                    <a class="btn-sm btn-outline-secondary"
+                                       href="/collection-details/@collection.Id">Details</a>
+                                </td>
+                            </tr>
                         }
-                    </tbody>
-                </table>
-            </div>
-        }
-        else
-        {
-            <p>Loading...</p>
-        }
-    </div>
-
-
-
-</AuthorizeView>
-
-@code {
-    private List<Collection>? collections;
-    private List<Item> items = [];
-    private List<Tag>? tagsGenerated;
-    private readonly DataGenerator dg = new("en");
-    private const int seed = 123;
-    private const string roleBlocked = "Blocked";
-    private const string loginPageURL = "/Account/Login";
-    private List<string> WordsToShow { get; set; } = [];
-    private ApplicationUser? ThisUser;
-    private bool newCollectionRequested = false;
-    private string TempImg { get; set; } = string.Empty;
-
-    private void RequestNewCollection()
-    {
-        newCollectionRequested = !newCollectionRequested;
+                    }
+                </tbody>
+            </table>
+        </div>
     }
-
-    protected override async Task OnInitializedAsync()
+    else
     {
-        await CheckAuthorizationLevel();
-
-        var te = await Task.Run(() => CreateData());
-        collections = te.Take(5).ToList();
-
-        List<Item> temp = [];
-
-        foreach (var t in collections)
-        {
-            t.TotalItems = t.Items.Count;
-            temp.AddRange(t.Items);
-        }
-
-        items.AddRange(temp.Take(5));
-
-        tagsGenerated = [];
-        List<Tag> k2;
-        using (var adc = _contextFactory.CreateDbContext())
-        {
-            k2 = adc.Tags.AsEnumerable<Tag>().ToList<Tag>();
-        }
-
-        tagsGenerated.AddRange(k2);
-
-        WordsToShow.Clear();
-        foreach (var tag in tagsGenerated)
-        {
-            WordsToShow.Add(tag.Name);
-        }
+        <p>Loading...</p>
     }
+</div>
 
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender)
-        {
-            //PopulateTable();
-        }
-    }
 
-    private void PopulateTable()
-    {
-        //PopulateThemes();
-        //PopulateTags();
-        //CreateCollection();
-    }
 
-    private void CreateCollection()
-    {
-        using (var adc = _contextFactory.CreateDbContext())
-        {
-            var collection = new Collection
-                {
-                    Name = "My awesome weekend",
-                    ThemeID = 2,
-                    ApplicationUserId = ThisUser!.Id,
-                    Description = "Photos and memories from the summer vacation 2 " +
-                                                        "to south east Asia. Wonderful landscapes and amazing views. 2 " +
-                                                        "The best food in the world and much more.",
-
-                    ImageLink = "https://1.bp.blogspot.com/-2FODK09wE9g/WZA3YXTPTJI/AAAAAAAAAQA/JMZr20FMOpYKoCGS33GQToQVO2_1y_8XgCLcBGAs/s1600/Vacation%2BPostcard%2BRecalculating.jpg",
-                };
-
-            adc.Collections.Add(collection);
-            adc.SaveChanges();
-        }
-    }
-
-    private void PopulateThemes()
-    {
-        using (var adc = _contextFactory.CreateDbContext())
-        {
-            List<Theme> theme = [
-                new Theme { Name = "Movies" },
-                new Theme { Name = "Travel" },
-                new Theme { Name = "Music" },
-                new Theme { Name = "Sport" },
-                new Theme { Name = "Computers" },
-                new Theme { Name = "Photo" },
-                new Theme { Name = "Cars" },
-                new Theme { Name = "Space" },
-                new Theme { Name = "Fishing" },
-                new Theme { Name = "Art" },
-            ];
-
-            adc.Themes.AddRange(theme);
-            adc.SaveChanges();
-        }
-    }
-
-    private void PopulateTags()
-    {
-        using (var adc = _contextFactory.CreateDbContext())
-        {
-            List<Tag> tags = [
-                new Tag { Name = "Chicago" },
-                new Tag { Name = "Rocket" },
-                new Tag { Name = "Beast" },
-                new Tag { Name = "Pencils" },
-                new Tag { Name = "Best" },
-                new Tag { Name = "Awesome" },
-                new Tag { Name = "Lame" },
-                new Tag { Name = "Lunch" },
-                new Tag { Name = "Vacation" },
-                new Tag { Name = "Holiday" },
-            ];
-
-            adc.Tags.AddRange(tags);
-            adc.SaveChanges();
-        }
-    }
-
-    private List<Collection> CreateData()
-    {
-        List<Collection> temp;
-        using (var adc = _contextFactory.CreateDbContext())
-        {
-            var t = adc.Collections
-            .Include(e => e.Theme)
-            .Include(e => e.Items)
-            .ThenInclude(e => e.Tags)
-            .Include(e => e.Items)
-            .ThenInclude(e => e.Likes)
-            .ToList();
-            temp = t.Where(x => x.ApplicationUserId == ThisUser!.Id).ToList();
-        }
-
-        return temp;
-    }
-
-    private async Task CheckAuthorizationLevel()
-    {
-        AuthenticationState authenticationState = Task.Run(() =>
-            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        ThisUser = Task.Run(() =>
-            _UserManager.GetUserAsync(authenticationState.User)).Result;
-        if (ThisUser is not null)
-        {
-            bool userInRoleBlocked = Task.Run(() =>
-                _UserManager.IsInRoleAsync(ThisUser, roleBlocked)).Result;
-            bool userIsBlocked = ThisUser.LockoutEnd is not null;
-            if (userInRoleBlocked || userIsBlocked)
-            {
-                await _SignInManager.SignOutAsync();
-                _navigationManager.NavigateTo(loginPageURL);
-            }
-        }
-        else
-        {
-            _navigationManager.NavigateTo("/");
-        }
-
-    }
-}
+@* </AuthorizeView> *@

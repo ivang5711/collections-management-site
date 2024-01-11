@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace Collections.Components.Pages;
+
 public partial class Home
 {
     private List<Collection>? collections;
@@ -43,15 +44,13 @@ public partial class Home
         {
             WordsToShow.Add(tag.Name);
         }
-
-
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
-            PopulateTable();
+            //PopulateTable();
         }
     }
 
@@ -68,26 +67,63 @@ public partial class Home
         {
             var collection = new Collection
             {
-                Name = "My awesome collection",
-                ThemeID = 6,
-                Items = new List<Item>
-                    {
+                Name = "My awesome weekend",
+                ThemeID = 2,
+                ApplicationUserId = ThisUser!.Id,
+                Description = "Photos and memories from the summer vacation " +
+                    "to south east Asia. Wonderful landscapes and amazing views. " +
+                    "The best food in the world and much more.",
+                Items =
+                    [
                         new Item
                         {
-                            Name = "Unusual keyboard",
-                            ApplicationUser = ThisUser!,
-                            ImageLink = "https://th.bing.com/th/id/R.9b2a3fd769228fb57123b60d09cb25d7?rik=WrrDpbHet61rCg&riu=http%3a%2f%2fupload.wikimedia.org%2fwikipedia%2fcommons%2f9%2f9f%2fApple_(Standard)_Keyboard_M0116.jpg&ehk=%2fEGwXB3aHJoiSK0PyIntdA4oLRO0LCKPNVamfIYI5gY%3d&risl=&pid=ImgRaw&r=0",
-                            Comments = new List<Comment>
-                            {
-                                new Comment { Name = "Joe Doe", Text = "This comment is awesome and amazing!" },
-                                new Comment { Name = "Billy Jane", Text = "The best product on the market!!! No doubt!" },
-                            }
+                            Name = "The Great Waterfall",
+                            ApplicationUserId = ThisUser!.Id,
+                            ImageLink = "https://images.pexels.com/photos/2406395/pexels-photo-2406395.jpeg?cs=srgb&dl=pexels-avery-nielsenwebb-2406395.jpg&fm=jpg",
+                            Comments =
+                            [
+                                new()
+                                {
+                                    ApplicationUserId = ThisUser!.Id,
+                                    Text = "This item is awesome and amazing!"
+                                },
+                                new()
+                                {
+                                    ApplicationUserId = ThisUser!.Id,
+                                    Text = "The best product on the market!!!"
+                                },
+                            ]
+                        },
+                        new Item
+                        {
+                            Name = "Street Food Gem",
+                            ApplicationUserId = ThisUser!.Id,
+                            ImageLink = "https://th.bing.com/th/id/OIP.Ju-1rTVwR5-rizOKEgLELAHaE8?rs=1&pid=ImgDetMain",
+                            Comments =
+                            [
+                                new()
+                                {
+                                    ApplicationUserId = ThisUser!.Id,
+                                    Text = "I wish to eat it every day"
+                                },
+                                new()
+                                {
+                                    ApplicationUserId = ThisUser!.Id,
+                                    Text = "Too good to be true"
+                                },
+                                new()
+                                {
+                                    ApplicationUserId = ThisUser!.Id,
+                                    Text = "It was not bad at all"
+                                },
+                            ]
                         }
 
-                    },
-                ImageLink = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.nytimes.com%2Fwirecutter%2Freviews%2Fthe-best-bluetooth-keyboard%2F&psig=AOvVaw0KxCHDSN3VGHnV0nEis_oT&ust=1705006685182000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCNi6soDb04MDFQAAAAAdAAAAABAQ",
-
+                    ],
+                ImageLink = "https://1.bp.blogspot.com/-2FODK09wE9g/WZA3YXTPTJI/AAAAAAAAAQA/JMZr20FMOpYKoCGS33GQToQVO2_1y_8XgCLcBGAs/s1600/Vacation%2BPostcard%2BRecalculating.jpg",
             };
+
+            collection.TotalItems = collection.Items.Count;
 
             adc.Collections.Add(collection);
             adc.SaveChanges();

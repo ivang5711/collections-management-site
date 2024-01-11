@@ -18,5 +18,7 @@ namespace Collections.Data
         public ICollection<Collection> Collections { get; } = [];
 
         public ICollection<Item> Items { get; } = [];
+
+        public ICollection<Comment> Comments { get; } = [];
     }
 }

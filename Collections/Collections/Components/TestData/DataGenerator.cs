@@ -42,7 +42,7 @@ public class DataGenerator(string locale)
     .Rules((f, u) =>
     {
         u.Id = f.IndexFaker + 1;
-        u.Name = f.Internet.UserName();
+        //u.Name = f.Internet.UserName();
         u.Text = f.Rant.Review();
     });
 

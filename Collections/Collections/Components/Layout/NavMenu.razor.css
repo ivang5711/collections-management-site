@@ -40,6 +40,7 @@
     width: 1.25rem;
     height: 1.25rem;
     margin-right: 0.75rem;
+    margin-left: 0.75rem;
     top: -1px;
     background-size: cover;
 }
@@ -111,14 +112,19 @@
     }
 
     .nav-item ::deep a.active {
-        background-color: rgba(255,255,255,0.25);
+        /*background-color: rgba(255,255,255,0.25);*/
         color: black;
+        text-shadow: 1px 1px 3px #c4c4c4f2;
+        border-bottom: ridge;
+        border-top: solid;
+        border-bottom-color: rgb(154, 154, 154);
+        border-top-color: rgb(184, 184, 184);
     }
 
     .nav-item ::deep .nav-link:hover {
         background-color: rgba(255,255,255,0.38);
         color: black;
-        text-shadow: 1px 1px 3px #c4c4c4f2; 
+        text-shadow: 1px 1px 3px #c4c4c4f2;
     }
 
 

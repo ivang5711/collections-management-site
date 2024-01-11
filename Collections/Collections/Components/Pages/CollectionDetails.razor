@@ -34,7 +34,7 @@
                     @collection.Description
                 </p>
             </div>
-            @if (!newItemRequested)
+            @if (!(newItemRequested || editItemRequested || deleteItemRequested))
             {
                 <div class="pb-2 d-flex justify-content-start m-0 row col-md
                         row-cols-md-auto gap-1">
@@ -44,13 +44,13 @@
                             type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                         <i class="bi bi-plus-square"></i> New Item
                     </button>
-                    <button @onclick="ToggleNewItemRequestStatus"
+                    <button @onclick="ToggleEditItemRequestStatus"
                             class="btn btn-outline-secondary btn-sm text-nowrap"
                             asp-formaction="Block" name="Block"
                             type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                         <i class="bi bi-pencil"></i> Edit Item
                     </button>
-                    <button @onclick="ToggleNewItemRequestStatus"
+                    <button @onclick="ToggleDeleteItemRequestStatus"
                             class="btn btn-outline-danger btn-sm text-nowrap"
                             asp-formaction="Block" name="Block"
                             type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
@@ -58,7 +58,7 @@
                     </button>
                 </div>
             }
-            @if (newItemRequested)
+            @if (newItemRequested && !editItemRequested && !deleteItemRequested)
             {
                 <div class="d-flex justify-content-center py-2">
                     <div class="card mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
@@ -92,6 +92,106 @@
                                     <span class="pb-2 pe-3 d-flex justify-content-end m-3 row col-md
                                  row-cols-md-auto gap-1">
                                         <button @onclick="ToggleNewItemRequestStatus"
+                                                class="btn btn-outline-secondary text-nowrap"
+                                                asp-formaction="Block" name="Block"
+                                                type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                            <i class="bi bi-plus-square"></i> Close
+                                        </button>
+                                        <button class="btn btn-outline-success text-nowrap"
+                                                type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                            <i class="bi bi-plus-square"></i> Create
+                                        </button>
+                                    </span>
+                                </EditForm>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (editItemRequested && !newItemRequested && !deleteItemRequested)
+            {
+                <div class="d-flex justify-content-center py-2">
+                    <div class="card mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
+                        <div class="row g-0">
+                            @if (string.IsNullOrWhiteSpace(TempImg))
+                            {
+                                <div class="col-md-4">
+                                    <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray; object-fit:cover;" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-4">
+                                    <img src="@TempImg" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
+                                </div>
+                            }
+                            <div class="col-md-8">
+                                <EditForm Context="formContext" Model="@Model" OnValidSubmit="@SubmitNewItem" FormName="Starship2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Edit Item</h5>
+                                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                        <div class="px-5 py-2">
+                                            <DataAnnotationsValidator />
+                                            <ValidationSummary />
+                                            Identifier:
+                                            <InputText @bind-Value="Model!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Item Name..." />
+                                            <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to item photo (optional)..." />
+                                        </div>
+                                    </div>
+                                    <span class="pb-2 pe-3 d-flex justify-content-end m-3 row col-md
+                                 row-cols-md-auto gap-1">
+                                        <button @onclick="ToggleEditItemRequestStatus"
+                                                class="btn btn-outline-secondary text-nowrap"
+                                                asp-formaction="Block" name="Block"
+                                                type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                            <i class="bi bi-plus-square"></i> Close
+                                        </button>
+                                        <button class="btn btn-outline-success text-nowrap"
+                                                type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                            <i class="bi bi-plus-square"></i> Create
+                                        </button>
+                                    </span>
+                                </EditForm>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (deleteItemRequested && !newItemRequested && !editItemRequested)
+            {
+                <div class="d-flex justify-content-center py-2">
+                    <div class="card mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
+                        <div class="row g-0">
+                            @if (string.IsNullOrWhiteSpace(TempImg))
+                            {
+                                <div class="col-md-4">
+                                    <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray; object-fit:cover;" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-4">
+                                    <img src="@TempImg" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
+                                </div>
+                            }
+                            <div class="col-md-8">
+                                <EditForm Context="formContext" Model="@Model" OnValidSubmit="@SubmitNewItem" FormName="Starship2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Delete Item</h5>
+                                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                        <div class="px-5 py-2">
+                                            <DataAnnotationsValidator />
+                                            <ValidationSummary />
+                                            Identifier:
+                                            <InputText @bind-Value="Model!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Item Name..." />
+                                            <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to item photo (optional)..." />
+                                        </div>
+                                    </div>
+                                    <span class="pb-2 pe-3 d-flex justify-content-end m-3 row col-md
+                                 row-cols-md-auto gap-1">
+                                        <button @onclick="ToggleDeleteItemRequestStatus"
                                                 class="btn btn-outline-secondary text-nowrap"
                                                 asp-formaction="Block" name="Block"
                                                 type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">

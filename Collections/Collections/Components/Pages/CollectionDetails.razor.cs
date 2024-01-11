@@ -16,6 +16,8 @@ public partial class CollectionDetails
     private List<Item>? itemsBunch;
     private ApplicationUser? ThisUser;
     private bool newItemRequested = false;
+    private bool editItemRequested = false;
+    private bool deleteItemRequested = false;
     private const string roleBlocked = "Blocked";
     private const string loginPageURL = "/Account/Login";
     private string TempImg { get; set; } = string.Empty;
@@ -44,6 +46,16 @@ public partial class CollectionDetails
     private void ToggleNewItemRequestStatus()
     {
         newItemRequested = !newItemRequested;
+    }
+
+    private void ToggleEditItemRequestStatus()
+    {
+        editItemRequested = !editItemRequested;
+    }
+
+    private void ToggleDeleteItemRequestStatus()
+    {
+        deleteItemRequested = !deleteItemRequested;
     }
 
     private List<Collection> GetCollectionsFromDataSource()

@@ -41,6 +41,11 @@ public partial class CollectionDetails
         Model ??= new();
     }
 
+    private void ToggleNewItemRequestStatus()
+    {
+        newItemRequested = !newItemRequested;
+    }
+
     private List<Collection> GetCollectionsFromDataSource()
     {
         List<Collection> t;
@@ -54,7 +59,6 @@ public partial class CollectionDetails
                            .ThenInclude(e => e.Tags)
                            .Include(e => e.Items)
                            .ThenInclude(e => e.Likes)
-,
             ];
         }
         return t;
@@ -80,6 +84,14 @@ public partial class CollectionDetails
         ToggleNewItemRequestStatus();
         Model ??= new();
         FetchCollectionsDataFromDataSource();
+    }
+
+    private void SubmitNewItem()
+    {
+        Model!.ImageLink = TempImg;
+        Model!.CollectionId = collection!.Id;
+        CreateNewItem();
+        newItemRequested = false;
     }
 
     private void FetchCollectionsDataFromDataSource()
@@ -122,18 +134,5 @@ public partial class CollectionDetails
                     _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
         ThisUser = Task.Run(() =>
             _UserManager.GetUserAsync(authenticationState.User)).Result;
-    }
-
-    private void SubmitNewItem()
-    {
-        Model!.ImageLink = TempImg;
-        Model!.CollectionId = collection!.Id;
-        CreateNewItem();
-        newItemRequested = false;
-    }
-
-    private void ToggleNewItemRequestStatus()
-    {
-        newItemRequested = !newItemRequested;
     }
 }

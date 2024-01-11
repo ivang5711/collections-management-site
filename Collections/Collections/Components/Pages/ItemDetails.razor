@@ -21,35 +21,25 @@ else
                     <div class="title-container text-center text-md-end">
                         <h1 class="text-light">@_itemDetails.Name</h1>
                         <h2 class="text-black">@_itemDetails.Author</h2>
-                        @if (_itemDetails.Likes.Count == 0 )
-                        {
-                            <span class="badge me-2 text-bg-light">
-                                No likes so far...
-                            </span>
-                        }
-
+                        
                         <span class="badge me-2 text-bg-light">
                             id: @_itemDetails.Id
                         </span>
-                        <span class="badge me-2 text-bg-dark">@_itemDetails.Collection.Name</span>
+                        <span class="badge me-2 text-bg-dark">collection: @_itemDetails.Collection.Name</span>
                         <button @onclick="IncrementLike" class="badge btn me-2 text-bg-success">
                             <i class="bi bi-hand-thumbs-up"></i> @LikeCount
                         </button>
-                        <div class="item-links">
-                            <div class="d-flex justify-content-center
-                                justify-content-md-end p-3">
-                                @if (!string.IsNullOrEmpty(_itemDetails.ImageLink))
-                                {
-                                    <div class="text-center px-2">
-                                        <a href="@_itemDetails.ImageLink"
-                                           target="_blank" class="btn
-                                            btn-outline-light rounded-pill">
-                                            Website
-                                        </a>
-                                    </div>
-                                }
-                            </div>
+
+                        <div class="me-2 pt-3">
+                            @if (_itemDetails.Tags.Count == 0)
+                            {
+                                <span class="badge text-bg-light">
+                                    No tags so far...
+                                </span>
+                            }
                         </div>
+
+                        
                     </div>
                 </div>
                 <div class="order-last order-md-first d-flex
@@ -62,8 +52,11 @@ else
                         }
                         else
                         {
+                            <a href="@_itemDetails.ImageLink">
+
                             <img src="@_itemDetails.ImageLink"
                                  alt="item poster" />
+                            </a>
                         }
                     </div>
                 </div>

@@ -15,129 +15,127 @@
 
 <PageTitle>My Collections</PageTitle>
 
-@* <AuthorizeView> *@
-<div class="container-xxl py-3 ">
-    @if (!newCollectionRequested)
-    {
-        <h3>My Collections</h3>
-        <div class="pb-2 d-flex justify-content-start m-0 row col-md
+<AuthorizeView>
+    <div class="container-xxl py-3 ">
+        @if (!newCollectionRequested)
+        {
+            <h3>My Collections</h3>
+            <div class="pb-2 d-flex justify-content-start m-0 row col-md
                         row-cols-md-auto gap-1">
-            <button @onclick="RequestNewCollection"
-                    class="btn btn-outline-success btn-sm text-nowrap"
-                    asp-formaction="Block" name="Block"
-                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                <i class="bi bi-plus-square"></i> New Collection
-            </button>
-        </div>
-    }
+                <button @onclick="RequestNewCollection"
+                        class="btn btn-outline-success btn-sm text-nowrap"
+                        asp-formaction="Block" name="Block"
+                        type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                    <i class="bi bi-plus-square"></i> New Collection
+                </button>
+            </div>
+        }
 
-    @if (newCollectionRequested)
-    {
-        <div class="d-flex justify-content-center py-5">
-            <div class="card mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
-                <div class="row g-0">
-                    @if (string.IsNullOrWhiteSpace(TempImg))
-                    {
+        @if (newCollectionRequested)
+        {
+            <div class="d-flex justify-content-center py-5">
+                <div class="card mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
+                    <div class="row g-0">
+                        @if (string.IsNullOrWhiteSpace(TempImg))
+                        {
 
-                        <div class="col-md-4">
-                            <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" />
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="col-md-4">
-                            <img src="@TempImg" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
-                        </div>
-                    }
-                    <div class="col-md-8">
-                        <EditForm Model="@Model" OnValidSubmit="@Submit" FormName="Starship2">
-                            <div class="card-body">
-                                <h5 class="card-title">Create New Collection</h5>
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                                <div class="px-5 py-2">
-                                    <DataAnnotationsValidator />
-                                    <ValidationSummary />
-                                    Identifier:
-                                    <InputText @bind-Value="Model!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Name..." />
-                                    <InputText @bind-Value="Model.Description" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Description" />
-                                    <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection photo (optional)..." />
-                                    <InputSelect class="form-select form-select" aria-label=".form-select example" @bind-Value="Model.ThemeId">
-                                        @if (Themes is null)
-                                        {
-                                            <option selected value="">None</option>
-                                        }
-                                        else
-                                        {
-                                            @foreach (var t in Themes)
-                                            {
-                                                <option value="@t.Id">@t.Name</option>
-                                            }
-                                        }
-
-                                    </InputSelect>
-                                </div>
+                            <div class="col-md-4">
+                                <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" />
                             </div>
-                            <span class="pb-2 pe-3 d-flex justify-content-end m-3 row col-md
+                        }
+                        else
+                        {
+                            <div class="col-md-4">
+                                <img src="@TempImg" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
+                            </div>
+                        }
+                        <div class="col-md-8">
+                            <EditForm Context="formContext" Model="@Model" OnValidSubmit="@Submit" FormName="Starship2">
+                                <div class="card-body">
+                                    <h5 class="card-title">Create New Collection</h5>
+                                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                    <div class="px-5 py-2">
+                                        <DataAnnotationsValidator />
+                                        <ValidationSummary />
+                                        Identifier:
+                                        <InputText @bind-Value="Model!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Name..." />
+                                        <InputText @bind-Value="Model.Description" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Description" />
+                                        <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection photo (optional)..." />
+                                        <InputSelect class="form-select form-select" aria-label=".form-select example" @bind-Value="Model.ThemeId">
+                                            @if (Themes is null)
+                                            {
+                                                <option selected value="">None</option>
+                                            }
+                                            else
+                                            {
+                                                @foreach (var t in Themes)
+                                                {
+                                                    <option value="@t.Id">@t.Name</option>
+                                                }
+                                            }
+
+                                        </InputSelect>
+                                    </div>
+                                </div>
+                                <span class="pb-2 pe-3 d-flex justify-content-end m-3 row col-md
                                  row-cols-md-auto gap-1">
-                                <button @onclick="RequestNewCollection"
-                                        class="btn btn-outline-secondary text-nowrap"
-                                        asp-formaction="Block" name="Block"
-                                        type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                    <i class="bi bi-plus-square"></i> Close
-                                </button>
-                                <button class="btn btn-outline-success text-nowrap"
-                                        type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                    <i class="bi bi-plus-square"></i> Create
-                                </button>
-                            </span>
-                        </EditForm>
+                                    <button @onclick="RequestNewCollection"
+                                            class="btn btn-outline-secondary text-nowrap"
+                                            asp-formaction="Block" name="Block"
+                                            type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                        <i class="bi bi-plus-square"></i> Close
+                                    </button>
+                                    <button class="btn btn-outline-success text-nowrap"
+                                            type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                        <i class="bi bi-plus-square"></i> Create
+                                    </button>
+                                </span>
+                            </EditForm>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    }
-    @if (collections is not null)
-    {
-        <div class="d-flex justify-content-center">
-            <table class="table table-sm table-hover table-striped table-bordered
+        }
+        @if (collections is not null)
+        {
+            <div class="d-flex justify-content-center">
+                <table class="table table-sm table-hover table-striped table-bordered
                               rounded-2 overflow-hidden" style="box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
-                <thead class="table-secondary">
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Theme</th>
-                        <th>Total Items</th>
-                        <th>Link</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        int j = 1;
-                        foreach (Collection collection in collections)
-                        {
-                            <tr>
-                                <th>@(j++)</th>
-                                <td>@collection.Name</td>
-                                <td>@collection.Theme!.Name</td>
-                                <td>@collection.TotalItems</td>
-                                <td>
-                                    <a class="btn-sm btn-outline-secondary"
-                                       href="/collection-details/@collection.Id">Details</a>
-                                </td>
-                            </tr>
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Theme</th>
+                            <th>Total Items</th>
+                            <th>Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int j = 1;
+                            foreach (Collection collection in collections)
+                            {
+                                <tr>
+                                    <th>@(j++)</th>
+                                    <td>@collection.Name</td>
+                                    <td>@collection.Theme!.Name</td>
+                                    <td>@collection.TotalItems</td>
+                                    <td>
+                                        <a class="btn-sm btn-outline-secondary"
+                                           href="/collection-details/@collection.Id">Details</a>
+                                    </td>
+                                </tr>
+                            }
                         }
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-    else
-    {
-        <p>Loading...</p>
-    }
-</div>
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p>Loading...</p>
+        }
+    </div>
 
-
-
-@* </AuthorizeView> *@
+</AuthorizeView>

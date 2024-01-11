@@ -47,8 +47,6 @@ public partial class CollectionsPage
         Console.WriteLine(Model?.ApplicationUserId);
         await CreateNewCollection();
         newCollectionRequested = false;
-        //StateHasChanged();
-        //_navigationManager.Refresh();
     }
 
     private void RequestNewCollection()

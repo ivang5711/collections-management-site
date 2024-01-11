@@ -1,7 +1,58 @@
 ﻿@page "/all"
 
-<h3>AllCollections</h3>
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<ApplicationUser> _UserManager
+@inject RoleManager<IdentityRole> _RoleManager
+@inject SignInManager<ApplicationUser> _SignInManager
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject NavigationManager _navigationManager
+@inject IDbContextFactory<ApplicationDbContext> _contextFactory
+@using System.ComponentModel.DataAnnotations
+@inject ILogger<CollectionsPage> Logger
 
-@code {
+@rendermode InteractiveServer
 
-}
+<PageTitle>All Collections</PageTitle>
+
+<div class="container-xxl py-3 ">
+    @if (collections is not null)
+    {
+        <div class="d-flex justify-content-center">
+            <table class="table table-sm table-hover table-striped table-bordered
+                              rounded-2 overflow-hidden" style="box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Theme</th>
+                        <th>Total Items</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int j = 1;
+                        foreach (Collection collection in collections)
+                        {
+                            <tr>
+                                <th>@(j++)</th>
+                                <td>@collection.Name</td>
+                                <td>@collection.Theme!.Name</td>
+                                <td>@collection.TotalItems</td>
+                                <td>
+                                    <a class="btn-sm btn-outline-secondary"
+                                       href="/collection-details/@collection.Id">Details</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p>Loading...</p>
+    }
+</div>

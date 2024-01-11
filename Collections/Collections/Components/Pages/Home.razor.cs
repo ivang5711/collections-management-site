@@ -44,13 +44,21 @@ public partial class Home
             WordsToShow.Add(tag.Name);
         }
 
-        //PopulateTable();
 
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            PopulateTable();
+        }
     }
 
     private void PopulateTable()
     {
-        PopulateThemes();
+        //PopulateThemes();
+        //PopulateTags();
         //CreateCollection();
     }
 
@@ -104,6 +112,28 @@ public partial class Home
             ];
 
             adc.Themes.AddRange(theme);
+            adc.SaveChanges();
+        }
+    }
+
+    private void PopulateTags()
+    {
+        using (adc)
+        {
+            List<Tag> tags = [
+                new Tag { Name = "Chicago" },
+                new Tag { Name = "Rocket" },
+                new Tag { Name = "Beast" },
+                new Tag { Name = "Pencils" },
+                new Tag { Name = "Best" },
+                new Tag { Name = "Awesome" },
+                new Tag { Name = "Lame" },
+                new Tag { Name = "Lunch" },
+                new Tag { Name = "Vacation" },
+                new Tag { Name = "Holiday" },
+            ];
+
+            adc.Tags.AddRange(tags);
             adc.SaveChanges();
         }
     }

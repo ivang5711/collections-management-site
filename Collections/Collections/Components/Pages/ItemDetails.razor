@@ -2,6 +2,7 @@
 
 @inject ApplicationDbContext adc
 
+@rendermode InteractiveServer
 
 @if (_itemDetails is null)
 {
@@ -27,10 +28,13 @@ else
                             </span>
                         }
 
-                        <span class="badge me-2 text-bg-dark">@_itemDetails.Collection.Theme.Name</span>
-                        <span class="badge me-2 text-bg-success">
-                            <i class="bi bi-hand-thumbs-up"></i> @_itemDetails.Likes.Count
+                        <span class="badge me-2 text-bg-light">
+                            id: @_itemDetails.Id
                         </span>
+                        <span class="badge me-2 text-bg-dark">@_itemDetails.Collection.Name</span>
+                        <button @onclick="IncrementLike" class="badge btn me-2 text-bg-success">
+                            <i class="bi bi-hand-thumbs-up"></i> @LikeCount
+                        </button>
                         <div class="item-links">
                             <div class="d-flex justify-content-center
                                 justify-content-md-end p-3">

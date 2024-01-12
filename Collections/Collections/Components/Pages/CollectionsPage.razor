@@ -56,41 +56,105 @@
                                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
                                     <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                                     <div class="px-5 py-2">
-                                        <DataAnnotationsValidator />
-                                        <ValidationSummary />
-                                        Identifier:
-                                        <InputText @bind-Value="Model!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Name..." />
-                                        <InputText @bind-Value="Model.Description" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Description" />
-                                        <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection photo (optional)..." />
-                                        <InputSelect class="form-select form-select" aria-label=".form-select example" @bind-Value="Model.ThemeId">
-                                            @if (Themes is null)
-                                            {
-                                                <option selected value="">None</option>
-                                            }
-                                            else
-                                            {
-                                                @foreach (var t in Themes)
-                                                {
-                                                    <option value="@t.Id">@t.Name</option>
-                                                }
-                                            }
+                                        @if (!addNewThemeRequested)
+                                        {
 
-                                        </InputSelect>
+                                            <DataAnnotationsValidator />
+                                            <ValidationSummary />
+                                            @* Identifier: *@
+                                            <InputText @bind-Value="Model!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Name..." />
+                                            <InputText @bind-Value="Model.Description" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Description" />
+                                            <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection photo (optional)..." />
+                                            <div class="row row-cols-1 row-cols-md-auto">
+                                                <div class="flex-fill pe-md-0 mx-0">
+                                                    <InputSelect class="d-flex form-select form-select" aria-label=".form-select example" @bind-Value="Model.ThemeId">
+                                                        @if (Themes is null)
+                                                        {
+                                                            <option selected value="">None</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var t in Themes)
+                                                            {
+                                                                <option value="@t.Id">@t.Name</option>
+                                                            }
+                                                        }
+                                                    </InputSelect>
+                                                </div>
+                                                <div class="mx-0 my-2 ps-md-2 my-md-0">
+                                                    <button @onclick="RequestNewTheme"
+                                                            class="btn btn-outline-secondary text-nowrap"
+                                                            asp-formaction="Block" name="Block"
+                                                            type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                        <i class="bi bi-plus-square"></i> Add Theme
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        }
+                                        else
+                                        {
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    New category
+                                                </div>
+                                                <div class="card-body">
+                                                    @if (!newTHemeAddFinishedSuccessfully)
+                                                    {
+                                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                                            <strong>Holy guacamole!</strong> You should check
+                                                            <button @onclick="ResetNewTHemeAddFinishedSuccessfullyStatus" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                    }
+                                                    <input type="text" @bind="NewTheme" class="form-control mt-3" placeholder="Enter new collection category...">
+                                                    <div class="d-flex justify-content-end me-0 mt-3 mb-0 row col-md
+                                 row-cols-md-auto gap-1">
+                                                        <button @onclick="RequestNewTheme"
+                                                                class="btn btn-outline-secondary text-nowrap"
+                                                                asp-formaction="Block" name="Block"
+                                                                type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                            <i class="bi bi-plus-square"></i> Cancel
+                                                        </button>
+                                                        <button @onclick="SubmitNewTheme"
+                                                                class="btn btn-outline-success text-nowrap"
+                                                                type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                            <i class="bi bi-plus-square"></i> Add
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
-                                <span class="pb-2 pe-3 d-flex justify-content-end m-3 row col-md
+                                <div>
+
+                                    <div class="pb-2 pe-3 d-flex justify-content-end m-3 row col-md
                                  row-cols-md-auto gap-1">
-                                    <button @onclick="RequestNewCollection"
-                                            class="btn btn-outline-secondary text-nowrap"
-                                            asp-formaction="Block" name="Block"
-                                            type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                        <i class="bi bi-plus-square"></i> Close
-                                    </button>
-                                    <button class="btn btn-outline-success text-nowrap"
-                                            type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                        <i class="bi bi-plus-square"></i> Create
-                                    </button>
-                                </span>
+                                        <button @onclick="RequestNewCollection"
+                                                class="btn btn-outline-secondary text-nowrap"
+                                                asp-formaction="Block" name="Block"
+                                                type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                            <i class="bi bi-plus-square"></i> Close
+                                        </button>
+                                        @if (!addNewThemeRequested)
+                                        {
+
+                                            <button class="btn btn-outline-success text-nowrap"
+                                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                <i class="bi bi-plus-square"></i> Create
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-outline-success text-nowrap"
+                                                    type="submit" disabled value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                <i class="bi bi-plus-square"></i> Create
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
                             </EditForm>
                         </div>
                     </div>

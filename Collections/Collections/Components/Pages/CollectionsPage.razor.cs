@@ -12,11 +12,15 @@ public partial class CollectionsPage
     private List<Collection>? collections;
     private const string roleBlocked = "Blocked";
     private const string loginPageURL = "/Account/Login";
-    private List<string> WordsToShow { get; set; } = [];
     private ApplicationUser? ThisUser;
+    private bool themeIsUnique = true;
+    private bool newTHemeAddFinishedSuccessfully = true;
     private bool newCollectionRequested = false;
+    private bool addNewThemeRequested = false;
     private string TempImg { get; set; } = string.Empty;
     public List<Theme> Themes { get; set; } = [];
+
+    public string? NewTheme { get; set; }
 
     [SupplyParameterFromForm]
     public CollectionCandidate? Model { get; set; }
@@ -55,14 +59,58 @@ public partial class CollectionsPage
         newCollectionRequested = !newCollectionRequested;
     }
 
+    private void ResetNewTHemeAddFinishedSuccessfullyStatus()
+    {
+        newTHemeAddFinishedSuccessfully = true;
+    }
+
+    private void RequestNewTheme()
+    {
+        Themes = GetThemes();
+        addNewThemeRequested = !addNewThemeRequested;
+    }
+
+    private void SubmitNewTheme()
+    {
+        newTHemeAddFinishedSuccessfully = true;
+        themeIsUnique = true;
+        if (!string.IsNullOrWhiteSpace(NewTheme))
+        {
+            foreach (var theme in Themes)
+            {
+                if (theme.Name == NewTheme)
+                {
+                    themeIsUnique = false;
+                    break;
+                }
+            }
+
+            if (themeIsUnique)
+            {
+                Console.WriteLine("New theme is: " + NewTheme);
+                CreateNewTheme();
+                NewTheme = string.Empty;
+                RequestNewTheme();
+            }
+            else
+            {
+                newTHemeAddFinishedSuccessfully = false;
+                Console.WriteLine("Theme is not unique");
+            }
+        }
+    }
+
     private async Task CreateNewCollection()
     {
         CreateCollection(Model!);
-
         newCollectionRequested = !newCollectionRequested;
-
         TempImg = string.Empty;
         Model ??= new();
+        await GetCollectionsFromDataSource();
+    }
+
+    private async Task GetCollectionsFromDataSource()
+    {
         var te = await Task.Run(() => CreateData());
         collections = [.. te];
         foreach (var t in collections)
@@ -76,7 +124,7 @@ public partial class CollectionsPage
         List<Theme> res;
         using (var adc = _contextFactory.CreateDbContext())
         {
-            res = adc.Themes.ToList();
+            res = [.. adc.Themes];
         }
 
         return res;
@@ -85,17 +133,22 @@ public partial class CollectionsPage
     protected override async Task OnInitializedAsync()
     {
         await CheckAuthorizationLevel();
-
         Model ??= new();
-
         Themes = GetThemes();
+        await GetCollectionsFromDataSource();
+    }
 
-        var te = await Task.Run(() => CreateData());
-        collections = [.. te];
-
-        foreach (var t in collections)
+    private void CreateNewTheme()
+    {
+        using (var adc = _contextFactory.CreateDbContext())
         {
-            t.TotalItems = t.Items.Count;
+            var theme = new Theme
+            {
+                Name = NewTheme!
+            };
+
+            adc.Themes.Add(theme);
+            adc.SaveChanges();
         }
     }
 

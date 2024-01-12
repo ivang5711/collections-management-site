@@ -13,7 +13,6 @@ public partial class ItemDetails
     private Item? _itemDetails;
     private List<Item>? _itemsBunch;
     private List<Comment> _comments = [];
-    private ApplicationUser? _user;
     public int LikeCount { get; set; } = 999;
 
     protected override async Task OnInitializedAsync()
@@ -34,12 +33,15 @@ public partial class ItemDetails
         List<Item> t;
         using (var adc = _contextFactory.CreateDbContext())
         {
-            t = adc.Items
-            .Include(e => e.Tags)
-            .Include(e => e.Likes)
-            .Include(e => e.Comments)
-            .Include(e => e.Collection)
-            .ToList();
+            t =
+            [
+                .. adc.Items
+                            .Include(e => e.Tags)
+                            .Include(e => e.Likes)
+                            .Include(e => e.Comments)
+                            .Include(e => e.Collection)
+,
+            ];
         }
         return t;
     }

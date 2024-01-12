@@ -90,7 +90,7 @@ namespace Collections.Components.Account
                 var email = principal.FindFirst(options.ClaimsIdentity.EmailClaimType)?.Value;
                 var role = principal.FindFirst(options.ClaimsIdentity.RoleClaimType)?.Value;
 
-                if (userId != null && email != null)
+                if (userId != null && email != null && role != null)
                 {
                     state.PersistAsJson(nameof(UserInfo), new UserInfo
                     {

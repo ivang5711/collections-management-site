@@ -102,14 +102,17 @@
                                                     @if (!newTHemeAddFinishedSuccessfully)
                                                     {
                                                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                                            <strong>Holy guacamole!</strong> You should check
-                                                            <button @onclick="ResetNewTHemeAddFinishedSuccessfullyStatus" type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
+                                                            <div>
+                                                                <strong>Holy guacamole!</strong> This category already exists
+                                                            </div>
+                                                            <div>
+                                                                <button @onclick="ResetNewTHemeAddFinishedSuccessfullyStatus" type="button" class="btn-close " data-dismiss="alert" aria-label="Close">
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     }
                                                     <input type="text" @bind="NewTheme" class="form-control mt-3" placeholder="Enter new collection category...">
-                                                    <div class="d-flex justify-content-end me-0 mt-3 mb-0 row col-md
+                                                    <div class="d-flex justify-content-end me-0 ms-0 mt-3 mb-0 row col-md
                                  row-cols-md-auto gap-1">
                                                         <button @onclick="RequestNewTheme"
                                                                 class="btn btn-outline-secondary text-nowrap"
@@ -130,7 +133,7 @@
                                 </div>
                                 <div>
 
-                                    <div class="pb-2 pe-3 d-flex justify-content-end m-3 row col-md
+                                    <div class="pb-2 pe-3 ps-3 d-flex justify-content-end m-3 row col-md
                                  row-cols-md-auto gap-1">
                                         <button @onclick="RequestNewCollection"
                                                 class="btn btn-outline-secondary text-nowrap"

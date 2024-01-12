@@ -50,7 +50,7 @@
                             </div>
                         }
                         <div class="col-md-8">
-                            <EditForm Context="formContext" Model="@Model" OnValidSubmit="@Submit" FormName="Starship2">
+                            <EditForm Context="formContext" Model="@Model" OnValidSubmit="@SubmitNewCollectionForm" FormName="NewCollectionForm">
                                 <div class="card-body">
                                     <h5 class="card-title">Create New Collection</h5>
                                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
@@ -67,7 +67,7 @@
                                             <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection photo (optional)..." />
                                             <div class="row row-cols-1 row-cols-md-auto">
                                                 <div class="flex-fill pe-md-0 mx-0">
-                                                    <InputSelect class="d-flex form-select form-select" aria-label=".form-select example" @bind-Value="Model.ThemeId">
+                                                    <InputSelect class="d-flex form-select form-select" aria-label=".form-select example" @bind-Value="Model.ThemeID">
                                                         @if (Themes is null)
                                                         {
                                                             <option selected value="">None</option>

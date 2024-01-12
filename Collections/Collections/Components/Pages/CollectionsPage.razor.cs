@@ -25,37 +25,29 @@ public partial class CollectionsPage
     [SupplyParameterFromForm]
     public CollectionCandidate? Model { get; set; }
 
-    public class CollectionCandidate
+    public class CollectionCandidate : Collection
     {
-        public string? ImageLink { get; set; }
-        public string? ApplicationUserId { get; set; }
+        [Required]
+        public new string? Name { get; set; }
 
         [Required]
-        public string? Name { get; set; }
+        public new int ThemeID { get; set; }
 
         [Required]
-        public int ThemeId { get; set; }
-
-        [Required]
-        public string? Description { get; set; }
+        public new string? Description { get; set; }
     }
 
-    private async Task Submit()
+    private async Task SubmitNewCollectionForm()
     {
         Model!.ImageLink = TempImg;
         Model!.ApplicationUserId = ThisUser!.Id;
-        Console.WriteLine(Model?.Name);
-        Console.WriteLine(Model?.Description);
-        Console.WriteLine(Model?.ImageLink);
-        Console.WriteLine(Model?.ThemeId);
-        Console.WriteLine(Model?.ApplicationUserId);
         await CreateNewCollection();
         newCollectionRequested = false;
     }
 
     private void RequestNewCollection()
     {
-        Themes = GetThemes();
+        GetThemes();
         newCollectionRequested = !newCollectionRequested;
     }
 
@@ -66,7 +58,7 @@ public partial class CollectionsPage
 
     private void RequestNewTheme()
     {
-        Themes = GetThemes();
+        GetThemes();
         addNewThemeRequested = !addNewThemeRequested;
     }
 
@@ -76,6 +68,7 @@ public partial class CollectionsPage
         themeIsUnique = true;
         if (!string.IsNullOrWhiteSpace(NewTheme))
         {
+            GetThemes();
             foreach (var theme in Themes)
             {
                 if (theme.Name == NewTheme)
@@ -87,7 +80,6 @@ public partial class CollectionsPage
 
             if (themeIsUnique)
             {
-                Console.WriteLine("New theme is: " + NewTheme);
                 CreateNewTheme();
                 NewTheme = string.Empty;
                 RequestNewTheme();
@@ -95,7 +87,6 @@ public partial class CollectionsPage
             else
             {
                 newThemeAddFinishedSuccessfully = false;
-                Console.WriteLine("Theme is not unique");
             }
         }
     }
@@ -111,81 +102,64 @@ public partial class CollectionsPage
 
     private async Task GetCollectionsFromDataSource()
     {
-        var te = await Task.Run(() => CreateData());
-        collections = [.. te];
-        foreach (var t in collections)
+        await Task.Run(() => CreateData());
+        if (collections is not null)
         {
-            t.TotalItems = t.Items.Count;
+            foreach (var t in collections)
+            {
+                t.TotalItems = t.Items.Count;
+            }
         }
     }
 
-    private List<Theme> GetThemes()
+    private void GetThemes()
     {
-        List<Theme> res;
-        using (var adc = _contextFactory.CreateDbContext())
-        {
-            res = [.. adc.Themes];
-        }
-
-        return res;
+        using var adc = _contextFactory.CreateDbContext();
+        Themes = [.. adc.Themes];
     }
 
     protected override async Task OnInitializedAsync()
     {
         await CheckAuthorizationLevel();
         Model ??= new();
-        Themes = GetThemes();
+        GetThemes();
         await GetCollectionsFromDataSource();
     }
 
     private void CreateNewTheme()
     {
-        using (var adc = _contextFactory.CreateDbContext())
-        {
-            var theme = new Theme
-            {
-                Name = NewTheme!
-            };
-
-            adc.Themes.Add(theme);
-            adc.SaveChanges();
-        }
+        using var adc = _contextFactory.CreateDbContext();
+        adc.Themes.Add(new Theme { Name = NewTheme! });
+        adc.SaveChanges();
     }
 
     private void CreateCollection(CollectionCandidate collectionCandidate)
     {
-        using (var adc = _contextFactory.CreateDbContext())
+        using var adc = _contextFactory.CreateDbContext();
+        var collection = new Collection
         {
-            var collection = new Collection
-            {
-                Name = collectionCandidate.Name,
-                ThemeID = collectionCandidate.ThemeId,
-                ApplicationUserId = collectionCandidate.ApplicationUserId,
-                Description = collectionCandidate.Description,
-                ImageLink = collectionCandidate.ImageLink,
-            };
+            Name = collectionCandidate!.Name!,
+            ThemeID = collectionCandidate!.ThemeID,
+            ApplicationUserId = collectionCandidate!.ApplicationUserId!,
+            Description = collectionCandidate!.Description!,
+            ImageLink = collectionCandidate!.ImageLink,
+        };
 
-            adc.Collections.Add(collection);
-            adc.SaveChanges();
-        }
+        adc.Collections.Add(collection);
+        adc.SaveChanges();
     }
 
-    private List<Collection> CreateData()
+    private void CreateData()
     {
-        List<Collection> temp;
-        using (var adc = _contextFactory.CreateDbContext())
-        {
-            var t = adc.Collections
-            .Include(e => e.Theme)
-            .Include(e => e.Items)
-            .ThenInclude(e => e.Tags)
-            .Include(e => e.Items)
-            .ThenInclude(e => e.Likes)
-            .ToList();
-            temp = t.Where(x => x.ApplicationUserId == ThisUser!.Id).ToList();
-        }
-
-        return temp;
+        using var adc = _contextFactory.CreateDbContext();
+        var t = adc.Collections
+        .Include(e => e.Theme)
+        .Include(e => e.Items)
+        .ThenInclude(e => e.Tags)
+        .Include(e => e.Items)
+        .ThenInclude(e => e.Likes)
+        .ToList();
+        collections = t.Where(x => x.ApplicationUserId == ThisUser!.Id).ToList();
     }
 
     private async Task CheckAuthorizationLevel()

@@ -9,18 +9,17 @@ namespace Collections.Components.Pages;
 
 public partial class CollectionsPage
 {
-    private List<Collection>? collections;
     private const string roleBlocked = "Blocked";
     private const string loginPageURL = "/Account/Login";
-    private ApplicationUser? ThisUser;
     private bool themeIsUnique = true;
     private bool newThemeAddFinishedSuccessfully = true;
     private bool newCollectionRequested = false;
     private bool addNewThemeRequested = false;
+    private List<Collection>? collections = null;
+    private ApplicationUser? ThisUser = null;
     private string TempImg { get; set; } = string.Empty;
-    public List<Theme> Themes { get; set; } = [];
-
     public string? NewTheme { get; set; }
+    public List<Theme> Themes { get; set; } = [];
 
     [SupplyParameterFromForm]
     public CollectionCandidate? Model { get; set; }
@@ -105,7 +104,7 @@ public partial class CollectionsPage
         await Task.Run(() => CreateData());
         if (collections is not null)
         {
-            foreach (var t in collections)
+            foreach (Collection t in collections)
             {
                 t.TotalItems = t.Items.Count;
             }
@@ -142,7 +141,7 @@ public partial class CollectionsPage
             ThemeID = collectionCandidate!.ThemeID,
             ApplicationUserId = collectionCandidate!.ApplicationUserId!,
             Description = collectionCandidate!.Description!,
-            ImageLink = collectionCandidate!.ImageLink,
+            ImageLink = collectionCandidate.ImageLink,
         };
 
         adc.Collections.Add(collection);
@@ -153,13 +152,11 @@ public partial class CollectionsPage
     {
         using var adc = _contextFactory.CreateDbContext();
         var t = adc.Collections
-        .Include(e => e.Theme)
-        .Include(e => e.Items)
-        .ThenInclude(e => e.Tags)
-        .Include(e => e.Items)
-        .ThenInclude(e => e.Likes)
-        .ToList();
-        collections = t.Where(x => x.ApplicationUserId == ThisUser!.Id).ToList();
+            .Include(e => e.Theme)
+            .Include(e => e.Items)
+            .ToList();
+        collections = [.. t.Where(x => x.ApplicationUserId == ThisUser!.Id)
+            .OrderByDescending(u => u.Items.Count)];
     }
 
     private async Task CheckAuthorizationLevel()

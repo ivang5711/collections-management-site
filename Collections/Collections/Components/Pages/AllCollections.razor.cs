@@ -44,16 +44,21 @@ public partial class AllCollections
         List<Collection> t;
         using (var adc = _contextFactory.CreateDbContext())
         {
-            t = adc.Collections
-           .Include(e => e.Theme)
-           .Include(e => e.Items)
-           .ThenInclude(e => e.Tags)
-           .Include(e => e.Items)
-           .ThenInclude(e => e.Likes)
-           .ToList();
+            t =
+            [
+                .. adc.Collections
+                           .Include(e => e.Theme)
+                           .Include(e => e.Items)
+                           .ThenInclude(e => e.Tags)
+                           .Include(e => e.Items)
+                           .ThenInclude(e => e.Likes)
+,
+            ];
         }
 
-        return t;
+        var res = collections = [.. t.OrderByDescending(u => u.Items.Count)];
+
+        return res;
     }
 
     private async Task CheckAuthorizationLevel()

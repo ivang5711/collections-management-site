@@ -20,6 +20,11 @@
         @if (!newCollectionRequested)
         {
             <h3>My Collections</h3>
+            @if (collections is not null && collections.Count == 0)
+            {
+                <p>You don't have any collection yet, </p>
+                <p>but you are welcome to add as many as you wish!</p>
+            }
             <div class="pb-2 d-flex justify-content-start m-0 row col-md
                         row-cols-md-auto gap-1">
                 <button @onclick="RequestNewCollection"
@@ -164,7 +169,12 @@
                 </div>
             </div>
         }
-        @if (collections is not null)
+
+        @if (collections is null)
+        {
+            <p>Loading...</p>
+        }
+        else if (collections.Count > 0)
         {
             <div class="d-flex justify-content-center">
                 <table class="table table-sm table-hover table-striped table-bordered
@@ -198,10 +208,6 @@
                     </tbody>
                 </table>
             </div>
-        }
-        else
-        {
-            <p>Loading...</p>
         }
     </div>
 

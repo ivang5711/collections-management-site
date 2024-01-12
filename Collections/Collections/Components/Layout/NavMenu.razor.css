@@ -93,6 +93,7 @@
     font-size: 0.9rem;
     padding-bottom: 0.25rem;
     padding-top: 0.25rem;
+
 }
 
     /*.nav-item:first-of-type {
@@ -119,16 +120,21 @@
         /*background-color: rgba(255,255,255,0.25);*/
         color: black;
         text-shadow: 1px 1px 3px #c4c4c4f2;
-        border-bottom: ridge;
+        /*        border-bottom: ridge;
         border-top: solid;
         border-bottom-color: rgb(154, 154, 154);
-        border-top-color: rgb(184, 184, 184);
+        border-top-color: rgb(184, 184, 184);*/
+        box-shadow: 0px 5px 2px -5px #000000ff;
+/*        border-bottom: solid;
+        border-bottom-width: 1px;
+        border-bottom-color: black;*/
     }
 
     .nav-item ::deep .nav-link:hover {
         background-color: rgba(255,255,255,0.38);
         color: black;
         text-shadow: 1px 1px 3px #c4c4c4f2;
+        border-radius: 4px;
     }
 
 

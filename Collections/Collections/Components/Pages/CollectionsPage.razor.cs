@@ -14,7 +14,7 @@ public partial class CollectionsPage
     private const string loginPageURL = "/Account/Login";
     private ApplicationUser? ThisUser;
     private bool themeIsUnique = true;
-    private bool newTHemeAddFinishedSuccessfully = true;
+    private bool newThemeAddFinishedSuccessfully = true;
     private bool newCollectionRequested = false;
     private bool addNewThemeRequested = false;
     private string TempImg { get; set; } = string.Empty;
@@ -61,7 +61,7 @@ public partial class CollectionsPage
 
     private void ResetNewTHemeAddFinishedSuccessfullyStatus()
     {
-        newTHemeAddFinishedSuccessfully = true;
+        newThemeAddFinishedSuccessfully = true;
     }
 
     private void RequestNewTheme()
@@ -72,7 +72,7 @@ public partial class CollectionsPage
 
     private void SubmitNewTheme()
     {
-        newTHemeAddFinishedSuccessfully = true;
+        newThemeAddFinishedSuccessfully = true;
         themeIsUnique = true;
         if (!string.IsNullOrWhiteSpace(NewTheme))
         {
@@ -94,7 +94,7 @@ public partial class CollectionsPage
             }
             else
             {
-                newTHemeAddFinishedSuccessfully = false;
+                newThemeAddFinishedSuccessfully = false;
                 Console.WriteLine("Theme is not unique");
             }
         }

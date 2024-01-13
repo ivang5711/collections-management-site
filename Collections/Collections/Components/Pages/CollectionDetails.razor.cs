@@ -20,10 +20,20 @@ public partial class CollectionDetails
     private bool deleteItemRequested = false;
     private const string roleBlocked = "Blocked";
     private const string loginPageURL = "/Account/Login";
-    private string TempImg { get; set; } = string.Empty;
+
+    private bool themeIsUnique = true;
+    private bool newThemeAddFinishedSuccessfully = true;
+    private bool newCollectionRequested = false;
+    private bool addNewThemeRequested = false;
+    private string? TempImg { get; set; } = string.Empty;
+
+    public string? NewTheme { get; set; }
+    public List<Theme> Themes { get; set; } = [];
 
     [SupplyParameterFromForm]
-    public ItemCandidate? Model { get; set; }
+    public ItemCandidate? ItemModel { get; set; }
+
+    public CollectionCandidate? CollectionModel { get; set; }
 
     public class ItemCandidate
     {
@@ -36,11 +46,74 @@ public partial class CollectionDetails
         public string? Name { get; set; }
     }
 
+    public class CollectionCandidate : Collection
+    {
+        [Required]
+        public new string Name { get; set; }
+
+        [Required]
+        public new int ThemeID { get; set; }
+
+        [Required]
+        public new string Description { get; set; }
+    }
+
+    private void GetThemes()
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        Themes = [.. adc.Themes];
+    }
+
+    private void CreateNewTheme()
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        adc.Themes.Add(new Theme { Name = NewTheme! });
+        adc.SaveChanges();
+    }
+
+    private void RequestNewTheme()
+    {
+        GetThemes();
+        addNewThemeRequested = !addNewThemeRequested;
+    }
+
+    private void SubmitNewTheme()
+    {
+        newThemeAddFinishedSuccessfully = true;
+        themeIsUnique = true;
+        if (!string.IsNullOrWhiteSpace(NewTheme))
+        {
+            GetThemes();
+            foreach (var theme in Themes)
+            {
+                if (theme.Name == NewTheme)
+                {
+                    themeIsUnique = false;
+                    break;
+                }
+            }
+
+            if (themeIsUnique)
+            {
+                CreateNewTheme();
+                NewTheme = string.Empty;
+                RequestNewTheme();
+            }
+            else
+            {
+                newThemeAddFinishedSuccessfully = false;
+            }
+        }
+    }
+
+
     protected override async Task OnInitializedAsync()
     {
         await CheckAuthorizationLevel();
         FetchCollectionsDataFromDataSource();
-        Model ??= new();
+        GetThemes();
+        ItemModel ??= new();
+        CollectionModel = new();
     }
 
     private void ToggleNewItemRequestStatus()
@@ -48,12 +121,13 @@ public partial class CollectionDetails
         newItemRequested = !newItemRequested;
     }
 
-    private void ToggleEditItemRequestStatus()
+    private void ToggleEditCollectionRequestStatus()
     {
+        TempImg = collection!.ImageLink;
         editItemRequested = !editItemRequested;
     }
 
-    private void ToggleDeleteItemRequestStatus()
+    private void ToggleDeleteCollectionRequestStatus()
     {
         deleteItemRequested = !deleteItemRequested;
     }
@@ -93,18 +167,26 @@ public partial class CollectionDetails
 
     private void CreateNewItem()
     {
-        CreateItem(Model!);
+        CreateItem(ItemModel!);
         ToggleNewItemRequestStatus();
-        Model ??= new();
+        ItemModel ??= new();
         FetchCollectionsDataFromDataSource();
     }
 
     private void SubmitNewItem()
     {
-        Model!.ImageLink = TempImg;
-        Model!.CollectionId = collection!.Id;
+        ItemModel!.ImageLink = TempImg;
+        ItemModel!.CollectionId = collection!.Id;
         CreateNewItem();
         newItemRequested = false;
+    }
+
+    private void SubmitEditCollection()
+    {
+    }
+
+    private void SubmitDeleteCollection()
+    {
     }
 
     private void FetchCollectionsDataFromDataSource()

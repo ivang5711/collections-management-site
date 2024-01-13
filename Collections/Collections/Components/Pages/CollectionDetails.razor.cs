@@ -112,7 +112,7 @@ public partial class CollectionDetails
         itemsBunch = [];
         var t = GetCollectionsFromDataSource().ToList<Collection>();
         collection = t.First(x => x.Id == Id);
-        itemsBunch.AddRange(collection.Items);
+        itemsBunch.AddRange(collection.Items.OrderByDescending(u => u.CreationDateTime));
     }
 
     private async Task CheckAuthorizationLevel()

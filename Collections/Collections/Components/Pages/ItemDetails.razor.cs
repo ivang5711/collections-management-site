@@ -1,4 +1,3 @@
-using Collections.Data;
 using Collections.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
@@ -17,19 +16,19 @@ public partial class ItemDetails
     private bool deleteItemRequested = false;
     public int LikeCount { get; set; } = 999;
     private string? TempImg { get; set; } = string.Empty;
-    private bool collectionChangeRequestValid = true;
-    public Collection? CollectionModel { get; set; }
+    private bool itemChangeRequestValid = true;
+    public Item? ItemModel { get; set; }
     private bool newItemRequested = false;
     private Collection? collection;
 
     private void ResetCollectionChangeRequestValidStatus()
     {
-        collectionChangeRequestValid = false;
+        itemChangeRequestValid = false;
     }
 
-    private void SubmitEditCollection()
+    private void SubmitEditItem()
     {
-        Console.WriteLine("Edit collection submitted!");
+        Console.WriteLine("Edit Item submitted!");
         //if (ValidateCollectionModel())
         //{
         //    UpdateCollection();
@@ -38,9 +37,20 @@ public partial class ItemDetails
         //}
     }
 
-
     private void ToggleEditItemRequestStatus()
     {
+        if (_itemDetails is not null)
+        {
+            ItemModel = new()
+            {
+                Id = _itemDetails.Id,
+                Name = _itemDetails.Name,
+                ImageLink = _itemDetails.ImageLink,
+                CreationDateTime = _itemDetails.CreationDateTime,
+            };
+            TempImg = _itemDetails.ImageLink;
+        }
+
         editItemRequested = !editItemRequested;
     }
 
@@ -51,10 +61,25 @@ public partial class ItemDetails
 
     protected override async Task OnInitializedAsync()
     {
-        _itemsBunch = CreateData2();
-        _itemDetails = _itemsBunch.First(x => x.Id == Id);
-        _comments = _itemDetails.Comments;
-        LikeCount = _itemDetails.Likes.Count;
+        CreateData();
+        if (_itemsBunch is not null)
+        {
+            _itemDetails = _itemsBunch.First(x => x.Id == Id);
+            _comments = _itemDetails.Comments;
+            LikeCount = _itemDetails.Likes.Count;
+            collection = _itemDetails.Collection;
+            if (_itemDetails is not null)
+            {
+                ItemModel = new()
+                {
+                    Id = _itemDetails.Id,
+                    Name = _itemDetails.Name,
+                    ImageLink = _itemDetails.ImageLink,
+                    CreationDateTime = _itemDetails.CreationDateTime,
+                };
+                TempImg = _itemDetails.ImageLink;
+            }
+        }
     }
 
     private void IncrementLike()
@@ -62,31 +87,27 @@ public partial class ItemDetails
         LikeCount++;
     }
 
-    private List<Item> CreateData2()
+    private void CreateData()
     {
-        List<Item> t;
         using (var adc = _contextFactory.CreateDbContext())
         {
-            t =
+            _itemsBunch =
             [
                 .. adc.Items
                             .Include(e => e.Tags)
                             .Include(e => e.Likes)
                             .Include(e => e.Comments)
                             .Include(e => e.Collection)
-,
             ];
         }
-        return t;
     }
 
-    private string GetAuthor(int collectionId)
+    private string GetAuthor()
     {
         string res = string.Empty;
         using (var adc = _contextFactory.CreateDbContext())
         {
-            var temp = adc.Collections.First(x => x.Id == collectionId);
-            res = adc.Users.First(x => x.Id == temp.ApplicationUserId).FullName;
+            res = adc.Users.First(x => x.Id == collection!.ApplicationUserId).FullName;
         }
 
         return res;

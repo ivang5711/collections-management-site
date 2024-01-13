@@ -12,7 +12,7 @@
 
 @rendermode InteractiveServer
 
-@if (_itemDetails is null)
+@if (_itemDetails is null || ItemModel is null)
 {
     <p><em>Loading...</em></p>
 }
@@ -30,7 +30,7 @@ else
                     justify-content-center justify-content-md-end">
                         <div class="title-container text-center text-md-end">
                             <h1 class="text-light">@_itemDetails.Name</h1>
-                            <h2 class="text-black">@GetAuthor(_itemDetails.CollectionId)</h2>
+                            <h2 class="text-black">@GetAuthor()</h2>
 
                             <span class="badge me-2 text-bg-light">
                                 id: @_itemDetails.Id
@@ -89,19 +89,19 @@ else
                                     else
                                     {
                                         <div class="col-md-4">
-                                            <img src="@TempImg" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
+                                            <img src="@ItemModel!.ImageLink" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
                                         </div>
                                     }
                                     <div class="col-md-8">
                                         <h5 class="card-header">Edit Item</h5>
-                                        <EditForm Context="formContext" Model="@_itemDetails" OnSubmit="@SubmitEditCollection" FormName="EditCollectionForm">
+                                        <EditForm Context="formContext" Model="@ItemModel" OnSubmit="@SubmitEditItem" FormName="EditCollectionForm">
                                             <div class="card-body">
-                                                <p class="card-text">@_itemDetails!.Name</p>
+                                                <p class="card-text">@ItemModel!.Name</p>
                                                 <p class="card-text">Edit fields you want to change or left them blank to keep current value</p>
-                                                <p class="card-text"><small class="text-muted">Created @_itemDetails!.CreationDateTime.ToLocalTime()</small></p>
+                                                <p class="card-text"><small class="text-muted">Created @ItemModel!.CreationDateTime.ToLocalTime()</small></p>
                                                 <div class="px-5 py-2">
 
-                                                    @if (_itemDetails is not null)
+                                                    @if (ItemModel is not null)
                                                     {
 
                                                         <DataAnnotationsValidator />
@@ -140,7 +140,7 @@ else
                         <div class="poster-container2 py-2 ">
                             <div class="card w-100 mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
                                 <div class="row g-0">
-                                    @if (string.IsNullOrWhiteSpace(_itemDetails.ImageLink))
+                                    @if (string.IsNullOrWhiteSpace(ItemModel!.ImageLink))
                                     {
                                         <div class="col-md-4">
                                             <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray; object-fit:cover;" />
@@ -149,14 +149,14 @@ else
                                     else
                                     {
                                         <div class="col-md-4">
-                                            <img src="@_itemDetails.ImageLink" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
+                                            <img src="@ItemModel.ImageLink" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
                                         </div>
                                     }
                                     <div class="col-md-8">
                                         <h5 class="card-header">Delete Item</h5>
                                         <div class="card-body">
-                                            <p class="card-text">@_itemDetails.Name</p>
-                                            <p class="card-text"><small class="text-muted">Created @_itemDetails.CreationDateTime.ToLocalTime()</small></p>
+                                            <p class="card-text">@ItemModel.Name</p>
+                                            <p class="card-text"><small class="text-muted">Created @ItemModel.CreationDateTime.ToLocalTime()</small></p>
                                             <div class="px-5 py-2">
                                                 <p>This action can not be undone</p>
                                                 <p>Are you sure you want to delete the item?</p>
@@ -190,8 +190,8 @@ else
             @if (!(editItemRequested || deleteItemRequested))
             {
                 <div class="overview d-flex flex-column">
-                    <h3>Author: @GetAuthor(_itemDetails.CollectionId)</h3>
-                    <h5>@_itemDetails.Name</h5>
+                    <h3>Author: @GetAuthor()</h3>
+                    <h5>@ItemModel.Name</h5>
                     @if (!(editItemRequested || deleteItemRequested))
                     {
                         <div class="pb-2 d-flex justify-content-start m-0 row col-md

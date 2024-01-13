@@ -13,7 +13,41 @@ public partial class ItemDetails
     private Item? _itemDetails;
     private List<Item>? _itemsBunch;
     private List<Comment> _comments = [];
+    private bool editItemRequested = false;
+    private bool deleteItemRequested = false;
     public int LikeCount { get; set; } = 999;
+    private string? TempImg { get; set; } = string.Empty;
+    private bool collectionChangeRequestValid = true;
+    public Collection? CollectionModel { get; set; }
+    private bool newItemRequested = false;
+    private Collection? collection;
+
+    private void ResetCollectionChangeRequestValidStatus()
+    {
+        collectionChangeRequestValid = false;
+    }
+
+    private void SubmitEditCollection()
+    {
+        Console.WriteLine("Edit collection submitted!");
+        //if (ValidateCollectionModel())
+        //{
+        //    UpdateCollection();
+        //    editItemRequested = !editItemRequested;
+        //    InitializeData();
+        //}
+    }
+
+
+    private void ToggleEditCollectionRequestStatus()
+    {
+        editItemRequested = !editItemRequested;
+    }
+
+    private void ToggleDeleteCollectionRequestStatus()
+    {
+        deleteItemRequested = !deleteItemRequested;
+    }
 
     protected override async Task OnInitializedAsync()
     {

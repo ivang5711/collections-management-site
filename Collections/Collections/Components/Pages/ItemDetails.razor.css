@@ -26,6 +26,12 @@
     background-color: white;
 }
 
+.poster-container2 {
+    position: relative;
+    margin: 0 2rem 2rem 2rem;
+    transform: translateY(15%);
+}
+
     .poster-container img {
         height: 24rem;
         max-height: 100%;

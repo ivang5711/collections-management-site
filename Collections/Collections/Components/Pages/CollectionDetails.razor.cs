@@ -110,7 +110,17 @@ public partial class CollectionDetails
         GetThemes();
         ItemModel = new();
         CollectionModel = new();
-        CollectionModel = collection;
+        if (collection is not null)
+        {
+            CollectionModel = new()
+            {
+                Id = collection!.Id,
+                Name = collection.Name,
+                Description = collection.Description,
+                ThemeID = collection.ThemeID,
+                ImageLink = collection.ImageLink,
+            };
+        }
     }
 
     private void ToggleNewItemRequestStatus()

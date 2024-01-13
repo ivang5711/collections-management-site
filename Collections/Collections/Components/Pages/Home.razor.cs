@@ -22,11 +22,8 @@ public partial class Home
     protected override async Task OnInitializedAsync()
     {
         await CheckAuthorizationLevel();
-
         var te = await Task.Run(() => CreateData());
-
         List<Item> temp = [];
-
         foreach (var t in te)
         {
             t.TotalItems = t.Items.Count;
@@ -35,8 +32,6 @@ public partial class Home
 
         items.AddRange(temp.OrderByDescending(u => u.CreationDateTime).Take(5));
         collections = te.OrderByDescending(x => x.TotalItems).Take(5).ToList();
-
-
         tagsGenerated = [];
         List<Tag> k2;
         using (var adc = _contextFactory.CreateDbContext())
@@ -59,8 +54,6 @@ public partial class Home
             //PopulateTable();
         }
     }
-
-
 
     private void PopulateTable()
     {

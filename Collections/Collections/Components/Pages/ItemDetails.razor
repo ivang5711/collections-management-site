@@ -80,7 +80,7 @@ else
                         <div class="poster-container2 py-2 ">
                             <div class="card w-100 mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
                                 <div class="row g-0">
-                                    @if (string.IsNullOrWhiteSpace(TempImg))
+                                    @if (string.IsNullOrWhiteSpace(ItemModel!.ImageLink))
                                     {
                                         <div class="col-md-4">
                                             <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray; object-fit:cover;" />
@@ -107,17 +107,12 @@ else
                                                         <DataAnnotationsValidator />
                                                         <ValidationSummary />
                                                         <InputText @bind-Value="_itemDetails!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Item New Name..." />
-                                                        <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to item new photo (optional)..." />
-
+                                                        <InputText @bind-Value="_itemDetails.ImageLink" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to item new photo (optional)..." />
                                                     }
-
                                                 </div>
-
-
-
                                             </div>
                                             <div class="pb-2 pe-3 mx-0 d-flex justify-content-end row col-md
-                                 row-cols-md-auto gap-1 card-footer">
+                                                        row-cols-md-auto gap-1 card-footer">
                                                 <button @onclick="ToggleEditItemRequestStatus"
                                                         class="btn btn-outline-secondary text-nowrap"
                                                         asp-formaction="Block" name="Block"
@@ -170,7 +165,8 @@ else
                                                     type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                 <i class="bi bi-plus-square"></i> Cancel
                                             </button>
-                                            <button class="btn btn-outline-danger text-nowrap"
+                                            <button @onclick="SubmitDeleteItem"
+                                                    class="btn btn-outline-danger text-nowrap"
                                                     type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                 <i class="bi bi-plus-square"></i> Delete
                                             </button>
@@ -237,7 +233,7 @@ else
                                         <textarea class="form-control"
                                                   placeholder="Enter your comment..."
                                                   aria-label="With textarea">
-                                                                                                                                                                            </textarea>
+                                                                                                                                                                                        </textarea>
                                     </div>
                                     <div class="card-footer text-end">
                                         <a class="btn btn-primary" href="/">

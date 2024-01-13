@@ -15,10 +15,8 @@ public partial class ItemDetails
     private bool editItemRequested = false;
     private bool deleteItemRequested = false;
     public int LikeCount { get; set; } = 999;
-    private string? TempImg { get; set; } = string.Empty;
     private bool itemChangeRequestValid = true;
     public Item? ItemModel { get; set; }
-    private bool newItemRequested = false;
     private Collection? collection;
 
     private void ResetCollectionChangeRequestValidStatus()
@@ -37,6 +35,12 @@ public partial class ItemDetails
         //}
     }
 
+    private void SubmitDeleteItem()
+    {
+        Console.WriteLine("Delete Item submitted!");
+
+    }
+
     private void ToggleEditItemRequestStatus()
     {
         if (_itemDetails is not null)
@@ -48,7 +52,6 @@ public partial class ItemDetails
                 ImageLink = _itemDetails.ImageLink,
                 CreationDateTime = _itemDetails.CreationDateTime,
             };
-            TempImg = _itemDetails.ImageLink;
         }
 
         editItemRequested = !editItemRequested;
@@ -77,7 +80,6 @@ public partial class ItemDetails
                     ImageLink = _itemDetails.ImageLink,
                     CreationDateTime = _itemDetails.CreationDateTime,
                 };
-                TempImg = _itemDetails.ImageLink;
             }
         }
     }

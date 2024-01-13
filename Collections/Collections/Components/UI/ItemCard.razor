@@ -31,7 +31,7 @@
         </div>
         <div class="card-footer text-end">
             <a class="btn btn-primary"
-               href="/item-details/@Item.Id">Details</a>
+               href="/item-details/@Collection!.Id/@Item.Id">Details</a>
         </div>
 
     </div>
@@ -60,6 +60,9 @@ else
 @code {
     [Parameter]
     public Item? Item { get; set; }
+
+    [Parameter]
+    public Collection? Collection { get; set; }
 
     private string GetAuthor(Collection collection)
     {

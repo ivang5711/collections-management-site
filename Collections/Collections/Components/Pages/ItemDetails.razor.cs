@@ -9,6 +9,9 @@ public partial class ItemDetails
     [Parameter]
     public int Id { get; set; }
 
+    [Parameter]
+    public int CollectionId { get; set; }
+
     private Item? _itemDetails;
     private List<Item>? _itemsBunch;
     private List<Comment> _comments = [];
@@ -20,7 +23,6 @@ public partial class ItemDetails
 
     private void SubmitEditItem()
     {
-        Console.WriteLine("Edit Item submitted!");
         if (ValidateItemModel())
         {
             UpdateItem();
@@ -60,7 +62,16 @@ public partial class ItemDetails
 
     private void SubmitDeleteItem()
     {
-        Console.WriteLine("Delete Item submitted!");
+        DeleteItem();
+        _navigationManager.NavigateTo($"/collection-details/{CollectionId}");
+    }
+
+    private void DeleteItem()
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        Item temp = adc.Items.Where(x => x.Id == _itemDetails!.Id).First();
+        adc.Items.Remove(temp);
+        adc.SaveChanges();
     }
 
     private void ToggleEditItemRequestStatus()

@@ -65,7 +65,7 @@ else
                             }
                             else
                             {
-                                <a href="@_itemDetails.ImageLink">
+                                <a href="@ItemModel.ImageLink">
                                     <img src="@_itemDetails.ImageLink"
                                          alt="item poster" />
                                 </a>
@@ -106,8 +106,8 @@ else
 
                                                         <DataAnnotationsValidator />
                                                         <ValidationSummary />
-                                                        <InputText @bind-Value="_itemDetails!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Item New Name..." />
-                                                        <InputText @bind-Value="_itemDetails.ImageLink" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to item new photo (optional)..." />
+                                                        <InputText @bind-Value="ItemModel!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Item New Name..." />
+                                                        <InputText @bind-Value="ItemModel.ImageLink" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to item new photo (optional)..." />
                                                     }
                                                 </div>
                                             </div>

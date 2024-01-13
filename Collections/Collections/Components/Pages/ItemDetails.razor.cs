@@ -15,30 +15,52 @@ public partial class ItemDetails
     private bool editItemRequested = false;
     private bool deleteItemRequested = false;
     public int LikeCount { get; set; } = 999;
-    private bool itemChangeRequestValid = true;
     public Item? ItemModel { get; set; }
     private Collection? collection;
-
-    private void ResetCollectionChangeRequestValidStatus()
-    {
-        itemChangeRequestValid = false;
-    }
 
     private void SubmitEditItem()
     {
         Console.WriteLine("Edit Item submitted!");
-        //if (ValidateCollectionModel())
-        //{
-        //    UpdateCollection();
-        //    editItemRequested = !editItemRequested;
-        //    InitializeData();
-        //}
+        if (ValidateItemModel())
+        {
+            UpdateItem();
+            InitializeData();
+            editItemRequested = !editItemRequested;
+        }
+    }
+
+    private void UpdateItem()
+    {
+        using var context = _contextFactory.CreateDbContext();
+        var tmp = context.Items.First(x => x.Id == _itemDetails!.Id);
+        tmp.Name = ItemModel!.Name;
+        tmp.ImageLink = ItemModel.ImageLink;
+        context.SaveChanges();
+    }
+
+    private bool ValidateItemModel()
+    {
+        if (ItemModel is not null)
+        {
+            if (!string.IsNullOrWhiteSpace(ItemModel.Name))
+            {
+                _itemDetails!.Name = ItemModel.Name;
+            }
+
+            if (!string.IsNullOrWhiteSpace(ItemModel.ImageLink))
+            {
+                _itemDetails!.ImageLink = ItemModel.ImageLink;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     private void SubmitDeleteItem()
     {
         Console.WriteLine("Delete Item submitted!");
-
     }
 
     private void ToggleEditItemRequestStatus()
@@ -64,6 +86,11 @@ public partial class ItemDetails
 
     protected override async Task OnInitializedAsync()
     {
+        InitializeData();
+    }
+
+    private void InitializeData()
+    {
         CreateData();
         if (_itemsBunch is not null)
         {
@@ -71,16 +98,13 @@ public partial class ItemDetails
             _comments = _itemDetails.Comments;
             LikeCount = _itemDetails.Likes.Count;
             collection = _itemDetails.Collection;
-            if (_itemDetails is not null)
+            ItemModel = new()
             {
-                ItemModel = new()
-                {
-                    Id = _itemDetails.Id,
-                    Name = _itemDetails.Name,
-                    ImageLink = _itemDetails.ImageLink,
-                    CreationDateTime = _itemDetails.CreationDateTime,
-                };
-            }
+                Id = _itemDetails.Id,
+                Name = _itemDetails.Name,
+                ImageLink = _itemDetails.ImageLink,
+                CreationDateTime = _itemDetails.CreationDateTime,
+            };
         }
     }
 
@@ -91,26 +115,22 @@ public partial class ItemDetails
 
     private void CreateData()
     {
-        using (var adc = _contextFactory.CreateDbContext())
-        {
-            _itemsBunch =
-            [
-                .. adc.Items
-                            .Include(e => e.Tags)
-                            .Include(e => e.Likes)
-                            .Include(e => e.Comments)
-                            .Include(e => e.Collection)
-            ];
-        }
+        using var adc = _contextFactory.CreateDbContext();
+        _itemsBunch =
+        [
+            .. adc.Items
+                        .Include(e => e.Tags)
+                        .Include(e => e.Likes)
+                        .Include(e => e.Comments)
+                        .Include(e => e.Collection)
+        ];
     }
 
     private string GetAuthor()
     {
         string res = string.Empty;
-        using (var adc = _contextFactory.CreateDbContext())
-        {
-            res = adc.Users.First(x => x.Id == collection!.ApplicationUserId).FullName;
-        }
+        using var adc = _contextFactory.CreateDbContext();
+        res = adc.Users.First(x => x.Id == collection!.ApplicationUserId).FullName;
 
         return res;
     }

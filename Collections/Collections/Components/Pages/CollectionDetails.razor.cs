@@ -20,10 +20,9 @@ public partial class CollectionDetails
     private bool deleteItemRequested = false;
     private const string roleBlocked = "Blocked";
     private const string loginPageURL = "/Account/Login";
-
+    private bool collectionChangeRequestValid = true;
     private bool themeIsUnique = true;
     private bool newThemeAddFinishedSuccessfully = true;
-    private bool newCollectionRequested = false;
     private bool addNewThemeRequested = false;
     private string? TempImg { get; set; } = string.Empty;
 
@@ -33,7 +32,7 @@ public partial class CollectionDetails
     [SupplyParameterFromForm]
     public ItemCandidate? ItemModel { get; set; }
 
-    public CollectionCandidate? CollectionModel { get; set; }
+    public Collection? CollectionModel { get; set; }
 
     public class ItemCandidate
     {
@@ -46,16 +45,9 @@ public partial class CollectionDetails
         public string? Name { get; set; }
     }
 
-    public class CollectionCandidate : Collection
+    private void ResetCollectionChangeRequestValidStatus()
     {
-        [Required]
-        public new string Name { get; set; }
-
-        [Required]
-        public new int ThemeID { get; set; }
-
-        [Required]
-        public new string Description { get; set; }
+        collectionChangeRequestValid = false;
     }
 
     private void GetThemes()
@@ -106,18 +98,24 @@ public partial class CollectionDetails
         }
     }
 
-
     protected override async Task OnInitializedAsync()
     {
         await CheckAuthorizationLevel();
+        InitializeData();
+    }
+
+    private void InitializeData()
+    {
         FetchCollectionsDataFromDataSource();
         GetThemes();
-        ItemModel ??= new();
+        ItemModel = new();
         CollectionModel = new();
+        CollectionModel = collection;
     }
 
     private void ToggleNewItemRequestStatus()
     {
+        TempImg = string.Empty;
         newItemRequested = !newItemRequested;
     }
 
@@ -183,6 +181,71 @@ public partial class CollectionDetails
 
     private void SubmitEditCollection()
     {
+        Console.WriteLine("Edit collection submitted!");
+        if (ValidateCollectionModel())
+        {
+            UpdateCollection();
+            editItemRequested = !editItemRequested;
+            InitializeData();
+        }
+    }
+
+    private bool ValidateCollectionModel()
+    {
+        if (CollectionModel is not null)
+        {
+            if (string.IsNullOrWhiteSpace(CollectionModel.Name) && CollectionModel.Name != collection!.Name)
+            {
+                CollectionModel.Name = collection!.Name;
+            }
+
+            if (string.IsNullOrWhiteSpace(CollectionModel.Description) && CollectionModel.Description != collection!.Description)
+            {
+                CollectionModel.Description = collection!.Description;
+            }
+
+            if (string.IsNullOrWhiteSpace(CollectionModel.ImageLink) && CollectionModel.ImageLink != collection!.ImageLink)
+            {
+                CollectionModel.ImageLink = collection!.ImageLink;
+            }
+            else
+            {
+                CollectionModel.ImageLink = TempImg;
+            }
+
+            CollectionModel.Id = collection!.Id;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private void UpdateCollection()
+    {
+        using var context = _contextFactory.CreateDbContext();
+        var tmp = context.Collections.First(a => a.Id == collection!.Id);
+        if (CollectionModel!.Name != collection!.Name)
+        {
+            tmp.Name = CollectionModel!.Name;
+        }
+
+        if (CollectionModel.Description != collection.Description)
+        {
+            tmp.Description = CollectionModel.Description;
+        }
+
+        if (CollectionModel.ThemeID != collection.ThemeID)
+        {
+            tmp.ThemeID = CollectionModel.ThemeID;
+        }
+
+        if (CollectionModel.ImageLink != collection.ImageLink)
+        {
+            tmp.ImageLink = TempImg;
+        }
+
+        context.SaveChanges();
     }
 
     private void SubmitDeleteCollection()

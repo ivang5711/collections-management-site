@@ -24,7 +24,6 @@ public partial class Home
         await CheckAuthorizationLevel();
 
         var te = await Task.Run(() => CreateData());
-        collections = te.Take(5).ToList();
 
         List<Item> temp = [];
 
@@ -35,6 +34,7 @@ public partial class Home
         }
 
         items.AddRange(temp.OrderByDescending(u => u.CreationDateTime).Take(5));
+        collections = te.OrderByDescending(x => x.TotalItems).Take(5).ToList();
 
 
         tagsGenerated = [];

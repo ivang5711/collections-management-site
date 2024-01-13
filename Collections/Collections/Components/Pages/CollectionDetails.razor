@@ -125,7 +125,19 @@
                             }
                             <div class="col-md-8">
                                 <h5 class="card-header">Edit Collection</h5>
-                                <EditForm Context="formContext" Model="@CollectionModel" OnValidSubmit="@SubmitEditCollection" FormName="EditCollectionForm">
+                                @if (!collectionChangeRequestValid)
+                                {
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <div>
+                                            <strong>Holy guacamole!</strong>There are no changes pending to apply
+                                        </div>
+                                        <div>
+                                            <button @onclick="ResetCollectionChangeRequestValidStatus" type="button" class="btn-close " data-dismiss="alert" aria-label="Close">
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                                <EditForm Context="formContext" Model="@CollectionModel" OnSubmit="@SubmitEditCollection" FormName="EditCollectionForm">
                                     <div class="card-body">
                                         <p class="card-text">@CollectionModel!.Name</p>
                                         <p class="card-text">Edit fields you want to change or left them blank to keep current value</p>

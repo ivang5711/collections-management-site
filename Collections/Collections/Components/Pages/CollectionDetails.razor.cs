@@ -84,6 +84,7 @@ public partial class CollectionDetails
             Name = itemCandidate.Name!,
             CollectionId = collection!.Id,
             ImageLink = itemCandidate.ImageLink,
+            CreationDateTime = DateTime.UtcNow
         };
 
         adc.Items.Add(item);

@@ -28,13 +28,13 @@ public partial class Home
 
         List<Item> temp = [];
 
-        foreach (var t in collections)
+        foreach (var t in te)
         {
             t.TotalItems = t.Items.Count;
             temp.AddRange(t.Items);
         }
 
-        items.AddRange(temp.Take(5));
+        items.AddRange(temp.OrderByDescending(u => u.CreationDateTime).Take(5));
 
 
         tagsGenerated = [];

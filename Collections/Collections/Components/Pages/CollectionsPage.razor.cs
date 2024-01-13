@@ -142,6 +142,7 @@ public partial class CollectionsPage
             ApplicationUserId = collectionCandidate!.ApplicationUserId!,
             Description = collectionCandidate!.Description!,
             ImageLink = collectionCandidate.ImageLink,
+            CreationDateTime = DateTime.UtcNow
         };
 
         adc.Collections.Add(collection);

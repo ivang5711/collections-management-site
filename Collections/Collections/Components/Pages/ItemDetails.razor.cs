@@ -39,12 +39,12 @@ public partial class ItemDetails
     }
 
 
-    private void ToggleEditCollectionRequestStatus()
+    private void ToggleEditItemRequestStatus()
     {
         editItemRequested = !editItemRequested;
     }
 
-    private void ToggleDeleteCollectionRequestStatus()
+    private void ToggleDeleteItemRequestStatus()
     {
         deleteItemRequested = !deleteItemRequested;
     }

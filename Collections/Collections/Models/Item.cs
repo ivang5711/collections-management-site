@@ -1,7 +1,4 @@
-﻿using Collections.Data;
-using Microsoft.EntityFrameworkCore;
-
-namespace Collections.Models;
+﻿namespace Collections.Models;
 
 public class Item
 {
@@ -22,4 +19,6 @@ public class Item
     public string? ImageLink { get; set; } = null;
 
     public int LikesTotal { get; set; }
+
+    public DateTime CreationDateTime { get; set; }
 }

@@ -17,4 +17,6 @@ public class Comment
     public ApplicationUser ApplicationUser { get; set; }
 
     public string Text { get; set; } = string.Empty;
+
+    public DateTime CreationDateTime { get; set; }
 }

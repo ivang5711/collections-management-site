@@ -24,4 +24,6 @@ public class Collection
     public int ThemeID { get; set; }
 
     public string? ImageLink { get; set; } = null;
+
+    public DateTime CreationDateTime { get; set; }
 }

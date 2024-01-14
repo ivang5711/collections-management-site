@@ -67,14 +67,14 @@
     margin-top: 12rem;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 768px) {
     .overview {
         margin-left: calc((24rem * .666) + 4rem);
         margin-top: 2rem;
     }
 
     .comment-container {
-        margin: 6rem 2rem 2rem 2rem;
+        margin: 2rem 2rem 2rem 2rem;
     }
 }
 

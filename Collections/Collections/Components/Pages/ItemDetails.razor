@@ -221,7 +221,7 @@ else
                 <div class="comment-container pb-3 ">
                     @if (_itemDetails.Comments.Count != 0)
                     {
-                        <div class="row justify-content-center example"
+                        <div class="row justify-content-center example pb-3"
                              style="overflow-y:scroll; max-height: 50vh;">
                             <Virtualize Items="@_comments" Context="comment">
                                 <ItemContent>
@@ -246,10 +246,10 @@ else
                     }
                     <div class="row row-cols-8 row-cols-lg-8
                                         row-cols-x1-5 g-3
-                                        justify-content-center my-1">
+                                        justify-content-center my-1 py-2">
                         <div class="card h-100 fade-in"
                              style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
-                            <div class="card-body border-top bg-light">
+                            <div class="card-body ">
                                 <textarea @ref="InputToFocus" class="form-control"
                                           @bind="CommentText"
                                           required
@@ -257,7 +257,7 @@ else
                                           aria-label="With textarea">
                                 </textarea>
                             </div>
-                            <div class="card-footer text-end">
+                            <div class="text-end pb-3 pe-2">
                                 @if (CommentText is null)
                                 {
 

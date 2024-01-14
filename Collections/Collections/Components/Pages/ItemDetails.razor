@@ -25,167 +25,170 @@ else
         <div class="hero-container">
             <div class="container-xxl d-flex flex-column flex-md-row">
                 <!--Item content here-->
-                @if (!(editItemRequested || deleteItemRequested))
-                {
-                    <div class="flex-grow-1 d-flex align-items-center
+                    @if (!(editItemRequested || deleteItemRequested))
+                    {
+                        <div class="flex-grow-1 d-flex align-items-center
                     justify-content-center justify-content-md-end">
-                        <div class="title-container text-center text-md-end">
-                            <h1 class="text-light">@_itemDetails.Name</h1>
-                            <h2 class="text-black">@GetAuthor()</h2>
+                            <div class="title-container text-center text-md-end">
+                                <h1 class="text-light">@_itemDetails.Name</h1>
+                                <h2 class="text-black">@GetAuthor()</h2>
 
-                            <span class="badge me-2 text-bg-light">
-                                id: @_itemDetails.Id
-                            </span>
-                            <span class="badge me-2 text-bg-dark">collection: @_itemDetails.Collection.Name</span>
+                                <span class="badge me-2 text-bg-light">
+                                    id: @_itemDetails.Id
+                                </span>
+                                <span class="badge me-2 text-bg-dark">collection: @_itemDetails.Collection.Name</span>
 
 
-                            <div class="me-2 pt-3">
-                                @if (_itemDetails.Tags.Count == 0)
+                                <div class="me-2 pt-3">
+                                    @if (_itemDetails.Tags.Count == 0)
+                                    {
+                                        <span class="badge text-bg-light">
+                                            No tags so far...
+                                        </span>
+                                    }
+                                </div>
+                                <div class="me-2 pt-3">
+                                    <button @onclick="IncrementLike" class="badge btn me-2 text-bg-danger">
+                                        <i class="bi bi-hand-thumbs-up"></i> @LikeCount
+                                    </button>
+                                </div>
+                                <AuthorizeView>
+                                    <div class="me-2 pt-3">
+                                        <button @onclick="Focus"
+                                                class="btn btn-outline-secondary btn-sm text-nowrap"
+                                                asp-formaction="Block" name="Block"
+                                                type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                            <i class="bi bi-chat-left-text"></i> Leave Comment
+                                        </button>
+                                    </div>
+                                </AuthorizeView>
+
+                            </div>
+                        </div>
+                        <div class="order-last order-md-first d-flex
+                    justify-content-center">
+                            <div class="poster-container">
+                                @if (string.IsNullOrEmpty(_itemDetails.ImageLink))
                                 {
-                                    <span class="badge text-bg-light">
-                                        No tags so far...
-                                    </span>
+                                    <img src="https://th.bing.com/th/id/OIG.gq_uOPPdJc81e_v0XAei"
+                                         alt="item poster" />
+                                }
+                                else
+                                {
+                                    <a href="@ItemModel.ImageLink">
+                                        <img src="@_itemDetails.ImageLink"
+                                             alt="item poster" />
+                                    </a>
                                 }
                             </div>
-                            <div class="me-2 pt-3">
-                                <button @onclick="IncrementLike" class="badge btn me-2 text-bg-danger">
-                                    <i class="bi bi-hand-thumbs-up"></i> @LikeCount
-                                </button>
-                            </div>
-                            <div class="me-2 pt-3">
-                                <button @onclick="Focus"
-                                        class="btn btn-outline-secondary btn-sm text-nowrap"
-                                        asp-formaction="Block" name="Block"
-                                        type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                    <i class="bi bi-chat-left-text"></i> Leave Comment
-                                </button>
-                            </div>
-
                         </div>
-                    </div>
+                    }
+                <AuthorizeView>
                     <div class="order-last order-md-first d-flex
                     justify-content-center">
-                        <div class="poster-container">
-                            @if (string.IsNullOrEmpty(_itemDetails.ImageLink))
-                            {
-                                <img src="https://th.bing.com/th/id/OIG.gq_uOPPdJc81e_v0XAei"
-                                     alt="item poster" />
-                            }
-                            else
-                            {
-                                <a href="@ItemModel.ImageLink">
-                                    <img src="@_itemDetails.ImageLink"
-                                         alt="item poster" />
-                                </a>
-                            }
-                        </div>
-                    </div>
-                }
-                <div class="order-last order-md-first d-flex
-                    justify-content-center">
-                    @if (editItemRequested && !deleteItemRequested)
-                    {
-                        <div class="poster-container2 py-2 ">
-                            <div class="card w-100 mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
-                                <div class="row g-0">
-                                    @if (string.IsNullOrWhiteSpace(ItemModel!.ImageLink))
-                                    {
-                                        <div class="col-md-4">
-                                            <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray; object-fit:cover;" />
+                        @if (editItemRequested && !deleteItemRequested)
+                        {
+                            <div class="poster-container2 py-2 ">
+                                <div class="card w-100 mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
+                                    <div class="row g-0">
+                                        @if (string.IsNullOrWhiteSpace(ItemModel!.ImageLink))
+                                        {
+                                            <div class="col-md-4">
+                                                <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray; object-fit:cover;" />
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-md-4">
+                                                <img src="@ItemModel!.ImageLink" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
+                                            </div>
+                                        }
+                                        <div class="col-md-8">
+                                            <h5 class="card-header">Edit Item</h5>
+                                            <EditForm Context="formContext2" Model="@ItemModel" OnSubmit="@SubmitEditItem" FormName="EditCollectionForm">
+                                                <div class="card-body">
+                                                    <p class="card-text">@ItemModel!.Name</p>
+                                                    <p class="card-text">Edit fields you want to change or left them blank to keep current value</p>
+                                                    <p class="card-text"><small class="text-muted">Created @ItemModel!.CreationDateTime.ToLocalTime()</small></p>
+                                                    <div class="px-5 py-2">
+
+                                                        @if (ItemModel is not null)
+                                                        {
+
+                                                            <DataAnnotationsValidator />
+                                                            <ValidationSummary />
+                                                            <InputText @bind-Value="ItemModel!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Item New Name..." />
+                                                            <InputText @bind-Value="ItemModel.ImageLink" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to item new photo (optional)..." />
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="pb-2 pe-3 mx-0 d-flex justify-content-end row col-md
+                                                        row-cols-md-auto gap-1 card-footer">
+                                                    <button @onclick="ToggleEditItemRequestStatus"
+                                                            class="btn btn-outline-secondary text-nowrap"
+                                                            asp-formaction="Block" name="Block"
+                                                            type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                        <i class="bi bi-plus-square"></i> Cancel
+                                                    </button>
+                                                    <button class="btn btn-outline-success text-nowrap"
+                                                            type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                        <i class="bi bi-plus-square"></i> Update
+                                                    </button>
+                                                </div>
+                                            </EditForm>
                                         </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="col-md-4">
-                                            <img src="@ItemModel!.ImageLink" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
-                                        </div>
-                                    }
-                                    <div class="col-md-8">
-                                        <h5 class="card-header">Edit Item</h5>
-                                        <EditForm Context="formContext" Model="@ItemModel" OnSubmit="@SubmitEditItem" FormName="EditCollectionForm">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (deleteItemRequested && !editItemRequested)
+                        {
+                            <div class="poster-container2 py-2 ">
+                                <div class="card w-100 mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
+                                    <div class="row g-0">
+                                        @if (string.IsNullOrWhiteSpace(ItemModel!.ImageLink))
+                                        {
+                                            <div class="col-md-4">
+                                                <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray; object-fit:cover;" />
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-md-4">
+                                                <img src="@ItemModel.ImageLink" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
+                                            </div>
+                                        }
+                                        <div class="col-md-8">
+                                            <h5 class="card-header">Delete Item</h5>
                                             <div class="card-body">
-                                                <p class="card-text">@ItemModel!.Name</p>
-                                                <p class="card-text">Edit fields you want to change or left them blank to keep current value</p>
-                                                <p class="card-text"><small class="text-muted">Created @ItemModel!.CreationDateTime.ToLocalTime()</small></p>
+                                                <p class="card-text">@ItemModel.Name</p>
+                                                <p class="card-text"><small class="text-muted">Created @ItemModel.CreationDateTime.ToLocalTime()</small></p>
                                                 <div class="px-5 py-2">
-
-                                                    @if (ItemModel is not null)
-                                                    {
-
-                                                        <DataAnnotationsValidator />
-                                                        <ValidationSummary />
-                                                        <InputText @bind-Value="ItemModel!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Item New Name..." />
-                                                        <InputText @bind-Value="ItemModel.ImageLink" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to item new photo (optional)..." />
-                                                    }
+                                                    <p>This action can not be undone</p>
+                                                    <p>Are you sure you want to delete the item?</p>
                                                 </div>
                                             </div>
                                             <div class="pb-2 pe-3 mx-0 d-flex justify-content-end row col-md
-                                                        row-cols-md-auto gap-1 card-footer">
-                                                <button @onclick="ToggleEditItemRequestStatus"
+                                 row-cols-md-auto gap-1 card-footer">
+                                                <button @onclick="ToggleDeleteItemRequestStatus"
                                                         class="btn btn-outline-secondary text-nowrap"
                                                         asp-formaction="Block" name="Block"
                                                         type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                     <i class="bi bi-plus-square"></i> Cancel
                                                 </button>
-                                                <button class="btn btn-outline-success text-nowrap"
+                                                <button @onclick="SubmitDeleteItem"
+                                                        class="btn btn-outline-danger text-nowrap"
                                                         type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                    <i class="bi bi-plus-square"></i> Update
+                                                    <i class="bi bi-plus-square"></i> Delete
                                                 </button>
                                             </div>
-                                        </EditForm>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    @if (deleteItemRequested && !editItemRequested)
-                    {
-                        <div class="poster-container2 py-2 ">
-                            <div class="card w-100 mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
-                                <div class="row g-0">
-                                    @if (string.IsNullOrWhiteSpace(ItemModel!.ImageLink))
-                                    {
-                                        <div class="col-md-4">
-                                            <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray; object-fit:cover;" />
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="col-md-4">
-                                            <img src="@ItemModel.ImageLink" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
-                                        </div>
-                                    }
-                                    <div class="col-md-8">
-                                        <h5 class="card-header">Delete Item</h5>
-                                        <div class="card-body">
-                                            <p class="card-text">@ItemModel.Name</p>
-                                            <p class="card-text"><small class="text-muted">Created @ItemModel.CreationDateTime.ToLocalTime()</small></p>
-                                            <div class="px-5 py-2">
-                                                <p>This action can not be undone</p>
-                                                <p>Are you sure you want to delete the item?</p>
-                                            </div>
-                                        </div>
-                                        <div class="pb-2 pe-3 mx-0 d-flex justify-content-end row col-md
-                                 row-cols-md-auto gap-1 card-footer">
-                                            <button @onclick="ToggleDeleteItemRequestStatus"
-                                                    class="btn btn-outline-secondary text-nowrap"
-                                                    asp-formaction="Block" name="Block"
-                                                    type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                <i class="bi bi-plus-square"></i> Cancel
-                                            </button>
-                                            <button @onclick="SubmitDeleteItem"
-                                                    class="btn btn-outline-danger text-nowrap"
-                                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                <i class="bi bi-plus-square"></i> Delete
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    }
-                </div>
-
+                        }
+                    </div>
+                </AuthorizeView>
             </div>
         </div>
     </div>
@@ -216,72 +219,114 @@ else
                     }
                 </div>
             }
-            <div class="comment-overview d-flex flex-column flex-lg-col
+
+        </AuthorizeView>
+        <AuthorizeView>
+            <Authorized>
+                <div class="d-flex flex-column flex-lg-col
                         justify-content-between my-3">
-                <div class="comment-container pb-3 ">
-                    @if (_itemDetails.Comments.Count != 0)
-                    {
-                        <div class="row justify-content-center example pb-3"
-                             style="overflow-y:scroll; max-height: 50vh;">
-                            <Virtualize Items="@_comments" Context="comment">
-                                <ItemContent>
-                                    <div class="row row-cols-8 row-cols-lg-8
+
+                    <div class="comment-container pb-3 ">
+                        @if (_itemDetails.Comments.Count != 0)
+                        {
+                            <div class="row justify-content-center example pb-3"
+                                 style="overflow-y:scroll; max-height: 50vh;">
+                                <Virtualize Items="@_comments" Context="comment">
+                                    <ItemContent>
+                                        <div class="row row-cols-8 row-cols-lg-8
                                             row-cols-x1-5 g-3
                                 justify-content-center my-1">
-                                        <CommentCard Comment="comment" />
-                                    </div>
-                                </ItemContent>
-                                <Placeholder>
-                                    <p>
-                                        Loading&hellip;
-                                    </p>
-                                </Placeholder>
-                                <EmptyContent>
-                                    <p>
-                                        There are no records to display.
-                                    </p>
-                                </EmptyContent>
-                            </Virtualize>
-                        </div>
-                    }
-                    <div class="row row-cols-8 row-cols-lg-8
+                                            <CommentCard Comment="comment" />
+                                        </div>
+                                    </ItemContent>
+                                    <Placeholder>
+                                        <p>
+                                            Loading&hellip;
+                                        </p>
+                                    </Placeholder>
+                                    <EmptyContent>
+                                        <p>
+                                            There are no records to display.
+                                        </p>
+                                    </EmptyContent>
+                                </Virtualize>
+                            </div>
+                        }
+                            <div class="row row-cols-8 row-cols-lg-8
                                         row-cols-x1-5 g-3
                                         justify-content-center my-1 py-2">
-                        <div class="card h-100 fade-in"
-                             style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
-                            <div class="card-body ">
-                                <textarea @ref="InputToFocus" class="form-control"
-                                          @bind="CommentText"
-                                          required
-                                          placeholder="Enter your comment..."
-                                          aria-label="With textarea">
-                                </textarea>
-                            </div>
-                            <div class="text-end pb-3 pe-2">
-                                @if (CommentText is null)
-                                {
+                                <div class="card h-100 fade-in"
+                                     style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
+                                    <div class="card-body ">
+                                        <textarea @ref="InputToFocus" class="form-control"
+                                                  @bind="CommentText"
+                                                  required
+                                                  placeholder="Enter your comment..."
+                                                  aria-label="With textarea">
+                                                </textarea>
+                                    </div>
+                                    <div class="text-end pb-3 pe-2">
+                                        @if (CommentText is null)
+                                        {
 
-                                    <button @onclick="Focus"
-                                            class="btn btn-outline-secondary btn-sm text-nowrap"
-                                            asp-formaction="Block" name="Block"
-                                            type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                        <i class="bi bi-chat-left-text"></i> Leave Comment
-                                    </button>
-                                }
-                                else
-                                {
-                                    <button @onclick="SubmitComment"
-                                            class="btn btn-outline-secondary btn-sm text-nowrap"
-                                            asp-formaction="Block" name="Block"
-                                            type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                        <i class="bi bi-chat-left-text"></i> Leave Comment
-                                    </button>
-                                }
+                                            <button @onclick="Focus"
+                                                    class="btn btn-outline-secondary btn-sm text-nowrap"
+                                                    asp-formaction="Block" name="Block"
+                                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                <i class="bi bi-chat-left-text"></i> Leave Comment
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button @onclick="SubmitComment"
+                                                    class="btn btn-outline-secondary btn-sm text-nowrap"
+                                                    asp-formaction="Block" name="Block"
+                                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                <i class="bi bi-chat-left-text"></i> Leave Comment
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
                             </div>
-                        </div>
                     </div>
                 </div>
-            </div>
+            </Authorized>
+            <NotAuthorized>
+                <div class="comment-overview d-flex flex-column flex-lg-col
+                        justify-content-between my-3">
+
+                    <div class="comment-container pb-3 ">
+                        @if (_itemDetails.Comments.Count != 0)
+                        {
+                            <div class="row justify-content-center example pb-3"
+                                 style="overflow-y:scroll; max-height: 50vh;">
+                                <Virtualize Items="@_comments" Context="comment">
+                                    <ItemContent>
+                                        <div class="row row-cols-8 row-cols-lg-8
+                                            row-cols-x1-5 g-3
+                                justify-content-center my-1">
+                                            <CommentCard Comment="comment" />
+                                        </div>
+                                    </ItemContent>
+                                    <Placeholder>
+                                        <p>
+                                            Loading&hellip;
+                                        </p>
+                                    </Placeholder>
+                                    <EmptyContent>
+                                        <p>
+                                            There are no records to display.
+                                        </p>
+                                    </EmptyContent>
+                                </Virtualize>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </NotAuthorized>
         </AuthorizeView>
+
+       
+
     </div>
 }

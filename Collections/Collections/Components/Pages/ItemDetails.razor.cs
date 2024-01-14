@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.JSInterop;
 
 namespace Collections.Components.Pages;
 
@@ -34,6 +35,24 @@ public partial class ItemDetails
             InitializeData();
             editItemRequested = !editItemRequested;
         }
+    }
+
+    private void SubmitAddComment()
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        var a = adc.Users.First(x => x.Id == ThisUser!.Id);
+        var b = adc.Items.First(x => x.Id == Id);
+        var temp = new Comment
+        {
+            ApplicationUserId = a.Id,
+            ItemId = b.Id,
+            Text = "Great product for sure!",
+            CreationDateTime = DateTime.UtcNow
+        };
+
+        adc.Comments.Add(temp);
+        adc.SaveChanges();
+        InitializeData();
     }
 
     private void UpdateItem()
@@ -105,14 +124,50 @@ public partial class ItemDetails
         InitializeData();
     }
 
+    private ElementReference InputToFocus;
+
+    public string? CommentText { get; set; }
+
+    private void SubmitComment()
+    {
+        if (!string.IsNullOrWhiteSpace(CommentText))
+        {
+            AddComment();
+        }
+
+        InitializeData();
+    }
+
+    private void AddComment()
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        var u = adc.Users.First(u => u.Id == ThisUser!.Id);
+        var x = adc.Items.First(x => x.Id == _itemDetails!.Id);
+        var temp = new Comment()
+        {
+            ItemId = x.Id,
+            ApplicationUserId = u.Id,
+            Text = CommentText!,
+            CreationDateTime = DateTime.UtcNow
+        };
+        adc.Comments.Add(temp);
+        adc.SaveChanges();
+    }
+
+    private async Task Focus()
+    {
+        await JsRuntime.InvokeVoidAsync("focusOnElement", InputToFocus);
+    }
+
     private void InitializeData()
     {
         GetAuthenticationState();
         CreateData();
+        CommentText = null;
         if (_itemsBunch is not null)
         {
             _itemDetails = _itemsBunch.First(x => x.Id == Id);
-            _comments = _itemDetails.Comments;
+            _comments = _itemDetails.Comments.OrderByDescending(x => x.CreationDateTime).ToList();
             LikeCount = _itemDetails.Likes.Count;
             collection = _itemDetails.Collection;
             ItemModel = new()
@@ -129,7 +184,6 @@ public partial class ItemDetails
     {
         if (!_itemDetails!.Likes.Where(x => x.ApplicationUserId == ThisUser!.Id)!.Any())
         {
-            Console.WriteLine("Like incremented by 1");
             using var adc = _contextFactory.CreateDbContext();
             var a = adc.Users.First(x => x.Id == ThisUser!.Id);
             var b = adc.Items.First(x => x.Id == _itemDetails.Id);
@@ -137,13 +191,11 @@ public partial class ItemDetails
             {
                 ApplicationUserId = a.Id,
                 ItemId = b.Id
-
             });
             adc.SaveChanges();
         }
         else
         {
-            Console.WriteLine("The like is already there");
             using var adc = _contextFactory.CreateDbContext();
             var temp = adc.Likes.Where(x => x.ApplicationUserId == ThisUser!.Id).First(x => x.ItemId == _itemDetails.Id);
             adc.Likes.Remove(temp);
@@ -162,6 +214,7 @@ public partial class ItemDetails
                         .Include(e => e.Tags)
                         .Include(e => e.Likes)
                         .Include(e => e.Comments)
+                        .ThenInclude(e => e.ApplicationUser)
                         .Include(e => e.Collection)
         ];
     }

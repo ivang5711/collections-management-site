@@ -131,7 +131,7 @@ public partial class ItemDetails
         {
             Console.WriteLine("Like incremented by 1");
             using var adc = _contextFactory.CreateDbContext();
-            var a = adc.Users.First(x => x.Id == ThisUser.Id);
+            var a = adc.Users.First(x => x.Id == ThisUser!.Id);
             var b = adc.Items.First(x => x.Id == _itemDetails.Id);
             adc.Likes.Add(new Like()
             {
@@ -144,6 +144,10 @@ public partial class ItemDetails
         else
         {
             Console.WriteLine("The like is already there");
+            using var adc = _contextFactory.CreateDbContext();
+            var temp = adc.Likes.Where(x => x.ApplicationUserId == ThisUser!.Id).First(x => x.ItemId == _itemDetails.Id);
+            adc.Likes.Remove(temp);
+            adc.SaveChanges();
         }
 
         InitializeData();

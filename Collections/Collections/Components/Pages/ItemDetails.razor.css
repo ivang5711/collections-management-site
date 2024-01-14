@@ -63,8 +63,7 @@
 }
 
 .comment-overview {
-    margin-top: 24rem;
-    padding-top: 10rem;
+    margin-top: 12rem;
 }
 
 @media (min-width: 768px) {
@@ -84,3 +83,5 @@
         margin-top: 2rem;
     }
 }
+
+@media ()

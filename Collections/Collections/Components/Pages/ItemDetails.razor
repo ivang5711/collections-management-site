@@ -28,62 +28,59 @@ else
                     {
                         <div class="flex-grow-1 d-flex align-items-center
                     justify-content-center justify-content-md-end">
-                            <div class="title-container text-center text-md-end">
-                                <h1 class="text-light">@_itemDetails.Name</h1>
-                                <h2 class="text-black">@GetAuthor()</h2>
+                        <div class="title-container text-center text-md-end">
+                            <h1 class="text-light">@_itemDetails.Name</h1>
+                            <h2 class="text-black">@GetAuthor()</h2>
 
-                                <span class="badge me-2 text-bg-light">
-                                    id: @_itemDetails.Id
-                                </span>
-                                <span class="badge me-2 text-bg-dark">collection: @_itemDetails.Collection.Name</span>
+                            <span class="badge me-2 text-bg-light">
+                                id: @_itemDetails.Id
+                            </span>
+                            <span class="badge me-2 text-bg-dark">collection: @_itemDetails.Collection.Name</span>
 
 
-                                <div class="me-2 pt-3">
-                                    @if (_itemDetails.Tags.Count == 0)
-                                    {
-                                        <span class="badge text-bg-light">
-                                            No tags so far...
-                                        </span>
-                                    }
-                                </div>
-                                <div class="me-2 pt-3">
-                                    <button @onclick="IncrementLike" class="badge btn me-2 text-bg-danger">
-                                        <i class="bi bi-hand-thumbs-up"></i> @LikeCount
-                                    </button>
-                                </div>
-                                <AuthorizeView>
-                                    <div class="me-2 pt-3">
-                                        <button @onclick="Focus"
-                                                class="btn btn-outline-secondary btn-sm text-nowrap"
-                                                asp-formaction="Block" name="Block"
-                                                type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                            <i class="bi bi-chat-left-text"></i> Leave Comment
-                                        </button>
-                                    </div>
-                                </AuthorizeView>
+                            <div class="me-2 pt-3">
+                                @if (_itemDetails.Tags.Count == 0)
+                                {
+                                    <span class="badge text-bg-light">
+                                        No tags so far...
+                                    </span>
+                                }
+                            </div>
+                            <div class="me-2 pt-3">
+                                <button @onclick="IncrementLike" class="badge btn me-2 text-bg-danger">
+                                    <i class="bi bi-hand-thumbs-up"></i> @LikeCount
+                                </button>
+                            </div>
+                            <div class="me-2 pt-3">
+                                <button @onclick="Focus"
+                                        class="btn btn-outline-secondary btn-sm text-nowrap"
+                                        asp-formaction="Block" name="Block"
+                                        type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                    <i class="bi bi-chat-left-text"></i> Leave Comment
+                                </button>
+                            </div>
 
                             </div>
                         </div>
                         <div class="order-last order-md-first d-flex
                     justify-content-center">
-                            <div class="poster-container">
-                                @if (string.IsNullOrEmpty(_itemDetails.ImageLink))
-                                {
-                                    <img src="https://th.bing.com/th/id/OIG.gq_uOPPdJc81e_v0XAei"
+                        <div class="poster-container">
+                            @if (string.IsNullOrEmpty(_itemDetails.ImageLink))
+                            {
+                                <img src="https://th.bing.com/th/id/OIG.gq_uOPPdJc81e_v0XAei"
+                                     alt="item poster" />
+                            }
+                            else
+                            {
+                                <a href="@ItemModel.ImageLink">
+                                    <img src="@_itemDetails.ImageLink"
                                          alt="item poster" />
-                                }
-                                else
-                                {
-                                    <a href="@ItemModel.ImageLink">
-                                        <img src="@_itemDetails.ImageLink"
-                                             alt="item poster" />
-                                    </a>
-                                }
-                            </div>
+                                </a>
+                            }
                         </div>
-                    }
-                <AuthorizeView>
-                    <div class="order-last order-md-first d-flex
+                    </div>
+                }
+                <div class="order-last order-md-first d-flex
                     justify-content-center">
                         @if (editItemRequested && !deleteItemRequested)
                         {
@@ -218,11 +215,7 @@ else
                     }
                 </div>
             }
-
-        </AuthorizeView>
-        <AuthorizeView>
-            <Authorized>
-                <div class="d-flex flex-column flex-lg-col
+            <div class="comment-overview d-flex flex-column flex-lg-col
                         justify-content-between my-3">
 
                     <div class="comment-container pb-3 ">
@@ -251,78 +244,44 @@ else
                                 </Virtualize>
                             </div>
                         }
-                            <div class="row row-cols-8 row-cols-lg-8
+                        <div class="row row-cols-8 row-cols-lg-8
                                         row-cols-x1-5 g-3
                                         justify-content-center my-1 py-2">
-                                <div class="card h-100 fade-in"
-                                     style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
-                                    <div class="card-body ">
-                                        <textarea @ref="InputToFocus" class="form-control"
-                                                  @bind="CommentText"
-                                                  required
-                                                  placeholder="Enter your comment..."
-                                                  aria-label="With textarea">
-                                                </textarea>
-                                    </div>
-                                    <div class="text-end pb-3 pe-2">
-                                        @if (CommentText is null)
-                                        {
-
-                                            <button @onclick="Focus"
-                                                    class="btn btn-outline-secondary btn-sm text-nowrap"
-                                                    asp-formaction="Block" name="Block"
-                                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                <i class="bi bi-chat-left-text"></i> Leave Comment
-                                            </button>
-                                        }
-                                        else
-                                        {
-                                            <button @onclick="SubmitComment"
-                                                    class="btn btn-outline-secondary btn-sm text-nowrap"
-                                                    asp-formaction="Block" name="Block"
-                                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                <i class="bi bi-chat-left-text"></i> Leave Comment
-                                            </button>
-                                        }
-                                    </div>
-                                </div>
+                        <div class="card h-100 fade-in"
+                             style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
+                            <div class="card-body ">
+                                <textarea @ref="InputToFocus" class="form-control"
+                                          @bind="CommentText"
+                                          required
+                                          placeholder="Enter your comment..."
+                                          aria-label="With textarea">
+                                </textarea>
                             </div>
+                            <div class="text-end pb-3 pe-2">
+                                @if (CommentText is null)
+                                {
+
+                                    <button @onclick="Focus"
+                                            class="btn btn-outline-secondary btn-sm text-nowrap"
+                                            asp-formaction="Block" name="Block"
+                                            type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                        <i class="bi bi-chat-left-text"></i> Leave Comment
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button @onclick="SubmitComment"
+                                            class="btn btn-outline-secondary btn-sm text-nowrap"
+                                            asp-formaction="Block" name="Block"
+                                            type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                        <i class="bi bi-chat-left-text"></i> Leave Comment
+                                    </button>
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </Authorized>
-            <NotAuthorized>
-                <div class="comment-overview d-flex flex-column flex-lg-col
-                        justify-content-between my-3">
-
-                    <div class="comment-container pb-3 ">
-                        @if (_itemDetails.Comments.Count != 0)
-                        {
-                            <div class="row justify-content-center example pb-3"
-                                 style="overflow-y:scroll; max-height: 50vh;">
-                                <Virtualize Items="@_comments" Context="comment">
-                                    <ItemContent>
-                                        <div class="row row-cols-8 row-cols-lg-8
-                                            row-cols-x1-5 g-3
-                                justify-content-center my-1">
-                                            <CommentCard Comment="comment" />
-                                        </div>
-                                    </ItemContent>
-                                    <Placeholder>
-                                        <p>
-                                            Loading&hellip;
-                                        </p>
-                                    </Placeholder>
-                                    <EmptyContent>
-                                        <p>
-                                            There are no records to display.
-                                        </p>
-                                    </EmptyContent>
-                                </Virtualize>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </NotAuthorized>
+            </div>
         </AuthorizeView>
 
        

@@ -140,6 +140,8 @@ public partial class CollectionDetails
         deleteItemRequested = !deleteItemRequested;
     }
 
+    
+
     private List<Collection> GetCollectionsFromDataSource()
     {
         List<Collection> t;
@@ -260,6 +262,16 @@ public partial class CollectionDetails
 
     private void SubmitDeleteCollection()
     {
+        DeleteCollection();
+        _navigationManager.NavigateTo($"/collections");
+    }
+
+    private void DeleteCollection()
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        Collection temp = adc.Collections.Where(x => x.Id == collection!.Id).First();
+        adc.Collections.Remove(temp);
+        adc.SaveChanges();
     }
 
     private void FetchCollectionsDataFromDataSource()

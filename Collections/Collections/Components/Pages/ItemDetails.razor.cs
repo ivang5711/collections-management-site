@@ -1,5 +1,8 @@
+using Collections.Data;
 using Collections.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Collections.Components.Pages;
@@ -17,6 +20,8 @@ public partial class ItemDetails
     private List<Comment> _comments = [];
     private bool editItemRequested = false;
     private bool deleteItemRequested = false;
+    private ApplicationUser? ThisUser;
+
     public int LikeCount { get; set; } = 999;
     public Item? ItemModel { get; set; }
     private Collection? collection;
@@ -102,6 +107,7 @@ public partial class ItemDetails
 
     private void InitializeData()
     {
+        GetAuthenticationState();
         CreateData();
         if (_itemsBunch is not null)
         {
@@ -121,7 +127,26 @@ public partial class ItemDetails
 
     private void IncrementLike()
     {
-        LikeCount++;
+        if (!_itemDetails!.Likes.Where(x => x.ApplicationUserId == ThisUser!.Id)!.Any())
+        {
+            Console.WriteLine("Like incremented by 1");
+            using var adc = _contextFactory.CreateDbContext();
+            var a = adc.Users.First(x => x.Id == ThisUser.Id);
+            var b = adc.Items.First(x => x.Id == _itemDetails.Id);
+            adc.Likes.Add(new Like()
+            {
+                ApplicationUserId = a.Id,
+                ItemId = b.Id
+
+            });
+            adc.SaveChanges();
+        }
+        else
+        {
+            Console.WriteLine("The like is already there");
+        }
+
+        InitializeData();
     }
 
     private void CreateData()
@@ -144,5 +169,13 @@ public partial class ItemDetails
         res = adc.Users.First(x => x.Id == collection!.ApplicationUserId).FullName;
 
         return res;
+    }
+
+    private void GetAuthenticationState()
+    {
+        AuthenticationState authenticationState = Task.Run(() =>
+                    _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
+        ThisUser = Task.Run(() =>
+            _userManager.GetUserAsync(authenticationState.User)).Result;
     }
 }

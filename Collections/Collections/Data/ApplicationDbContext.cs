@@ -21,6 +21,8 @@ namespace Collections.Data
 
         public DbSet<Theme> Themes { get; set; }
 
+        public DbSet<Like> Likes { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -33,6 +35,10 @@ namespace Collections.Data
             builder.Entity<Tag>().ToTable("Tags");
             builder.Entity<Like>().ToTable("Likes");
             builder.Entity<Theme>().ToTable("Themes");
+
+            builder.Entity<Like>()
+                .HasIndex(p => new { p.ApplicationUserId, p.ItemId})
+                .IsUnique(true);
 
             //builder.Entity<ApplicationUser>().HasMany(e => e.Likes)
             //    .WithOne(e => e.User)

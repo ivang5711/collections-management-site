@@ -11,30 +11,20 @@
 
 @if (Item is not null)
 {
-    <div class="card h-100 fade-in" style="min-width: 18rem;">
-        @if (string.IsNullOrWhiteSpace(@Item.ImageLink))
-        {
-             
-            <canvas class="card-img-top"
-                    style="background-color: lightgray; height: 24rem;
-                      object-fit: cover;" />
-        }
-        else
-        {
-            <img class="card-img-top" alt="Collection Item"
-                 src="@Item.ImageLink" style="height: 24rem;
-                      object-fit: cover;" />
-        }
-        <div class="card-body border-top bg-light">
-            <h5 class="card-title">@Item.Name</h5>
-            <p class="card-text">@GetAuthor(Item.Collection)</p>
+    <a href="/item-details/@Collection!.Id/@Item.Id">
+        <div class="card text-bg-dark h-100 fade-in card-container" style="min-width: 12rem;">
+            @if (!string.IsNullOrWhiteSpace(@Item.ImageLink))
+            {
+                <img class="card-img-top" alt="Collection Item"
+                     src="@Item.ImageLink" />
+            }
+            <div class="card-img-overlay" style="text-shadow: 1px 1px #000000;">
+                <h5 class="card-title">@Item.Name</h5>
+                <p class="card-text">Added by: @GetAuthor(Item.Collection)</p>
+                <p class="card-text"><small>On: @Item.CreationDateTime.ToLocalTime()</small></p>
+            </div>
         </div>
-        <div class="card-footer text-end">
-            <a class="btn btn-primary"
-               href="/item-details/@Collection!.Id/@Item.Id">Details</a>
-        </div>
-
-    </div>
+    </a>
 }
 else
 {
@@ -48,11 +38,6 @@ else
             <p class="card-text placeholder-glow">
                 <span class="placeholder col-8"></span>
             </p>
-        </div>
-        <div class="card-footer text-end">
-            <button class="btn btn-primary disabled placeholder col-6">
-                Details
-            </button>
         </div>
     </div>
 }

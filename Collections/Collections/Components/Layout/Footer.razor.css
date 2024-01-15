@@ -1,7 +1,7 @@
 ﻿.footerStyle {
     /*background-color: lightgray;*/
     background-image: linear-gradient(0deg, #d1d1d1, #ffffff);
-    color: #303030;
+    /*color: #303030;*/
 }
 
 .footerStyle a {
@@ -12,10 +12,32 @@
         color: black;
     }
 
-    .footerStyle a:hover {
-        color: #303030;
-        background-color: black;
+    .footerStyle .bi-youtube:hover {
+        color: #ff0000;
     }
+
+    .footerStyle .bi-telegram:hover {
+        color: #3ba8e3;
+    }
+
+    .footerStyle .bi-linkedin:hover {
+        color: #0076b5;
+    }
+
+    .footerStyle .bi-github:hover {
+        color: black;
+        text-shadow: 1px 1px 2px #35186ec6;
+    }
+
+
+
+.footerStyle a:hover {
+    /*color: #303030;*/
+    /*color: succes;*/
+    text-shadow: 1px 1px 2px #9c9c9c;
+    /*background-color: ;*/
+    /*background-image: linear-gradient(180deg, #d1d1d1, #ffffff);*/
+}
 
 .footerStyle .bi {
     font-size: 1.5rem;

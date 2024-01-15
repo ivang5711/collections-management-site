@@ -30,12 +30,18 @@ else
                     justify-content-center justify-content-md-end">
                         <div class="title-container text-center text-md-end">
                             <h1 class="text-light" style="text-shadow: 1px 1px #000000;">@_itemDetails.Name</h1>
-                            <h2 class="text-black" style="text-shadow: 1px 1px #FFFFFF;">@GetAuthor()</h2>
-                            <span class="badge me-2 text-bg-light">
-                                id: @_itemDetails.Id
-                            </span>
-                            <span class="badge me-2 text-bg-dark">collection: @_itemDetails.Collection.Name</span>
-                            <div class="me-2 pt-3">
+                            <h2 class="text-dark" style="text-shadow: 1px 1px #FFFFFF;">@GetAuthor()</h2>
+                            <div class="pt-3">
+                                <span class="badge text-bg-light">
+                                    id: @_itemDetails.Id
+                                </span>
+                            </div>
+                            <div class="pt-3">
+                                <a href="/collection-details/@_itemDetails.Collection.Id">
+                                    <span class="badge text-bg-dark">collection: @_itemDetails.Collection.Name</span>
+                                </a>
+                            </div>
+                            <div class="pt-3">
                                 @if (Tags.Count == 0)
                                 {
                                     <span class="badge text-bg-success">
@@ -52,10 +58,20 @@ else
                                     }
                                 }
                             </div>
-                            <div class="me-2 pt-3">
-                                <button @onclick="IncrementLike" class="badge btn me-2 text-bg-danger">
-                                    <i class="bi bi-hand-thumbs-up"></i> @LikeCount
-                                </button>
+                            <div class="pt-3">
+                                <AuthorizeView>
+                                    <Authorized>
+
+                                        <button @onclick="IncrementLike" class="badge btn text-bg-danger">
+                                            <i class="bi bi-hand-thumbs-up"></i> @LikeCount
+                                        </button>
+                                    </Authorized>
+                                    <NotAuthorized>
+                                        <button style="pointer-events: none;" class="badge btn text-bg-danger">
+                                            <i class="bi bi-hand-thumbs-up"></i> @LikeCount
+                                        </button>
+                                    </NotAuthorized>
+                                </AuthorizeView>
                             </div>
                             <AuthorizeView>
                                 <div class="me-2 pt-3">
@@ -233,8 +249,8 @@ else
         @if (!(editItemRequested || deleteItemRequested))
         {
             <div class="overview d-flex flex-column">
-                <h3>Author: @GetAuthor()</h3>
-                <h5>@ItemModel.Name</h5>
+                <h3 class="text-dark">@ItemModel.Name</h3>
+                <h5 class="text-secondary">Author: @GetAuthor()</h5>
                 <AuthorizeView>
                     @if (!(editItemRequested || deleteItemRequested))
                     {
@@ -299,7 +315,7 @@ else
                                               required
                                               placeholder="Enter your comment..."
                                               aria-label="With textarea">
-                                                                        </textarea>
+                                                                                </textarea>
                                 </div>
                                 <div class="text-end pb-3 pe-2">
                                     @if (CommentText is null)
@@ -361,7 +377,7 @@ else
                                         justify-content-center my-1 py-2">
                             <div class="card h-100 fade-in"
                                  style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
-                                        ">
+                                                ">
                                 <div class="card-body text-center">
                                     <p>Register now to leave comments, likes and more!</p>
                                     <p>Or <span class="text-success">Log in</span> if you're already have an account</p>

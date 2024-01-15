@@ -16,6 +16,7 @@ public partial class CollectionsPage
     private bool newThemeAddFinishedSuccessfully = true;
     private bool newCollectionRequested = false;
     private bool addNewThemeRequested = false;
+    public string ThemeNameChoosen { get; set; }
     private List<Collection>? collections = null;
     private ApplicationUser? ThisUser = null;
     private string TempImg { get; set; } = string.Empty;
@@ -47,6 +48,7 @@ public partial class CollectionsPage
     {
         Model!.ImageLink = TempImg;
         Model!.ApplicationUserId = ThisUser!.Id;
+        Model!.ThemeID = Themes.First(x => x.Name == ThemeNameChoosen).Id;
         await CreateNewCollection();
         newCollectionRequested = false;
     }

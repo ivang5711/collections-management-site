@@ -155,10 +155,8 @@
                                         <p class="card-text">Edit fields you want to change or left them blank to keep current value</p>
                                         <p class="card-text"><small class="text-muted">Created @CollectionModel!.CreationDateTime.ToLocalTime()</small></p>
                                         <div class="px-5 py-2">
-
                                             @if (!addNewThemeRequested)
                                             {
-
                                                 <DataAnnotationsValidator />
                                                 <ValidationSummary />
                                                 @* Identifier: *@
@@ -167,19 +165,13 @@
                                                 <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection new photo (optional)..." />
                                                 <div class="row row-cols-1 row-cols-md-auto">
                                                     <div class="flex-fill pe-md-0 mx-0">
-                                                        <InputSelect class="d-flex form-select form-select" aria-label=".form-select example" @bind-Value="CollectionModel.ThemeID">
-                                                            @if (Themes is null)
+                                                        <input @bind="ThemeNameChoosen" class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Theme...">
+                                                        <datalist id="datalistOptions">
+                                                            @foreach (var t in Themes)
                                                             {
-                                                                <option selected value="">None</option>
+                                                                <option value="@t.Name" />
                                                             }
-                                                            else
-                                                            {
-                                                                @foreach (var t in Themes)
-                                                                {
-                                                                    <option value="@t.Id">@t.Name</option>
-                                                                }
-                                                            }
-                                                        </InputSelect>
+                                                        </datalist>
                                                     </div>
                                                     <div class="mx-0 my-2 ps-md-2 my-md-0">
                                                         <button @onclick="RequestNewTheme"
@@ -190,7 +182,6 @@
                                                         </button>
                                                     </div>
                                                 </div>
-
                                             }
                                             else
                                             {

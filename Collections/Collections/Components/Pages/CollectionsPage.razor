@@ -72,22 +72,8 @@
 
                                             <div class="row row-cols-1 row-cols-md-auto">
                                                 <div class="flex-fill pe-md-0 mx-0">
-                                                   @*  <InputSelect class="d-flex form-select form-select" aria-label=".form-select example" @bind-Value="Model.ThemeID">
-                                                        @if (Themes is null)
-                                                        {
-                                                            <option selected value="">None</option>
-                                                        }
-                                                        else
-                                                        {
-                                                            @foreach (var t in Themes)
-                                                            {
-                                                                <option value="@t.Id">@t.Name</option>
-                                                            }
-                                                        }
-                                                    </InputSelect> *@
-                                                    @* <InputText class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search..." class="form-control input-group-text input-group-lg w-100 my-2" aria-label=".form-select example" @bind-Value="Model.ThemeID" /> *@
-
-                                                    <input @bind="ThemeNameChoosen" class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
+           
+                                                    <input @bind="ThemeNameChoosen" class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Theme...">
                                                     <datalist id="datalistOptions">
                                                         
                                                         @foreach (var t in Themes)

@@ -22,10 +22,36 @@ public partial class ItemDetails
     private bool editItemRequested = false;
     private bool deleteItemRequested = false;
     private ApplicationUser? ThisUser;
+    public List<Tag> Tags { get; set; }
+
+    public string? NewTag { get; set; }
 
     public int LikeCount { get; set; } = 999;
     public Item? ItemModel { get; set; }
     private Collection? collection;
+
+    private void SubmitAddTag()
+    {
+        Console.WriteLine($"Tag: {NewTag}");
+        if (!string.IsNullOrWhiteSpace(NewTag))
+        {
+            AddTag();
+            InitializeData();
+        }
+
+        NewTag = null;
+    }
+
+    private void AddTag()
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        adc.Tags.Add(new Tag() { Name = NewTag! });
+        adc.SaveChanges();
+        var a = adc.Items.First(x => x.Id == Id);
+        var b = adc.Tags.First(x => x.Name == NewTag);
+        a.Tags.Add(b);
+        adc.SaveChanges();
+    }
 
     private void SubmitEditItem()
     {
@@ -217,6 +243,7 @@ public partial class ItemDetails
                         .ThenInclude(e => e.ApplicationUser)
                         .Include(e => e.Collection)
         ];
+        Tags = [.. adc.Tags.OrderByDescending(x => x.Items.Count)];
     }
 
     private string GetAuthor()

@@ -31,8 +31,20 @@
                         @collection.Theme!.Name
                     </span>
                 </h3>
-                @((MarkupString)@collection.Description)
+                <div class="card mb-3 w-100" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                    <div class="row g-0">
+                        <div class="col-md">
+                            <h5 class="card-header">Description:</h5>
+                            <div class="card-body">
+                                <div class="px-5 py-2">
+                                    @((MarkupString)@collection.Description)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
+
             </div>
             @if (!(newItemRequested || editItemRequested || deleteItemRequested))
             {

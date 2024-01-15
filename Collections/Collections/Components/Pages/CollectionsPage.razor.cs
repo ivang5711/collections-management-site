@@ -1,5 +1,6 @@
 using Collections.Data;
 using Collections.Models;
+using Markdig;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,12 @@ public partial class CollectionsPage
 
         [Required]
         public new string? Description { get; set; }
+    }
+
+    private string CreateMarkdown(string input)
+    {
+        var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseSoftlineBreakAsHardlineBreak().Build();
+        return Markdown.ToHtml(input, pipeline);
     }
 
     private async Task SubmitNewCollectionForm()
@@ -140,7 +147,7 @@ public partial class CollectionsPage
             Name = collectionCandidate!.Name!,
             ThemeID = collectionCandidate!.ThemeID,
             ApplicationUserId = collectionCandidate!.ApplicationUserId!,
-            Description = collectionCandidate!.Description!,
+            Description = CreateMarkdown(collectionCandidate!.Description!),
             ImageLink = collectionCandidate.ImageLink,
             CreationDateTime = DateTime.UtcNow
         };

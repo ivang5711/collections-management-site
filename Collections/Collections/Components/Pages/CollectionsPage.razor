@@ -69,8 +69,8 @@
                                             <ValidationSummary />
                                             @* Identifier: *@
                                             <InputText @bind-Value="Model!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Name..." />
-                                            <InputText @bind-Value="Model.Description" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Description" />
-                                            <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection photo (optional)..." />
+                                            <InputTextArea @bind-Value="Model.Description" type="text" class="text-start input-group-text input-group-lg w-100 my-2" placeholder="Collection New Description" />                                            <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection photo (optional)..." />
+                                            
                                             <div class="row row-cols-1 row-cols-md-auto">
                                                 <div class="flex-fill pe-md-0 mx-0">
                                                     <InputSelect class="d-flex form-select form-select" aria-label=".form-select example" @bind-Value="Model.ThemeID">

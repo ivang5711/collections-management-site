@@ -10,7 +10,6 @@
 @inject IJSRuntime JsRuntime
 @inject IDbContextFactory<ApplicationDbContext> _contextFactory
 
-
 @rendermode InteractiveServer
 
 @if (_itemDetails is null || ItemModel is null)
@@ -32,13 +31,10 @@ else
                         <div class="title-container text-center text-md-end">
                             <h1 class="text-light">@_itemDetails.Name</h1>
                             <h2 class="text-black">@GetAuthor()</h2>
-
                             <span class="badge me-2 text-bg-light">
                                 id: @_itemDetails.Id
                             </span>
                             <span class="badge me-2 text-bg-dark">collection: @_itemDetails.Collection.Name</span>
-
-
                             <div class="me-2 pt-3">
                                 @if (_itemDetails.Tags.Count == 0)
                                 {
@@ -62,7 +58,6 @@ else
                                     </button>
                                 </div>
                             </AuthorizeView>
-
                         </div>
                     </div>
                     <div class="order-last order-md-first d-flex
@@ -219,7 +214,6 @@ else
                     }
                 </div>
             }
-
         </AuthorizeView>
         <AuthorizeView>
             <Authorized>
@@ -294,7 +288,6 @@ else
             <NotAuthorized>
                 <div class="comment-overview d-flex flex-column flex-lg-col
                         justify-content-between my-3">
-
                     <div class="comment-container pb-3 ">
                         @if (_itemDetails.Comments.Count != 0)
                         {
@@ -325,8 +318,5 @@ else
                 </div>
             </NotAuthorized>
         </AuthorizeView>
-
-
-
     </div>
 }

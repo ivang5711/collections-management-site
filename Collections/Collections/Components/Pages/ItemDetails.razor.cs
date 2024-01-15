@@ -2,7 +2,6 @@ using Collections.Data;
 using Collections.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 
@@ -22,6 +21,7 @@ public partial class ItemDetails
     private bool editItemRequested = false;
     private bool deleteItemRequested = false;
     private ApplicationUser? ThisUser;
+    public string? CommentText { get; set; }
     public List<Tag> Tags { get; set; }
 
     public string? NewTag { get; set; }
@@ -29,6 +29,7 @@ public partial class ItemDetails
     public int LikeCount { get; set; } = 999;
     public Item? ItemModel { get; set; }
     private Collection? collection;
+    private ElementReference InputToFocus;
 
     private void SubmitAddTag()
     {
@@ -150,9 +151,9 @@ public partial class ItemDetails
         InitializeData();
     }
 
-    private ElementReference InputToFocus;
+   
 
-    public string? CommentText { get; set; }
+    
 
     private void SubmitComment()
     {

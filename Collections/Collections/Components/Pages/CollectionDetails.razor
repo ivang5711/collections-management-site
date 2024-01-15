@@ -9,6 +9,7 @@
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager _navigationManager
 
+
 @rendermode InteractiveServer
 
 <PageTitle>Collection details</PageTitle>
@@ -30,9 +31,8 @@
                         @collection.Theme!.Name
                     </span>
                 </h3>
-                <p>
-                    @collection.Description
-                </p>
+                @((MarkupString)@collection.Description)
+                
             </div>
             @if (!(newItemRequested || editItemRequested || deleteItemRequested))
             {
@@ -151,7 +151,7 @@
                                                 <ValidationSummary />
                                                 @* Identifier: *@
                                                 <InputText @bind-Value="CollectionModel!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection New Name..." />
-                                                <InputText @bind-Value="CollectionModel.Description" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection New Description" />
+                                                <InputTextArea @bind-Value="CollectionModel.Description" type="text" class="text-start input-group-text input-group-lg w-100 my-2" placeholder="Collection New Description" />
                                                 <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection new photo (optional)..." />
                                                 <div class="row row-cols-1 row-cols-md-auto">
                                                     <div class="flex-fill pe-md-0 mx-0">

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using Markdig;
 
 namespace Collections.Components.Pages;
 
@@ -123,6 +124,8 @@ public partial class CollectionDetails
         }
     }
 
+
+
     private void ToggleNewItemRequestStatus()
     {
         TempImg = string.Empty;
@@ -233,6 +236,12 @@ public partial class CollectionDetails
         return false;
     }
 
+    private string  CreateMarkdown(string input)
+    {
+        var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseSoftlineBreakAsHardlineBreak().Build();
+        return Markdown.ToHtml(input, pipeline);
+    }
+
     private void UpdateCollection()
     {
         using var context = _contextFactory.CreateDbContext();
@@ -244,7 +253,7 @@ public partial class CollectionDetails
 
         if (CollectionModel.Description != collection.Description)
         {
-            tmp.Description = CollectionModel.Description;
+            tmp.Description = CreateMarkdown(CollectionModel.Description);
         }
 
         if (CollectionModel.ThemeID != collection.ThemeID)

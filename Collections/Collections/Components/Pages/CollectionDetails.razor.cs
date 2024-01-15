@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using Markdig;
+using Azure.Storage.Blobs;
 
 namespace Collections.Components.Pages;
 
@@ -25,6 +26,18 @@ public partial class CollectionDetails
     private bool themeIsUnique = true;
     private bool newThemeAddFinishedSuccessfully = true;
     private bool addNewThemeRequested = false;
+
+    private const string blobStorageConnectionString = "";
+    private const string blobStorageContainerName = "photoupload";
+
+    private async void UploadImageToStorage()
+    {
+        var container = new BlobContainerClient(blobStorageConnectionString, blobStorageContainerName);
+        var blob = container.GetBlobClient("welcome.png");
+
+        var stream = File.OpenRead("welcome.png");
+        await blob.UploadAsync(stream);
+    }
 
     public string? ThemeNameChoosen { get; set; }
     private string? TempImg { get; set; } = string.Empty;

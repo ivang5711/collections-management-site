@@ -25,6 +25,8 @@ public partial class CollectionDetails
     private bool themeIsUnique = true;
     private bool newThemeAddFinishedSuccessfully = true;
     private bool addNewThemeRequested = false;
+
+    public string? ThemeNameChoosen { get; set; }
     private string? TempImg { get; set; } = string.Empty;
 
     public string? NewTheme { get; set; }
@@ -109,6 +111,7 @@ public partial class CollectionDetails
     {
         FetchCollectionsDataFromDataSource();
         GetThemes();
+        ThemeNameChoosen = null;
         ItemModel = new();
         CollectionModel = new();
         if (collection is not null)
@@ -256,9 +259,11 @@ public partial class CollectionDetails
             tmp.Description = CreateMarkdown(CollectionModel.Description);
         }
 
-        if (CollectionModel.ThemeID != collection.ThemeID)
+        var t = Themes.First(x => x.Name == ThemeNameChoosen).Id;
+
+        if (t != collection.ThemeID)
         {
-            tmp.ThemeID = CollectionModel.ThemeID;
+            tmp.ThemeID = t;
         }
 
         if (CollectionModel.ImageLink != collection.ImageLink)

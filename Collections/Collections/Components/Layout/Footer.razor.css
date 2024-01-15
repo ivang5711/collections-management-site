@@ -1,6 +1,7 @@
 ﻿.footerStyle {
-background-color: lightgray;
-color: #303030;
+    /*background-color: lightgray;*/
+    background-image: linear-gradient(0deg, #d1d1d1, #ffffff);
+    color: #303030;
 }
 
 .footerStyle a {

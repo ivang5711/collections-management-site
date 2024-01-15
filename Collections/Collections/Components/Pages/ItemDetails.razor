@@ -128,7 +128,6 @@ else
                                                             <div class="row row-cols-1 row-cols-md-auto align-items-center">
                                                                 <div class="flex-fill pe-md-0 mx-0">
                                                                     <InputText @bind-Value="NewTag" requred list="datalistOptions" id="exampleDataList" class="input-group-text input-group-lg w-100 my-2" placeholder="Tags..." />
-                                                                    @* <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search..."> *@
                                                                     <datalist id="datalistOptions">
                                                                         @foreach (var t in Tags)
                                                                         {
@@ -149,7 +148,7 @@ else
                                                             </div>
 
 
-                                                            
+
 
                                                             @foreach (var t in _itemDetails.Tags)
                                                             {
@@ -231,12 +230,12 @@ else
         </div>
     </div>
     <div class="container-xxl">
-        <AuthorizeView>
-            @if (!(editItemRequested || deleteItemRequested))
-            {
-                <div class="overview d-flex flex-column">
-                    <h3>Author: @GetAuthor()</h3>
-                    <h5>@ItemModel.Name</h5>
+        @if (!(editItemRequested || deleteItemRequested))
+        {
+            <div class="overview d-flex flex-column">
+                <h3>Author: @GetAuthor()</h3>
+                <h5>@ItemModel.Name</h5>
+                <AuthorizeView>
                     @if (!(editItemRequested || deleteItemRequested))
                     {
                         <div class="pb-2 d-flex justify-content-start m-0 row col-md
@@ -255,9 +254,9 @@ else
                             </button>
                         </div>
                     }
-                </div>
-            }
-        </AuthorizeView>
+                </AuthorizeView>
+            </div>
+        }
         <AuthorizeView>
             <Authorized>
                 <div class="d-flex flex-column flex-lg-col
@@ -300,7 +299,7 @@ else
                                               required
                                               placeholder="Enter your comment..."
                                               aria-label="With textarea">
-                                                            </textarea>
+                                                                        </textarea>
                                 </div>
                                 <div class="text-end pb-3 pe-2">
                                     @if (CommentText is null)
@@ -357,6 +356,36 @@ else
                                 </Virtualize>
                             </div>
                         }
+                        <div class="row row-cols-8 row-cols-lg-8
+                                        row-cols-x1-5 g-3
+                                        justify-content-center my-1 py-2">
+                            <div class="card h-100 fade-in"
+                                 style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
+                                        ">
+                                <div class="card-body text-center">
+                                    <p>Register now to leave comments, likes and more!</p>
+                                    <p>Or <span class="text-success">Log in</span> if you're already have an account</p>
+                                </div>
+                                <div class="text-center pb-3 pe-2">
+
+                                    <button @onclick="OnRegisterSubmit"
+                                            class="btn btn-outline-dark btn-sm text-nowrap mx-1"
+                                            asp-formaction="Block" name="Block"
+                                            type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                        <i class="bi bi-person-fill-add"></i> Register
+                                    </button>
+
+                                    <button @onclick="OnLoginSubmit"
+                                            class="btn btn-outline-success btn-sm text-nowrap mx-1"
+                                            asp-formaction="Block" name="Block"
+                                            type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                        <span class="bi bi-person-fill" aria-hidden="true" /> Log in
+                                    </button>
+
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </NotAuthorized>

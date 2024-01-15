@@ -43,6 +43,16 @@ public partial class ItemDetails
         NewTag = null;
     }
 
+    private void OnRegisterSubmit()
+    {
+        _navigationManager.NavigateTo("/Account/Register");
+    }
+
+    private void OnLoginSubmit()
+    {
+        _navigationManager.NavigateTo("/Account/Login");
+    }
+
     private void AddTag()
     {
         using var adc = _contextFactory.CreateDbContext();

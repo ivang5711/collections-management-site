@@ -1,14 +1,16 @@
 ﻿@page "/collection-details/{id:int}"
 @using Components.TestData
-@inject IDbContextFactory<ApplicationDbContext> _contextFactory
-@using Microsoft.AspNetCore.Authorization;
-@using Microsoft.AspNetCore.Identity;
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Collections.Services
 @inject UserManager<ApplicationUser> _UserManager
 @inject RoleManager<IdentityRole> _RoleManager
 @inject SignInManager<ApplicationUser> _SignInManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager _navigationManager
-
+@inject IDbContextFactory<ApplicationDbContext> _contextFactory
+@inject IConfiguration _configuration
+@inject IBlobService _blobService
 
 @rendermode InteractiveServer
 
@@ -43,8 +45,6 @@
                         </div>
                     </div>
                 </div>
-                
-
             </div>
             @if (!(newItemRequested || editItemRequested || deleteItemRequested))
             {

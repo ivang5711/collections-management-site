@@ -1,7 +1,9 @@
+using Azure.Storage.Blobs;
 using Collections.Client.Pages;
 using Collections.Components;
 using Collections.Components.Account;
 using Collections.Data;
+using Collections.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +39,16 @@ builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
 }
     , ServiceLifetime.Transient);
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddSingleton(x =>
+new BlobServiceClient(
+    builder.Configuration.GetConnectionString("BlobStorageConnection") ??
+        throw new InvalidOperationException(
+        "Connection string 'BlobStorageConnection' not found.")
+        )
+);
+
+builder.Services.AddSingleton<IBlobService, BlobService>();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {

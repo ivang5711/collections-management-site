@@ -16,12 +16,16 @@ public partial class ItemDetails
     [Parameter]
     public int CollectionId { get; set; }
 
+    public string TempImg { get; set; } = string.Empty;
+
     private Item? _itemDetails;
     private List<Item>? _itemsBunch;
     private List<Comment> _comments = [];
     private bool editItemRequested = false;
     private bool deleteItemRequested = false;
     private ApplicationUser? ThisUser;
+
+    string OldImage = string.Empty;
     public string? CommentText { get; set; }
     public List<Tag> Tags { get; set; }
 
@@ -39,6 +43,13 @@ public partial class ItemDetails
 
     public async Task UploadFile(InputFileChangeEventArgs e)
     {
+        if (!string.IsNullOrWhiteSpace(UploadedFileName))
+        {
+            var basePath = Directory.GetCurrentDirectory();
+            string path = Path.Combine(basePath, "wwwroot/bloobtempfolder", UploadedFileName);
+            File.Delete(path);
+        }
+
 
         Error = string.Empty;
         var file = e.File;
@@ -49,7 +60,6 @@ public partial class ItemDetails
             if (file.Size > maxFileSize)
             {
                 Error = $"File is too big! The file size is limited to {maxFileSize}";
-                StateHasChanged();
                 return;
             }
 
@@ -59,17 +69,19 @@ public partial class ItemDetails
                 var fileExtension = Path.GetExtension(file.Name);
                 var newFileName = Path.ChangeExtension(randomFileName, fileExtension);
                 var basePath = Directory.GetCurrentDirectory();
-                string path = Path.Combine(basePath, "bloobtempfolder", newFileName);
-                Directory.CreateDirectory(Path.Combine(basePath, "bloobtempfolder"));
+                string path = Path.Combine(basePath, "wwwroot/bloobtempfolder", newFileName);
+                Directory.CreateDirectory(Path.Combine(basePath, "wwwroot/bloobtempfolder"));
                 using FileStream fs = new(path, FileMode.Create);
                 await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
                 UploadedFileName = newFileName;
+                TempImg = Path.Combine("bloobtempfolder", newFileName);
+                StateHasChanged();
             }
             catch (Exception exception)
             {
                 Error = $"File Error: {exception}";
-                StateHasChanged();
             }
+
         }
     }
 
@@ -78,10 +90,18 @@ public partial class ItemDetails
         Console.WriteLine("Change item image!!!!!!!!!!!!!!!!!!!");
 
         var basePath = Directory.GetCurrentDirectory();
-        string path = Path.Combine(basePath, "bloobtempfolder", UploadedFileName!);
+        string path = Path.Combine(basePath, "wwwroot/bloobtempfolder", UploadedFileName!);
 
+        //var fileExtension = Path.GetExtension(UploadedFileName);
+        //var newFileName = Path.ChangeExtension($"{_itemDetails!.Id}", fileExtension);
+
+
+        var randomFileName = Path.GetRandomFileName();
         var fileExtension = Path.GetExtension(UploadedFileName);
-        var newFileName = Path.ChangeExtension($"{_itemDetails!.Id}", fileExtension);
+        var newFileName = Path.ChangeExtension(randomFileName, fileExtension);
+
+
+
 
         await _blobService.UploadFileBlobAsync(path, newFileName, "items");
 
@@ -90,6 +110,27 @@ public partial class ItemDetails
         var res0 = _blobService.GetBlobUrl(newFileName, "items");
 
         ItemModel!.ImageLink = res0;
+
+
+        if (!string.IsNullOrWhiteSpace(OldImage))
+        {
+            Uri uri = new(OldImage);
+            if (uri.IsFile)
+            {
+                string filename = System.IO.Path.GetFileName(uri.LocalPath);
+                await _blobService.DeleteBlobAsync(filename, "items");
+            }
+
+        }
+
+
+        if (!string.IsNullOrWhiteSpace(UploadedFileName))
+        {
+            var basePath2 = Directory.GetCurrentDirectory();
+            string path2 = Path.Combine(basePath2, "wwwroot/bloobtempfolder", UploadedFileName);
+            File.Delete(path2);
+        }
+
     }
 
     private void SubmitAddTag()
@@ -125,13 +166,18 @@ public partial class ItemDetails
         adc.SaveChanges();
     }
 
-    private void SubmitEditItem()
+    private async Task SubmitEditItem()
     {
         if (ValidateItemModel())
         {
+            if (UploadedFileName != _itemDetails!.ImageLink)
+            {
+                await ChangeItemImage();
+            }
             UpdateItem();
-            InitializeData();
             editItemRequested = !editItemRequested;
+            _navigationManager.NavigateTo($"/item-details/{CollectionId}/{Id}", true);
+            StateHasChanged();
         }
     }
 
@@ -222,9 +268,9 @@ public partial class ItemDetails
         InitializeData();
     }
 
-   
 
-    
+
+
 
     private void SubmitComment()
     {
@@ -261,6 +307,7 @@ public partial class ItemDetails
     {
         GetAuthenticationState();
         CreateData();
+        UploadedFileName = null;
         CommentText = null;
         if (_itemsBunch is not null)
         {
@@ -275,6 +322,9 @@ public partial class ItemDetails
                 ImageLink = _itemDetails.ImageLink,
                 CreationDateTime = _itemDetails.CreationDateTime,
             };
+
+            TempImg = _itemDetails.ImageLink!;
+            OldImage = _itemDetails.ImageLink!;
         }
     }
 

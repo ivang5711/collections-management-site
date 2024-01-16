@@ -122,15 +122,13 @@ else
                                         else
                                         {
                                             <div class="col-md-4">
-                                                <img src="@ItemModel!.ImageLink" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
+                                                <img src="@TempImg" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
                                             </div>
                                         }
                                         <div class="col-md-8">
-                                            <h5 class="card-header">Edit Item</h5>
+                                            <h5 class="card-header">Edit Item: @ItemModel!.Name</h5>
                                             <EditForm Context="formContext2" Model="@ItemModel" OnSubmit="@SubmitEditItem" FormName="EditCollectionForm">
                                                 <div class="card-body">
-                                                    <p class="card-text">@ItemModel!.Name</p>
-                                                    <p class="card-text">Edit fields you want to change or left them blank to keep current value</p>
                                                     <p class="card-text"><small class="text-muted">Created @ItemModel!.CreationDateTime.ToLocalTime()</small></p>
                                                     <div class="px-5 py-2">
 
@@ -139,20 +137,12 @@ else
 
                                                             <DataAnnotationsValidator />
                                                             <ValidationSummary />
-                                                            <InputText @bind-Value="ItemModel!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Item New Name..." />
-                                                            <InputText @bind-Value="ItemModel.ImageLink" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to item new photo (optional)..." />
+                                                            <InputText @bind-Value="ItemModel!.Name" type="text" class="input-group-text input-group-lg my-2 w-100" placeholder="Item New Name..." />
+                                                            <InputFile OnChange="UploadFile" class="form-control my-2" type="file" id="formFile" accept=".png,.jpg,.jpeg,.tiff" />
 
-                                                            <div class="mb-3">
-                                                                <label for="formFile" class="form-label">Default file input example</label>
-                                                                <InputFile OnChange="UploadFile" class="form-control" type="file" id="formFile" accept=".png,.jpg,.jpeg,.tiff" />
-                                                            </div>
-                                                            <p>Uploaded file name: @UploadedFileName</p>
-                                                            <button type="button" class="btn btn-outline-secondary" @onclick="ChangeItemImage">Change image</button>
-
-
-                                                            <div class="row row-cols-1 row-cols-md-auto align-items-center">
+                                                            <div class="row row-cols-1 row-cols-md-auto align-items-center my-2">
                                                                 <div class="flex-fill pe-md-0 mx-0">
-                                                                    <InputText @bind-Value="NewTag" requred list="datalistOptions" id="exampleDataList" class="input-group-text input-group-lg w-100 my-2" placeholder="Tags..." />
+                                                                    <InputText @bind-Value="NewTag" requred list="datalistOptions" id="exampleDataList" class="input-group-text input-group-lg w-100" placeholder="Tags..." />
                                                                     <datalist id="datalistOptions">
                                                                         @foreach (var t in Tags)
                                                                         {
@@ -162,7 +152,7 @@ else
                                                                         }
                                                                     </datalist>
                                                                 </div>
-                                                                <div class="mx-0 my-2 ps-md-2 my-md-0 d-flex row col-md">
+                                                                <div class="mx-0 my-1 ps-md-2 my-md-0 d-flex row col-md">
                                                                     <button @onclick="SubmitAddTag"
                                                                             class="btn btn-outline-secondary text-nowrap"
                                                                             asp-formaction="Block" name="Block"
@@ -324,7 +314,7 @@ else
                                               required
                                               placeholder="Enter your comment..."
                                               aria-label="With textarea">
-                                                                                </textarea>
+                                                                                    </textarea>
                                 </div>
                                 <div class="text-end pb-3 pe-2">
                                     @if (CommentText is null)
@@ -386,7 +376,7 @@ else
                                         justify-content-center my-1 py-2">
                             <div class="card h-100 fade-in"
                                  style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
-                                                ">
+                                                    ">
                                 <div class="card-body text-center">
                                     <p>Register now to leave comments, likes and more!</p>
                                     <p>Or <span class="text-success">Log in</span> if you're already have an account</p>

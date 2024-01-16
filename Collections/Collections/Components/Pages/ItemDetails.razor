@@ -1,14 +1,15 @@
 ﻿@page "/item-details/{collectionId:int}/{id:int}"
 
-@inject UserManager<ApplicationUser> _userManager
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Identity;
+@inject UserManager<ApplicationUser> _userManager
 @inject RoleManager<IdentityRole> _RoleManager
 @inject SignInManager<ApplicationUser> _SignInManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager _navigationManager
 @inject IJSRuntime JsRuntime
 @inject IDbContextFactory<ApplicationDbContext> _contextFactory
+@inject IBlobService _blobService
 
 @rendermode InteractiveServer
 

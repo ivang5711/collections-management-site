@@ -142,6 +142,14 @@ else
                                                             <InputText @bind-Value="ItemModel!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Item New Name..." />
                                                             <InputText @bind-Value="ItemModel.ImageLink" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to item new photo (optional)..." />
 
+                                                            <div class="mb-3">
+                                                                <label for="formFile" class="form-label">Default file input example</label>
+                                                                <InputFile OnChange="UploadFile" class="form-control" type="file" id="formFile" accept=".png,.jpg,.jpeg,.tiff" />
+                                                            </div>
+                                                            <p>Uploaded file name: @UploadedFileName</p>
+                                                            <button type="button" class="btn btn-outline-secondary" @onclick="ChangeItemImage">Change image</button>
+
+
                                                             <div class="row row-cols-1 row-cols-md-auto align-items-center">
                                                                 <div class="flex-fill pe-md-0 mx-0">
                                                                     <InputText @bind-Value="NewTag" requred list="datalistOptions" id="exampleDataList" class="input-group-text input-group-lg w-100 my-2" placeholder="Tags..." />

@@ -39,7 +39,62 @@
 </div>
 
 
+
+<h2>Selected file</h2>
+
+@if(Error != string.Empty)
+{
+    <p>@Error</p>
+}
+
+
+
+<div style="margin-bottom: 20px; display:flex; ">
+    <div>Select your file:</div>
+<InputFile OnChange="UploadFile" accept=".png,.jpg,.jpeg,.tiff" />
+</div>
+
+
 @code {
+    public string FileName { get; set; } = string.Empty;
+    const int maxFileSize = 1024 * 1024 * 1; // 5 MB
+    public string Error { get; set; } = string.Empty;
+
+    public async Task UploadFile(InputFileChangeEventArgs e)
+    {
+
+        Error = string.Empty;
+        var file = e.File;
+
+        if (file is not null)
+        {
+            FileName = file.Name;
+            if (file.Size > maxFileSize)
+            {
+                Error = $"File is too big! The file size is limited to {maxFileSize}";
+                StateHasChanged();
+                return;
+            }
+
+            try
+            {
+                var randomFileName = Path.GetRandomFileName();
+                var fileExtension = Path.GetExtension(file.Name);
+                var newFileName = Path.ChangeExtension(randomFileName, fileExtension);
+                var basePath = Directory.GetCurrentDirectory();
+                string path = Path.Combine(basePath, "bloobtempfolder", newFileName);
+                Directory.CreateDirectory(Path.Combine(basePath, "bloobtempfolder"));
+                using FileStream fs = new(path, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+            }
+            catch(Exception exception)
+            {
+                Error = $"File Error: {exception}";
+                StateHasChanged();
+            }
+        }
+    }
+
     string questionText = string.Empty;
     ElementReference InputToFocus;
     ElementReference InputToToggle;

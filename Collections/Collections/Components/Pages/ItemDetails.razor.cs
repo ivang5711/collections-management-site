@@ -2,6 +2,7 @@ using Collections.Data;
 using Collections.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 
@@ -30,6 +31,66 @@ public partial class ItemDetails
     public Item? ItemModel { get; set; }
     private Collection? collection;
     private ElementReference InputToFocus;
+    public string? UploadedFileName { get; set; }
+
+    public string FileName { get; set; } = string.Empty;
+    const int maxFileSize = 1024 * 1024 * 5; // 5 MB
+    public string Error { get; set; } = string.Empty;
+
+    public async Task UploadFile(InputFileChangeEventArgs e)
+    {
+
+        Error = string.Empty;
+        var file = e.File;
+
+        if (file is not null)
+        {
+            FileName = file.Name;
+            if (file.Size > maxFileSize)
+            {
+                Error = $"File is too big! The file size is limited to {maxFileSize}";
+                StateHasChanged();
+                return;
+            }
+
+            try
+            {
+                var randomFileName = Path.GetRandomFileName();
+                var fileExtension = Path.GetExtension(file.Name);
+                var newFileName = Path.ChangeExtension(randomFileName, fileExtension);
+                var basePath = Directory.GetCurrentDirectory();
+                string path = Path.Combine(basePath, "bloobtempfolder", newFileName);
+                Directory.CreateDirectory(Path.Combine(basePath, "bloobtempfolder"));
+                using FileStream fs = new(path, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                UploadedFileName = newFileName;
+            }
+            catch (Exception exception)
+            {
+                Error = $"File Error: {exception}";
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task ChangeItemImage()
+    {
+        Console.WriteLine("Change item image!!!!!!!!!!!!!!!!!!!");
+
+        var basePath = Directory.GetCurrentDirectory();
+        string path = Path.Combine(basePath, "bloobtempfolder", UploadedFileName!);
+
+        var fileExtension = Path.GetExtension(UploadedFileName);
+        var newFileName = Path.ChangeExtension($"{_itemDetails!.Id}", fileExtension);
+
+        await _blobService.UploadFileBlobAsync(path, newFileName, "items");
+
+        var res2 = await _blobService.ListBlobsAsync("items");
+
+        var res0 = _blobService.GetBlobUrl(newFileName, "items");
+
+        ItemModel!.ImageLink = res0;
+    }
 
     private void SubmitAddTag()
     {

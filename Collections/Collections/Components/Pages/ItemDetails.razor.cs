@@ -25,7 +25,7 @@ public partial class ItemDetails
     private bool deleteItemRequested = false;
     private ApplicationUser? ThisUser;
 
-    string OldImage = string.Empty;
+    private string OldImage = string.Empty;
     public string? CommentText { get; set; }
     public List<Tag> Tags { get; set; }
 
@@ -38,7 +38,7 @@ public partial class ItemDetails
     public string? UploadedFileName { get; set; }
 
     public string FileName { get; set; } = string.Empty;
-    const int maxFileSize = 1024 * 1024 * 5; // 5 MB
+    private const int maxFileSize = 1024 * 1024 * 5; // 5 MB
     public string Error { get; set; } = string.Empty;
 
     public async Task UploadFile(InputFileChangeEventArgs e)
@@ -49,7 +49,6 @@ public partial class ItemDetails
             string path = Path.Combine(basePath, "wwwroot/bloobtempfolder", UploadedFileName);
             File.Delete(path);
         }
-
 
         Error = string.Empty;
         var file = e.File;
@@ -81,27 +80,17 @@ public partial class ItemDetails
             {
                 Error = $"File Error: {exception}";
             }
-
         }
     }
 
     private async Task ChangeItemImage()
     {
-        Console.WriteLine("Change item image!!!!!!!!!!!!!!!!!!!");
-
         var basePath = Directory.GetCurrentDirectory();
         string path = Path.Combine(basePath, "wwwroot/bloobtempfolder", UploadedFileName!);
-
-        //var fileExtension = Path.GetExtension(UploadedFileName);
-        //var newFileName = Path.ChangeExtension($"{_itemDetails!.Id}", fileExtension);
-
 
         var randomFileName = Path.GetRandomFileName();
         var fileExtension = Path.GetExtension(UploadedFileName);
         var newFileName = Path.ChangeExtension(randomFileName, fileExtension);
-
-
-
 
         await _blobService.UploadFileBlobAsync(path, newFileName, "items");
 
@@ -111,18 +100,12 @@ public partial class ItemDetails
 
         ItemModel!.ImageLink = res0;
 
-
         if (!string.IsNullOrWhiteSpace(OldImage))
         {
             Uri uri = new(OldImage);
-            if (uri.IsFile)
-            {
-                string filename = System.IO.Path.GetFileName(uri.LocalPath);
-                await _blobService.DeleteBlobAsync(filename, "items");
-            }
-
+            string filename = System.IO.Path.GetFileName(uri.LocalPath);
+            await _blobService.DeleteBlobAsync(filename, "items");
         }
-
 
         if (!string.IsNullOrWhiteSpace(UploadedFileName))
         {
@@ -130,7 +113,6 @@ public partial class ItemDetails
             string path2 = Path.Combine(basePath2, "wwwroot/bloobtempfolder", UploadedFileName);
             File.Delete(path2);
         }
-
     }
 
     private void SubmitAddTag()
@@ -267,10 +249,6 @@ public partial class ItemDetails
     {
         InitializeData();
     }
-
-
-
-
 
     private void SubmitComment()
     {

@@ -83,6 +83,38 @@ public partial class ItemDetails
         blobTempDirectory = _configuration.GetValue<string>("BlobTempDirectory") ?? string.Empty;
     }
 
+    private void GetItemData()
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        ItemsBunch =
+        [
+            .. adc.Items
+                        .Include(e => e.Tags)
+                        .Include(e => e.Likes)
+                        .Include(e => e.Comments)
+                        .ThenInclude(e => e.ApplicationUser)
+                        .Include(e => e.Collection)
+        ];
+        Tags = [.. adc.Tags.OrderByDescending(x => x.Items.Count)];
+    }
+
+    private string GetAuthor()
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        return adc.Users.First(x => x.Id == collection!.ApplicationUserId).FullName;
+    }
+
+    private void CreateItemModel()
+    {
+        ItemModel = new()
+        {
+            Id = CurrentItem!.Id,
+            Name = CurrentItem.Name,
+            ImageLink = CurrentItem.ImageLink,
+            CreationDateTime = CurrentItem.CreationDateTime,
+        };
+    }
+
     public async Task UploadFile(InputFileChangeEventArgs e)
     {
         if (!string.IsNullOrWhiteSpace(UploadedFileName))
@@ -165,6 +197,35 @@ public partial class ItemDetails
         }
     }
 
+    private void ToggleEditPhotoRequestStatus()
+    {
+        editPhotoRequested = !editPhotoRequested;
+    }
+
+    private async Task SubmitEditPhoto()
+    {
+        if (!string.IsNullOrWhiteSpace(UploadedFileName))
+        {
+            if (UploadedFileName != CurrentItem!.ImageLink)
+            {
+                await ChangeItemImage();
+            }
+
+            UpdateItemPhoto();
+        }
+
+        editPhotoRequested = !editPhotoRequested;
+        InitializeData();
+    }
+
+    private void UpdateItemPhoto()
+    {
+        using var context = _contextFactory.CreateDbContext();
+        var tmp = context.Items.First(x => x.Id == CurrentItem!.Id);
+        tmp.ImageLink = ItemModel!.ImageLink;
+        context.SaveChanges();
+    }
+
     private void SubmitAddTag()
     {
         if (!string.IsNullOrWhiteSpace(NewTag))
@@ -203,16 +264,6 @@ public partial class ItemDetails
         adc.SaveChanges();
     }
 
-    private void OnRegisterSubmit()
-    {
-        _navigationManager.NavigateTo("/Account/Register");
-    }
-
-    private void OnLoginSubmit()
-    {
-        _navigationManager.NavigateTo("/Account/Login");
-    }
-
     private void AddTag()
     {
         using var adc = _contextFactory.CreateDbContext();
@@ -227,6 +278,16 @@ public partial class ItemDetails
         using var adc = _contextFactory.CreateDbContext();
         adc.Tags.Add(new Tag() { Name = NewTag! });
         adc.SaveChanges();
+    }
+
+    private void ToggleEditItemRequestStatus()
+    {
+        if (CurrentItem is not null)
+        {
+            CreateItemModel();
+        }
+
+        editItemRequested = !editItemRequested;
     }
 
     private void SubmitEditItem()
@@ -266,18 +327,15 @@ public partial class ItemDetails
         return false;
     }
 
+    private void ToggleDeleteItemRequestStatus()
+    {
+        deleteItemRequested = !deleteItemRequested;
+    }
+
     private void SubmitDeleteItem()
     {
         DeleteItem();
         _navigationManager.NavigateTo($"/collection-details/{CollectionId}");
-    }
-
-    private void UpdateItemPhoto()
-    {
-        using var context = _contextFactory.CreateDbContext();
-        var tmp = context.Items.First(x => x.Id == CurrentItem!.Id);
-        tmp.ImageLink = ItemModel!.ImageLink;
-        context.SaveChanges();
     }
 
     private void DeleteItem()
@@ -285,53 +343,6 @@ public partial class ItemDetails
         using var adc = _contextFactory.CreateDbContext();
         adc.Items.Remove(adc.Items.Where(x => x.Id == CurrentItem!.Id).First());
         adc.SaveChanges();
-    }
-
-    private void ToggleEditItemRequestStatus()
-    {
-        if (CurrentItem is not null)
-        {
-            CreateItemModel();
-        }
-
-        editItemRequested = !editItemRequested;
-    }
-
-    private void CreateItemModel()
-    {
-        ItemModel = new()
-        {
-            Id = CurrentItem!.Id,
-            Name = CurrentItem.Name,
-            ImageLink = CurrentItem.ImageLink,
-            CreationDateTime = CurrentItem.CreationDateTime,
-        };
-    }
-
-    private void ToggleDeleteItemRequestStatus()
-    {
-        deleteItemRequested = !deleteItemRequested;
-    }
-
-    private void ToggleEditPhotoRequestStatus()
-    {
-        editPhotoRequested = !editPhotoRequested;
-    }
-
-    private async Task SubmitEditPhoto()
-    {
-        if (!string.IsNullOrWhiteSpace(UploadedFileName))
-        {
-            if (UploadedFileName != CurrentItem!.ImageLink)
-            {
-                await ChangeItemImage();
-            }
-
-            UpdateItemPhoto();
-        }
-
-        editPhotoRequested = !editPhotoRequested;
-        InitializeData();
     }
 
     private void SubmitComment()
@@ -396,25 +407,14 @@ public partial class ItemDetails
         adc.SaveChanges();
     }
 
-    private void GetItemData()
+    private void OnRegisterSubmit()
     {
-        using var adc = _contextFactory.CreateDbContext();
-        ItemsBunch =
-        [
-            .. adc.Items
-                        .Include(e => e.Tags)
-                        .Include(e => e.Likes)
-                        .Include(e => e.Comments)
-                        .ThenInclude(e => e.ApplicationUser)
-                        .Include(e => e.Collection)
-        ];
-        Tags = [.. adc.Tags.OrderByDescending(x => x.Items.Count)];
+        _navigationManager.NavigateTo("/Account/Register");
     }
 
-    private string GetAuthor()
+    private void OnLoginSubmit()
     {
-        using var adc = _contextFactory.CreateDbContext();
-        return adc.Users.First(x => x.Id == collection!.ApplicationUserId).FullName;
+        _navigationManager.NavigateTo("/Account/Login");
     }
 
     private void GetAuthenticationState()

@@ -135,7 +135,7 @@
                                 </div>
                             }
                             <div class="col-md-8">
-                                <h5 class="card-header">Edit Collection</h5>
+                                <h5 class="card-header">Edit Collection: @CollectionModel!.Name</h5>
                                 @if (!collectionChangeRequestValid)
                                 {
                                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -150,8 +150,6 @@
                                 }
                                 <EditForm Context="formContext" Model="@CollectionModel" OnSubmit="@SubmitEditCollection" FormName="EditCollectionForm">
                                     <div class="card-body">
-                                        <p class="card-text">@CollectionModel!.Name</p>
-                                        <p class="card-text">Edit fields you want to change or left them blank to keep current value</p>
                                         <p class="card-text"><small class="text-muted">Created @CollectionModel!.CreationDateTime.ToLocalTime()</small></p>
                                         <div class="px-5 py-2">
                                             @if (!addNewThemeRequested)
@@ -162,7 +160,7 @@
                                                 <InputText @bind-Value="CollectionModel!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection New Name..." />
                                                 <InputTextArea @bind-Value="CollectionModel.Description" type="text" class="text-start input-group-text input-group-lg w-100 my-2" placeholder="Collection New Description" />
                                                 <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection new photo (optional)..." />
-                                                <div class="row row-cols-1 row-cols-md-auto">
+                                                <div class="row row-cols-1 row-cols-md-3">
                                                     <div class="flex-fill pe-md-0 mx-0">
                                                         <input @bind="ThemeNameChoosen" class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Theme...">
                                                         <datalist id="datalistOptions">
@@ -174,7 +172,7 @@
                                                     </div>
                                                     <div class="mx-0 my-2 ps-md-2 my-md-0">
                                                         <button @onclick="RequestNewTheme"
-                                                                class="btn btn-outline-secondary text-nowrap"
+                                                                class="btn w-100 btn-outline-secondary text-nowrap"
                                                                 asp-formaction="Block" name="Block"
                                                                 type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                             <i class="bi bi-plus-square"></i> Add Theme

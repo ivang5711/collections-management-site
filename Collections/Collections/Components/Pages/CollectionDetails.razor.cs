@@ -120,7 +120,6 @@ public partial class CollectionDetails
     {
         FetchCollectionsDataFromDataSource();
         GetThemes();
-        ThemeNameChoosen = null;
         ItemModel = new();
         CollectionModel = new();
         if (collection is not null)
@@ -134,6 +133,8 @@ public partial class CollectionDetails
                 ImageLink = collection.ImageLink,
             };
         }
+
+        ThemeNameChoosen = Themes.First(x => x.Id == CollectionModel.ThemeID).Name;
     }
 
     private void ToggleNewItemRequestStatus()

@@ -2,6 +2,7 @@
 
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Identity;
+@using Microsoft.Extensions.Configuration;
 @inject UserManager<ApplicationUser> _userManager
 @inject RoleManager<IdentityRole> _RoleManager
 @inject SignInManager<ApplicationUser> _SignInManager
@@ -10,18 +11,19 @@
 @inject IJSRuntime JsRuntime
 @inject IDbContextFactory<ApplicationDbContext> _contextFactory
 @inject IBlobService _blobService
+@inject IConfiguration _configuration
 
 @rendermode InteractiveServer
 
-@if (_itemDetails is null || ItemModel is null)
+@if (CurrentItem is null || ItemModel is null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <PageTitle>@_itemDetails.Name</PageTitle>
+    <PageTitle>@CurrentItem.Name</PageTitle>
     <!--Page banner-->
-    <div class="hero-bg" style="@($"--bg-img: url({_itemDetails.ImageLink})")">
+    <div class="hero-bg" style="@($"--bg-img: url({CurrentItem.ImageLink})")">
         <div class="hero-container">
             <div class="container-xxl d-flex flex-column flex-md-row">
                 <!--Item content here-->
@@ -30,16 +32,38 @@ else
                     <div class="flex-grow-1 d-flex align-items-center
                     justify-content-center justify-content-md-end">
                         <div class="title-container text-center text-md-end">
-                            <h1 class="text-light" style="text-shadow: 1px 1px #000000;">@_itemDetails.Name</h1>
+                            <h1 class="text-light" style="text-shadow: 1px 1px #000000;">@CurrentItem.Name</h1>
                             <h2 class="text-dark" style="text-shadow: 1px 1px #FFFFFF;">@GetAuthor()</h2>
-                            <div class="pt-3">
-                                <span class="badge text-bg-light">
-                                    id: @_itemDetails.Id
-                                </span>
+                            <div class="pt-3 d-flex justify-content-md-end justify-content-center">
+
+                                @if (ItemModel is not null)
+                                {
+                                    <div class="row row-cols-1 row-cols-md-2 my-2 d-flex justify-content-md-end">
+                                        <div class="pe-md-0 mx-0">
+                                            <InputText @bind-Value="NewTag" requred list="datalistOptions" id="exampleDataList" class="input-group-text input-group-lg w-100" placeholder="Tags..." />
+                                            <datalist id="datalistOptions">
+                                                @foreach (var t in Tags)
+                                                {
+                                                    <option value="@t.Name">
+                                                        @t.Name
+                                                    </option>
+                                                }
+                                            </datalist>
+                                        </div>
+                                        <div class="mx-0 my-1 ps-md-2 my-md-0 d-flex row col-md-auto">
+                                            <button @onclick="SubmitAddTag"
+                                                    class="btn btn-dark text-nowrap"
+                                                    asp-formaction="Block" name="Block"
+                                                    type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                <i class="bi bi-plus-square"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                             <div class="pt-3">
-                                <a href="/collection-details/@_itemDetails.Collection.Id">
-                                    <span class="badge text-bg-dark">collection: @_itemDetails.Collection.Name</span>
+                                <a href="/collection-details/@CurrentItem.Collection.Id">
+                                    <span class="badge text-bg-dark">collection: @CurrentItem.Collection.Name</span>
                                 </a>
                             </div>
                             <div class="pt-3">
@@ -51,11 +75,11 @@ else
                                 }
                                 else
                                 {
-                                    @foreach (var t in _itemDetails.Tags)
+                                    @foreach (var t in CurrentItem.Tags)
                                     {
-                                        <span class="badge text-bg-success ms-1">
+                                        <button class="badge text-bg-success ms-1" style="border: none;" type="button" @onclick="() => SubmitRemoveTag(t.Id)">
                                             @t.Name
-                                        </span>
+                                        </button>
                                     }
                                 }
                             </div>
@@ -75,9 +99,9 @@ else
                                 </AuthorizeView>
                             </div>
                             <AuthorizeView>
-                                <div class="me-2 pt-3">
+                                <div class="pt-3">
                                     <button @onclick="Focus"
-                                            class="btn btn-outline-dark btn-sm text-nowrap"
+                                            class="btn btn-dark btn-sm text-nowrap"
                                             asp-formaction="Block" name="Block"
                                             type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                         <i class="bi bi-chat-left-text"></i> Leave Comment
@@ -89,7 +113,7 @@ else
                     <div class="order-last order-md-first d-flex
                     justify-content-center">
                         <div class="poster-container">
-                            @if (string.IsNullOrEmpty(_itemDetails.ImageLink))
+                            @if (string.IsNullOrEmpty(CurrentItem.ImageLink))
                             {
                                 <img src="https://th.bing.com/th/id/OIG.gq_uOPPdJc81e_v0XAei"
                                      alt="item poster" />
@@ -98,7 +122,7 @@ else
                             {
 
                                 <a href="@ItemModel.ImageLink">
-                                    <img src="@_itemDetails.ImageLink"
+                                    <img src="@CurrentItem.ImageLink"
                                          alt="item poster" />
                                 </a>
                             }
@@ -138,37 +162,7 @@ else
                                                             <DataAnnotationsValidator />
                                                             <ValidationSummary />
                                                             <InputText @bind-Value="ItemModel!.Name" type="text" class="input-group-text input-group-lg my-2 w-100" placeholder="Item New Name..." />
-                                                            <div class="row row-cols-1 row-cols-md-auto align-items-center my-2">
-                                                                <div class="flex-fill pe-md-0 mx-0">
-                                                                    <InputText @bind-Value="NewTag" requred list="datalistOptions" id="exampleDataList" class="input-group-text input-group-lg w-100" placeholder="Tags..." />
-                                                                    <datalist id="datalistOptions">
-                                                                        @foreach (var t in Tags)
-                                                                        {
-                                                                            <option value="@t.Name">
-                                                                                @t.Name
-                                                                            </option>
-                                                                        }
-                                                                    </datalist>
-                                                                </div>
-                                                                <div class="mx-0 my-1 ps-md-2 my-md-0 d-flex row col-md">
-                                                                    <button @onclick="SubmitAddTag"
-                                                                            class="btn btn-outline-secondary text-nowrap"
-                                                                            asp-formaction="Block" name="Block"
-                                                                            type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                                        <i class="bi bi-plus-square"></i> Add Tag
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-
-
-
-
-                                                            @foreach (var t in _itemDetails.Tags)
-                                                            {
-                                                                <button class="badge text-bg-success m-1" type="button" @onclick="() => RemoveTag(t.Id)">
-                                                                    @t.Name
-                                                                </button>
-                                                            }
+                                                                                                      
                                                         }
                                                     </div>
                                                 </div>
@@ -180,10 +174,21 @@ else
                                                             type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                         <i class="bi bi-plus-square"></i> Cancel
                                                     </button>
+                                                    @if(ItemModel!.Name == CurrentItem.Name)
+                                                    {
+                                                    <button class="btn btn-outline-success text-nowrap"
+                                                            type="submit" disabled value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                        <i class="bi bi-plus-square"></i> Update
+                                                    </button>
+                                                    }
+                                                    else
+                                                    {
+
                                                     <button class="btn btn-outline-success text-nowrap"
                                                             type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                         <i class="bi bi-plus-square"></i> Update
                                                     </button>
+                                                    }
                                                 </div>
                                             </EditForm>
                                         </div>
@@ -216,14 +221,12 @@ else
 
                                                         @if (ItemModel is not null)
                                                         {
-                                                            <DataAnnotationsValidator />
-                                                            <ValidationSummary />
                                                             <InputFile OnChange="UploadFile" class="form-control my-2" type="file" id="formFile" accept=".png,.jpg,.jpeg,.tiff" />
                                                         }
                                                     </div>
                                                 </div>
                                                 <div class="pb-2 pe-3 mx-0 d-flex justify-content-end row col-md
-                                                        row-cols-md-auto gap-1 card-footer">
+                                 row-cols-md-auto gap-1 card-footer">
                                                     <button @onclick="ToggleEditPhotoRequestStatus"
                                                             class="btn btn-outline-secondary text-nowrap"
                                                             asp-formaction="Block" name="Block"
@@ -307,7 +310,7 @@ else
         @if (!(editItemRequested || deleteItemRequested || editPhotoRequested))
         {
             <div class="overview d-flex flex-column">
-                <h3 class="text-dark">@_itemDetails.Name</h3>
+                <h3 class="text-dark">@CurrentItem.Name</h3>
                 <h5 class="text-secondary">Author: @GetAuthor()</h5>
                 <AuthorizeView>
                     @if (!(editItemRequested || deleteItemRequested || editPhotoRequested))
@@ -343,11 +346,11 @@ else
                         justify-content-between my-3">
 
                     <div class="comment-container pb-3 ">
-                        @if (_itemDetails.Comments.Count != 0)
+                        @if (CurrentItem.Comments.Count != 0)
                         {
                             <div class="row justify-content-center example pb-3"
                                  style="overflow-y:scroll; max-height: 50vh;">
-                                <Virtualize Items="@_comments" Context="comment">
+                                <Virtualize Items="@Comments" Context="comment">
                                     <ItemContent>
                                         <div class="row row-cols-8 row-cols-lg-8
                                             row-cols-x1-5 g-3
@@ -374,12 +377,12 @@ else
                             <div class="card h-100 fade-in"
                                  style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
                                 <div class="card-body ">
-                                    <textarea @ref="InputToFocus" class="form-control"
+                                    <textarea @ref="inputToFocus" class="form-control"
                                               @bind="CommentText"
                                               required
                                               placeholder="Enter your comment..."
                                               aria-label="With textarea">
-                                                                                        </textarea>
+                                                                                                </textarea>
                                 </div>
                                 <div class="text-end pb-3 pe-2">
                                     @if (CommentText is null)
@@ -411,11 +414,11 @@ else
                 <div class="comment-overview d-flex flex-column flex-lg-col
                         justify-content-between my-3">
                     <div class="comment-container pb-3 ">
-                        @if (_itemDetails.Comments.Count != 0)
+                        @if (CurrentItem.Comments.Count != 0)
                         {
                             <div class="row justify-content-center example pb-3"
                                  style="overflow-y:scroll; max-height: 50vh;">
-                                <Virtualize Items="@_comments" Context="comment">
+                                <Virtualize Items="@Comments" Context="comment">
                                     <ItemContent>
                                         <div class="row row-cols-8 row-cols-lg-8
                                             row-cols-x1-5 g-3
@@ -441,7 +444,7 @@ else
                                         justify-content-center my-1 py-2">
                             <div class="card h-100 fade-in"
                                  style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
-                                                        ">
+                                                                ">
                                 <div class="card-body text-center">
                                     <p>Register now to leave comments, likes and more!</p>
                                     <p>Or <span class="text-success">Log in</span> if you're already have an account</p>

@@ -1,55 +1,86 @@
 using Collections.Data;
 using Collections.Models;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Collections.Components.Pages;
 
 public partial class ItemDetails
 {
+    private Collection? collection;
+    private ElementReference inputToFocus;
+    private bool editItemRequested = false;
+    private bool editPhotoRequested = false;
+    private bool deleteItemRequested = false;
+    private const int maxFileSize = 1024 * 1024 * 5;
+    private string blobTempDirectory = string.Empty;
+    private string itemBlobContainerName = string.Empty;
+    private string blobTempDirectoryPath = string.Empty;
+
     [Parameter]
     public int Id { get; set; }
 
     [Parameter]
     public int CollectionId { get; set; }
 
-    public string TempImg { get; set; } = string.Empty;
-
-    private Item? _itemDetails;
-    private List<Item>? _itemsBunch;
-    private List<Comment> _comments = [];
-    private bool editItemRequested = false;
-    private bool editPhotoRequested = false;
-    private bool deleteItemRequested = false;
-    private ApplicationUser? ThisUser;
-
-    private string OldImage = string.Empty;
-    public string? CommentText { get; set; }
-    public List<Tag> Tags { get; set; }
-
+    public int LikeCount { get; set; }
     public string? NewTag { get; set; }
-
-    public string? TagToDelete { get; set; }
-
-    public int LikeCount { get; set; } = 999;
     public Item? ItemModel { get; set; }
-    private Collection? collection;
-    private ElementReference InputToFocus;
+    private Item? CurrentItem { get; set; }
+    public string? CommentText { get; set; }
+    public string? TagToDelete { get; set; }
+    private List<Item>? ItemsBunch { get; set; }
     public string? UploadedFileName { get; set; }
-
-    public string FileName { get; set; } = string.Empty;
-    private const int maxFileSize = 1024 * 1024 * 5; // 5 MB
+    private ApplicationUser? ThisUser { get; set; }
+    public List<Tag> Tags { get; set; } = [];
     public string Error { get; set; } = string.Empty;
+    private List<Comment> Comments { get; set; } = [];
+    public string TempImg { get; set; } = string.Empty;
+    public string FileName { get; set; } = string.Empty;
+    private string OldImage { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        InitializeData();
+    }
+
+    private void InitializeData()
+    {
+        GetAuthenticationState();
+        itemBlobContainerName = _configuration.GetValue<string>("ItemBlobContainerName") ?? string.Empty;
+        blobTempDirectoryPath = _configuration.GetValue<string>("BlobTempDirectoryPath") ?? string.Empty;
+        blobTempDirectory = _configuration.GetValue<string>("BlobTempDirectory") ?? string.Empty;
+        CreateData();
+        UploadedFileName = null;
+        CommentText = null;
+        if (ItemsBunch is not null)
+        {
+            CurrentItem = ItemsBunch.First(x => x.Id == Id);
+            Comments = CurrentItem.Comments.OrderByDescending(x => x.CreationDateTime).ToList();
+            LikeCount = CurrentItem.Likes.Count;
+            collection = CurrentItem.Collection;
+            ItemModel = new()
+            {
+                Id = CurrentItem.Id,
+                Name = CurrentItem.Name,
+                ImageLink = CurrentItem.ImageLink,
+                CreationDateTime = CurrentItem.CreationDateTime,
+            };
+
+            TempImg = CurrentItem.ImageLink!;
+            OldImage = CurrentItem.ImageLink!;
+        }
+    }
 
     public async Task UploadFile(InputFileChangeEventArgs e)
     {
         if (!string.IsNullOrWhiteSpace(UploadedFileName))
         {
             var basePath = Directory.GetCurrentDirectory();
-            string path = Path.Combine(basePath, "wwwroot/bloobtempfolder", UploadedFileName);
+            string path = Path.Combine(basePath, blobTempDirectoryPath, UploadedFileName);
             File.Delete(path);
         }
 
@@ -71,12 +102,12 @@ public partial class ItemDetails
                 var fileExtension = Path.GetExtension(file.Name);
                 var newFileName = Path.ChangeExtension(randomFileName, fileExtension);
                 var basePath = Directory.GetCurrentDirectory();
-                string path = Path.Combine(basePath, "wwwroot/bloobtempfolder", newFileName);
-                Directory.CreateDirectory(Path.Combine(basePath, "wwwroot/bloobtempfolder"));
+                string path = Path.Combine(basePath, blobTempDirectoryPath, newFileName);
+                Directory.CreateDirectory(Path.Combine(basePath, blobTempDirectoryPath));
                 using FileStream fs = new(path, FileMode.Create);
                 await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
                 UploadedFileName = newFileName;
-                TempImg = Path.Combine("bloobtempfolder", newFileName);
+                TempImg = Path.Combine(blobTempDirectory, newFileName);
                 StateHasChanged();
             }
             catch (Exception exception)
@@ -88,46 +119,62 @@ public partial class ItemDetails
 
     private async Task ChangeItemImage()
     {
-        var basePath = Directory.GetCurrentDirectory();
-        string path = Path.Combine(basePath, "wwwroot/bloobtempfolder", UploadedFileName!);
-
-        var randomFileName = Path.GetRandomFileName();
-        var fileExtension = Path.GetExtension(UploadedFileName);
-        var newFileName = Path.ChangeExtension(randomFileName, fileExtension);
-
-        await _blobService.UploadFileBlobAsync(path, newFileName, "items");
-
-        var res2 = await _blobService.ListBlobsAsync("items");
-
-        var res0 = _blobService.GetBlobUrl(newFileName, "items");
-
-        ItemModel!.ImageLink = res0;
-
+        string basePath = Directory.GetCurrentDirectory();
+        string path = Path.Combine(basePath, blobTempDirectoryPath, UploadedFileName!);
+        string randomFileName = Path.GetRandomFileName();
+        string fileExtension = Path.GetExtension(UploadedFileName!);
+        string newFileName = Path.ChangeExtension(randomFileName, fileExtension);
+        await _blobService.UploadFileBlobAsync(path, newFileName, itemBlobContainerName);
+        ItemModel!.ImageLink = _blobService.GetBlobUrl(newFileName, itemBlobContainerName);
+        
         if (!string.IsNullOrWhiteSpace(OldImage))
         {
-            Uri uri = new(OldImage);
-            string filename = System.IO.Path.GetFileName(uri.LocalPath);
-            await _blobService.DeleteBlobAsync(filename, "items");
+            string filename = Path.GetFileName(new Uri(OldImage).LocalPath);
+            await _blobService.DeleteBlobAsync(filename, itemBlobContainerName);
         }
 
         if (!string.IsNullOrWhiteSpace(UploadedFileName))
         {
-            var basePath2 = Directory.GetCurrentDirectory();
-            string path2 = Path.Combine(basePath2, "wwwroot/bloobtempfolder", UploadedFileName);
-            File.Delete(path2);
+            File.Delete(path);
         }
     }
 
     private void SubmitAddTag()
     {
-        Console.WriteLine($"Tag: {NewTag}");
         if (!string.IsNullOrWhiteSpace(NewTag))
         {
+            if (CheckTagPresence())
+            {
+                NewTag = null;
+                return;
+            }
+
+            CreateTag();
             AddTag();
             InitializeData();
         }
 
         NewTag = null;
+    }
+
+    private bool CheckTagPresence()
+    {
+        return CurrentItem!.Tags.Exists(x => x.Name == NewTag);
+    }
+
+    private void SubmitRemoveTag(int id)
+    {
+        RemoveTag(id);
+        InitializeData();
+        StateHasChanged();
+    }
+
+    private void RemoveTag(int id)
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        Tag temp = adc.Tags.Where(x => x.Id == id).First();
+        adc.Tags.Remove(temp);
+        adc.SaveChanges();
     }
 
     private void OnRegisterSubmit()
@@ -143,23 +190,23 @@ public partial class ItemDetails
     private void AddTag()
     {
         using var adc = _contextFactory.CreateDbContext();
-        adc.Tags.Add(new Tag() { Name = NewTag! });
-        adc.SaveChanges();
         var a = adc.Items.First(x => x.Id == Id);
         var b = adc.Tags.First(x => x.Name == NewTag);
         a.Tags.Add(b);
         adc.SaveChanges();
     }
 
-    private async Task SubmitEditItem()
+    private void CreateTag()
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        adc.Tags.Add(new Tag() { Name = NewTag! });
+        adc.SaveChanges();
+    }
+
+    private void SubmitEditItem()
     {
         if (ValidateItemModel())
         {
-            //if (UploadedFileName != _itemDetails!.ImageLink)
-            //{
-            //    await ChangeItemImage();
-            //}
-
             if (!string.IsNullOrWhiteSpace(ItemModel!.Name))
             {
                 UpdateItem();
@@ -170,49 +217,11 @@ public partial class ItemDetails
         }
     }
 
-    private void SubmitAddComment()
-    {
-        using var adc = _contextFactory.CreateDbContext();
-        var a = adc.Users.First(x => x.Id == ThisUser!.Id);
-        var b = adc.Items.First(x => x.Id == Id);
-        var temp = new Comment
-        {
-            ApplicationUserId = a.Id,
-            ItemId = b.Id,
-            Text = "Great product for sure!",
-            CreationDateTime = DateTime.UtcNow
-        };
-
-        adc.Comments.Add(temp);
-        adc.SaveChanges();
-        InitializeData();
-    }
-
-    private void RemoveTag(int id)
-    {
-        using var adc = _contextFactory.CreateDbContext();
-        Tag temp = adc.Tags.Where(x => x.Id == id).First();
-        adc.Tags.Remove(temp);
-        adc.SaveChanges();
-        InitializeData();
-        StateHasChanged();
-    }
-
     private void UpdateItem()
     {
         using var context = _contextFactory.CreateDbContext();
-        var tmp = context.Items.First(x => x.Id == _itemDetails!.Id);
+        var tmp = context.Items.First(x => x.Id == CurrentItem!.Id);
         tmp.Name = ItemModel!.Name;
-        //tmp.ImageLink = ItemModel.ImageLink;
-        context.SaveChanges();
-    }
-
-    private void UpdateItemPhoto()
-    {
-        using var context = _contextFactory.CreateDbContext();
-        var tmp = context.Items.First(x => x.Id == _itemDetails!.Id);
-        //tmp.Name = ItemModel!.Name;
-        tmp.ImageLink = ItemModel!.ImageLink;
         context.SaveChanges();
     }
 
@@ -222,33 +231,10 @@ public partial class ItemDetails
         {
             if (!string.IsNullOrWhiteSpace(ItemModel.Name))
             {
-                _itemDetails!.Name = ItemModel.Name;
+                CurrentItem!.Name = ItemModel.Name;
             }
-
-            //if (!string.IsNullOrWhiteSpace(ItemModel.ImageLink))
-            //{
-            //    _itemDetails!.ImageLink = ItemModel.ImageLink;
-            //}
 
             return true;
-        }
-
-        return false;
-    }
-
-    private bool ValidateItemPhotoModel()
-    {
-        if (ItemModel is not null)
-        {
-            if (!string.IsNullOrWhiteSpace(ItemModel.ImageLink))
-            {
-                _itemDetails!.ImageLink = ItemModel.ImageLink;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
 
         return false;
@@ -260,24 +246,31 @@ public partial class ItemDetails
         _navigationManager.NavigateTo($"/collection-details/{CollectionId}");
     }
 
+    private void UpdateItemPhoto()
+    {
+        using var context = _contextFactory.CreateDbContext();
+        var tmp = context.Items.First(x => x.Id == CurrentItem!.Id);
+        tmp.ImageLink = ItemModel!.ImageLink;
+        context.SaveChanges();
+    }
+
     private void DeleteItem()
     {
         using var adc = _contextFactory.CreateDbContext();
-        Item temp = adc.Items.Where(x => x.Id == _itemDetails!.Id).First();
-        adc.Items.Remove(temp);
+        adc.Items.Remove(adc.Items.Where(x => x.Id == CurrentItem!.Id).First());
         adc.SaveChanges();
     }
 
     private void ToggleEditItemRequestStatus()
     {
-        if (_itemDetails is not null)
+        if (CurrentItem is not null)
         {
             ItemModel = new()
             {
-                Id = _itemDetails.Id,
-                Name = _itemDetails.Name,
-                ImageLink = _itemDetails.ImageLink,
-                CreationDateTime = _itemDetails.CreationDateTime,
+                Id = CurrentItem.Id,
+                Name = CurrentItem.Name,
+                ImageLink = CurrentItem.ImageLink,
+                CreationDateTime = CurrentItem.CreationDateTime,
             };
         }
 
@@ -298,7 +291,7 @@ public partial class ItemDetails
     {
         if (!string.IsNullOrWhiteSpace(UploadedFileName))
         {
-            if (UploadedFileName != _itemDetails!.ImageLink)
+            if (UploadedFileName != CurrentItem!.ImageLink)
             {
                 await ChangeItemImage();
             }
@@ -310,11 +303,6 @@ public partial class ItemDetails
 
         InitializeData();
         StateHasChanged();
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        InitializeData();
     }
 
     private void SubmitComment()
@@ -331,7 +319,7 @@ public partial class ItemDetails
     {
         using var adc = _contextFactory.CreateDbContext();
         var u = adc.Users.First(u => u.Id == ThisUser!.Id);
-        var x = adc.Items.First(x => x.Id == _itemDetails!.Id);
+        var x = adc.Items.First(x => x.Id == CurrentItem!.Id);
         var temp = new Comment()
         {
             ItemId = x.Id,
@@ -343,43 +331,13 @@ public partial class ItemDetails
         adc.SaveChanges();
     }
 
-    private async Task Focus()
-    {
-        await JsRuntime.InvokeVoidAsync("focusOnElement", InputToFocus);
-    }
-
-    private void InitializeData()
-    {
-        GetAuthenticationState();
-        CreateData();
-        UploadedFileName = null;
-        CommentText = null;
-        if (_itemsBunch is not null)
-        {
-            _itemDetails = _itemsBunch.First(x => x.Id == Id);
-            _comments = _itemDetails.Comments.OrderByDescending(x => x.CreationDateTime).ToList();
-            LikeCount = _itemDetails.Likes.Count;
-            collection = _itemDetails.Collection;
-            ItemModel = new()
-            {
-                Id = _itemDetails.Id,
-                Name = _itemDetails.Name,
-                ImageLink = _itemDetails.ImageLink,
-                CreationDateTime = _itemDetails.CreationDateTime,
-            };
-
-            TempImg = _itemDetails.ImageLink!;
-            OldImage = _itemDetails.ImageLink!;
-        }
-    }
-
     private void IncrementLike()
     {
-        if (!_itemDetails!.Likes.Where(x => x.ApplicationUserId == ThisUser!.Id)!.Any())
+        if (!CurrentItem!.Likes.Where(x => x.ApplicationUserId == ThisUser!.Id)!.Any())
         {
             using var adc = _contextFactory.CreateDbContext();
             var a = adc.Users.First(x => x.Id == ThisUser!.Id);
-            var b = adc.Items.First(x => x.Id == _itemDetails.Id);
+            var b = adc.Items.First(x => x.Id == CurrentItem.Id);
             adc.Likes.Add(new Like()
             {
                 ApplicationUserId = a.Id,
@@ -390,7 +348,7 @@ public partial class ItemDetails
         else
         {
             using var adc = _contextFactory.CreateDbContext();
-            var temp = adc.Likes.Where(x => x.ApplicationUserId == ThisUser!.Id).First(x => x.ItemId == _itemDetails.Id);
+            var temp = adc.Likes.Where(x => x.ApplicationUserId == ThisUser!.Id).First(x => x.ItemId == CurrentItem.Id);
             adc.Likes.Remove(temp);
             adc.SaveChanges();
         }
@@ -401,7 +359,7 @@ public partial class ItemDetails
     private void CreateData()
     {
         using var adc = _contextFactory.CreateDbContext();
-        _itemsBunch =
+        ItemsBunch =
         [
             .. adc.Items
                         .Include(e => e.Tags)
@@ -428,5 +386,10 @@ public partial class ItemDetails
                     _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
         ThisUser = Task.Run(() =>
             _userManager.GetUserAsync(authenticationState.User)).Result;
+    }
+
+    private async Task Focus()
+    {
+        await JsRuntime.InvokeVoidAsync("focusOnElement", inputToFocus);
     }
 }

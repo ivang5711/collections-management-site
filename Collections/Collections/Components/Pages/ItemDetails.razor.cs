@@ -50,8 +50,15 @@ public partial class ItemDetails
     {
         GetAuthenticationState();
         GetConfigurationData();
+        SetUpFileTransferManager();
         GetItemData();
         SetUpItem();
+    }
+
+    private void SetUpFileTransferManager()
+    {
+        _fileTransferManager.SetUpMaxFileSize(1024 * 1024 * 10);
+        _fileTransferManager.SetUpWorkingDirectory(blobTempDirectoryPath);
     }
 
     private void SetUpItem()
@@ -119,7 +126,7 @@ public partial class ItemDetails
     {
         if (!string.IsNullOrWhiteSpace(UploadedFileName))
         {
-            DeletePreviousPhoto();
+            _fileTransferManager.DeleteFileFromDisk(UploadedFileName);
         }
 
         FileError = string.Empty;
@@ -135,7 +142,9 @@ public partial class ItemDetails
 
             try
             {
-                await SaveFileOnDisk(file);
+                UploadedFileName = await _fileTransferManager.SaveFileToDisk(file);
+                TempImg = Path.Combine(blobTempDirectory, UploadedFileName);
+                StateHasChanged();
             }
             catch (Exception exception)
             {
@@ -144,39 +153,14 @@ public partial class ItemDetails
         }
     }
 
-    private async Task SaveFileOnDisk(IBrowserFile file)
-    {
-        string newFileName = GetNewRandomFileNamePreserveExtension(file.Name);
-        var basePath = Directory.GetCurrentDirectory();
-        string path = Path.Combine(basePath, blobTempDirectoryPath, newFileName);
-        Directory.CreateDirectory(Path.Combine(basePath, blobTempDirectoryPath));
-        using FileStream fs = new(path, FileMode.Create);
-        await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
-        UploadedFileName = newFileName;
-        TempImg = Path.Combine(blobTempDirectory, newFileName);
-        StateHasChanged();
-    }
-
-    private string GetNewRandomFileNamePreserveExtension(string oldName)
-    {
-        return Path.ChangeExtension(Path.GetRandomFileName(),
-                Path.GetExtension(oldName));
-    }
-
-    private void DeletePreviousPhoto()
-    {
-        string path = Path.Combine(Directory.GetCurrentDirectory(),
-            blobTempDirectoryPath, UploadedFileName!);
-        File.Delete(path);
-    }
-
     private async Task ChangeItemImage()
     {
         string path = Path.Combine(Directory.GetCurrentDirectory(),
             blobTempDirectoryPath, UploadedFileName!);
         await UploadFileToCloud(path);
         AssignNewImageToItem();
-        await CleanOldPhotos(path);
+        await DeleteOldPhotoFromCloud();
+        _fileTransferManager.DeleteFileFromDisk(UploadedFileName!);
     }
 
     private async Task UploadFileToCloud(string path)
@@ -189,12 +173,6 @@ public partial class ItemDetails
     {
         ItemModel!.ImageLink = _blobService.GetBlobUrl(UploadedFileName!,
             itemBlobContainerName);
-    }
-
-    private async Task CleanOldPhotos(string path)
-    {
-        await DeleteOldPhotoFromCloud();
-        File.Delete(path);
     }
 
     private async Task DeleteOldPhotoFromCloud()
@@ -398,7 +376,7 @@ public partial class ItemDetails
     {
         using var adc = _contextFactory.CreateDbContext();
         var temp = adc.Likes.Where(x => x.ApplicationUserId == ThisUser!.Id)
-            .First(x => x.ItemId == CurrentItem.Id);
+            .First(x => x.ItemId == CurrentItem!.Id);
         adc.Likes.Remove(temp);
         adc.SaveChanges();
     }

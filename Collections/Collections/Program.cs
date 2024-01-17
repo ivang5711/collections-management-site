@@ -50,6 +50,8 @@ new BlobServiceClient(
 
 builder.Services.AddSingleton<IBlobService, BlobService>();
 
+builder.Services.AddScoped<IFileTransferManager, FileTransferManager>();
+
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = true;

@@ -31,13 +31,11 @@ public partial class ItemDetails
     public Item? ItemModel { get; set; }
     private Item? CurrentItem { get; set; }
     public string? CommentText { get; set; }
-    private List<Item>? ItemsBunch { get; set; }
     public string? UploadedFileName { get; set; }
     private ApplicationUser? ThisUser { get; set; }
     public List<Tag> Tags { get; set; } = [];
     private List<Comment> Comments { get; set; } = [];
     public string TempImg { get; set; } = string.Empty;
-    public string FileName { get; set; } = string.Empty;
     private string OldImage { get; set; } = string.Empty;
     public string FileError { get; set; } = string.Empty;
 
@@ -65,12 +63,8 @@ public partial class ItemDetails
     {
         UploadedFileName = null;
         CommentText = null;
-        if (ItemsBunch is not null)
-        {
-            CurrentItem = ItemsBunch.First(x => x.Id == Id);
-            SetItemState();
-            CreateItemModel();
-        }
+        SetItemState();
+        CreateItemModel();
     }
 
     private void SetItemState()
@@ -94,16 +88,14 @@ public partial class ItemDetails
     private void GetItemData()
     {
         using var adc = _contextFactory.CreateDbContext();
-        ItemsBunch =
-        [
-            .. adc.Items
+        Tags = [.. adc.Tags.OrderByDescending(x => x.Items.Count)];
+        CurrentItem = adc.Items
                         .Include(e => e.Tags)
                         .Include(e => e.Likes)
                         .Include(e => e.Comments)
                         .ThenInclude(e => e.ApplicationUser)
                         .Include(e => e.Collection)
-        ];
-        Tags = [.. adc.Tags.OrderByDescending(x => x.Items.Count)];
+                        .First(x => x.Id == Id);
     }
 
     private string GetAuthor()
@@ -134,7 +126,6 @@ public partial class ItemDetails
         IBrowserFile file = e.File;
         if (file is not null)
         {
-            FileName = file.Name;
             if (file.Size > maxFileSize)
             {
                 FileError = $"File is too big! The file size is limited to {maxFileSize}";

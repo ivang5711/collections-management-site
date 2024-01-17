@@ -35,11 +35,11 @@ public partial class ItemDetails
     public string? UploadedFileName { get; set; }
     private ApplicationUser? ThisUser { get; set; }
     public List<Tag> Tags { get; set; } = [];
-    public string FileError { get; set; } = string.Empty;
     private List<Comment> Comments { get; set; } = [];
     public string TempImg { get; set; } = string.Empty;
     public string FileName { get; set; } = string.Empty;
     private string OldImage { get; set; } = string.Empty;
+    public string FileError { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {

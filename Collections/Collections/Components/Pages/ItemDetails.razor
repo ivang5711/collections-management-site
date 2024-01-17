@@ -163,7 +163,7 @@ else
                                                             <DataAnnotationsValidator />
                                                             <ValidationSummary />
                                                             <InputText @bind-Value="ItemModel!.Name" type="text" class="input-group-text input-group-lg my-2 w-100" placeholder="Item New Name..." />
-                                                                                                      
+
                                                         }
                                                     </div>
                                                 </div>
@@ -175,20 +175,20 @@ else
                                                             type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                         <i class="bi bi-plus-square"></i> Cancel
                                                     </button>
-                                                    @if(ItemModel!.Name == CurrentItem.Name)
+                                                    @if (ItemModel!.Name == CurrentItem.Name)
                                                     {
-                                                    <button class="btn btn-outline-success text-nowrap"
-                                                            type="submit" disabled value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                        <i class="bi bi-plus-square"></i> Update
-                                                    </button>
+                                                        <button class="btn btn-outline-success text-nowrap"
+                                                                type="submit" disabled value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                            <i class="bi bi-plus-square"></i> Update
+                                                        </button>
                                                     }
                                                     else
                                                     {
 
-                                                    <button class="btn btn-outline-success text-nowrap"
-                                                            type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                        <i class="bi bi-plus-square"></i> Update
-                                                    </button>
+                                                        <button class="btn btn-outline-success text-nowrap"
+                                                                type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                            <i class="bi bi-plus-square"></i> Update
+                                                        </button>
                                                     }
                                                 </div>
                                             </EditForm>
@@ -219,7 +219,13 @@ else
                                             <EditForm Context="formContextImage" Model="@ItemModel" OnSubmit="@SubmitEditPhoto" FormName="EditImageForm">
                                                 <div class="card-body">
                                                     <div class="px-5 py-2">
-
+                                                        @if (!string.IsNullOrWhiteSpace(FileError))
+                                                        {
+                                                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                                                <strong>Holy guacamole!</strong> @FileError.
+                                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                            </div>
+                                                        }
                                                         @if (ItemModel is not null)
                                                         {
                                                             <InputFile OnChange="UploadFile" class="form-control my-2" type="file" id="formFile" accept=".png,.jpg,.jpeg,.tiff" />
@@ -234,7 +240,7 @@ else
                                                             type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                         <i class="bi bi-plus-square"></i> Cancel
                                                     </button>
-                                                    @if (UploadedFileName is null)
+                                                    @if (UploadedFileName is null || !string.IsNullOrWhiteSpace(FileError))
                                                     {
                                                         <button class="btn btn-outline-success text-nowrap"
                                                                 type="submit" disabled value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
@@ -383,7 +389,7 @@ else
                                               required
                                               placeholder="Enter your comment..."
                                               aria-label="With textarea">
-                                                                                                </textarea>
+                                                                                                        </textarea>
                                 </div>
                                 <div class="text-end pb-3 pe-2">
                                     @if (CommentText is null)
@@ -445,7 +451,7 @@ else
                                         justify-content-center my-1 py-2">
                             <div class="card h-100 fade-in"
                                  style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
-                                                                ">
+                                                                        ">
                                 <div class="card-body text-center">
                                     <p>Register now to leave comments, likes and more!</p>
                                     <p>Or <span class="text-success">Log in</span> if you're already have an account</p>

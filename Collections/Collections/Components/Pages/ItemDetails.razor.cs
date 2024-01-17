@@ -128,7 +128,9 @@ public partial class ItemDetails
         {
             if (file.Size > maxFileSize)
             {
-                FileError = $"File is too big! The file size is limited to {maxFileSize}";
+                FileError = $"File is too big! The file size is limited to {maxFileSize / (1024 * 1024)} MB";
+                InitializeData();
+                StateHasChanged();
                 return;
             }
 
@@ -136,13 +138,16 @@ public partial class ItemDetails
             {
                 UploadedFileName = await _fileTransferManager.SaveFileToDisk(file);
                 TempImg = Path.Combine(blobTempDirectory, UploadedFileName);
-                StateHasChanged();
+                
             }
-            catch (Exception exception)
+            catch (IOException ex)
             {
-                FileError = $"File Error: {exception}";
+                FileError = $"File Error: {ex}";
+                InitializeData();
             }
         }
+
+        StateHasChanged();
     }
 
     private async Task ChangeItemImage()

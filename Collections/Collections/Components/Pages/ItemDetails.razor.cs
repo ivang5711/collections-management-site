@@ -123,7 +123,7 @@ public partial class ItemDetails
         }
 
         FileError = string.Empty;
-        var file = e.File;
+        IBrowserFile file = e.File;
         if (file is not null)
         {
             FileName = file.Name;
@@ -135,23 +135,32 @@ public partial class ItemDetails
 
             try
             {
-                var randomFileName = Path.GetRandomFileName();
-                var fileExtension = Path.GetExtension(file.Name);
-                var newFileName = Path.ChangeExtension(randomFileName, fileExtension);
-                var basePath = Directory.GetCurrentDirectory();
-                string path = Path.Combine(basePath, blobTempDirectoryPath, newFileName);
-                Directory.CreateDirectory(Path.Combine(basePath, blobTempDirectoryPath));
-                using FileStream fs = new(path, FileMode.Create);
-                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
-                UploadedFileName = newFileName;
-                TempImg = Path.Combine(blobTempDirectory, newFileName);
-                StateHasChanged();
+                await SaveFileOnDisk(file);
             }
             catch (Exception exception)
             {
                 FileError = $"File Error: {exception}";
             }
         }
+    }
+
+    private async Task SaveFileOnDisk(IBrowserFile file)
+    {
+        string newFileName = GetNewRandomFileNamePreserveExtension(file.Name);
+        var basePath = Directory.GetCurrentDirectory();
+        string path = Path.Combine(basePath, blobTempDirectoryPath, newFileName);
+        Directory.CreateDirectory(Path.Combine(basePath, blobTempDirectoryPath));
+        using FileStream fs = new(path, FileMode.Create);
+        await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+        UploadedFileName = newFileName;
+        TempImg = Path.Combine(blobTempDirectory, newFileName);
+        StateHasChanged();
+    }
+
+    private string GetNewRandomFileNamePreserveExtension(string oldName)
+    {
+        return Path.ChangeExtension(Path.GetRandomFileName(),
+                Path.GetExtension(oldName));
     }
 
     private void DeletePreviousPhoto()

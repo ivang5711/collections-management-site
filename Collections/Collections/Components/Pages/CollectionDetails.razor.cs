@@ -13,38 +13,27 @@ public partial class CollectionDetails
     [Parameter]
     public int Id { get; set; }
 
-    private Collection? collection;
-    private List<Item>? itemsBunch;
-    private ApplicationUser? ThisUser;
-    private bool newItemRequested = false;
-    private bool editItemRequested = false;
-    private bool deleteItemRequested = false;
-    private const string roleBlocked = "Blocked";
-    private const string loginPageURL = "/Account/Login";
-    private bool collectionChangeRequestValid = true;
-    private bool themeIsUnique = true;
-    private bool newThemeAddFinishedSuccessfully = true;
-    private bool addNewThemeRequested = false;
-
-    private async Task UploadImageToStorage()
-    {
-        //await _blobService.UploadFileBlobAsync("C:\\Users\\Smith\\source\\repos\\CollectionsWebApp\\Collections\\Collections\\admin.png",
-        //    $"{collection!.Id}.png",
-        //    "collections");
-
-        //var res = await _blobService.ListBlobsAsync("collections");
-    }
-
-    public string? ThemeNameChoosen { get; set; }
-    private string? TempImg { get; set; } = string.Empty;
-
-    public string? NewTheme { get; set; }
-    public List<Theme> Themes { get; set; } = [];
-
     [SupplyParameterFromForm]
     public ItemCandidate? ItemModel { get; set; }
 
+    private const string roleBlocked = "Blocked";
+    private const string loginPageURL = "/Account/Login";
+    private Collection? collection;
+    private List<Item>? itemsBunch;
+    private ApplicationUser? ThisUser;
+    private bool themeIsUnique = true;
+    private bool newItemRequested = false;
+    private bool editItemRequested = false;
+    private bool deleteItemRequested = false;
+    private bool addNewThemeRequested = false;
+    private bool collectionChangeRequestValid = true;
+    private bool newThemeAddFinishedSuccessfully = true;
+
+    public string? NewTheme { get; set; }
+    public string? ThemeNameChoosen { get; set; }
     public Collection? CollectionModel { get; set; }
+    public List<Theme> Themes { get; set; } = [];
+    private string? TempImg { get; set; } = string.Empty;
 
     public class ItemCandidate
     {
@@ -205,7 +194,6 @@ public partial class CollectionDetails
 
     private void SubmitEditCollection()
     {
-        Console.WriteLine("Edit collection submitted!");
         if (ValidateCollectionModel())
         {
             UpdateCollection();
@@ -297,7 +285,7 @@ public partial class CollectionDetails
     private void FetchCollectionsDataFromDataSource()
     {
         itemsBunch = [];
-        var t = GetCollectionsFromDataSource().ToList<Collection>();
+        var t = GetCollectionsFromDataSource().ToList();
         collection = t.First(x => x.Id == Id);
         itemsBunch.AddRange(collection.Items.OrderByDescending(u => u.CreationDateTime));
     }

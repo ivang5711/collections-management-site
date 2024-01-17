@@ -22,6 +22,7 @@ public partial class ItemDetails
     private List<Item>? _itemsBunch;
     private List<Comment> _comments = [];
     private bool editItemRequested = false;
+    private bool editPhotoRequested = false;
     private bool deleteItemRequested = false;
     private ApplicationUser? ThisUser;
 
@@ -30,6 +31,8 @@ public partial class ItemDetails
     public List<Tag> Tags { get; set; }
 
     public string? NewTag { get; set; }
+
+    public string? TagToDelete { get; set; }
 
     public int LikeCount { get; set; } = 999;
     public Item? ItemModel { get; set; }
@@ -152,13 +155,17 @@ public partial class ItemDetails
     {
         if (ValidateItemModel())
         {
-            if (UploadedFileName != _itemDetails!.ImageLink)
+            //if (UploadedFileName != _itemDetails!.ImageLink)
+            //{
+            //    await ChangeItemImage();
+            //}
+
+            if (!string.IsNullOrWhiteSpace(ItemModel!.Name))
             {
-                await ChangeItemImage();
+                UpdateItem();
             }
-            UpdateItem();
+
             editItemRequested = !editItemRequested;
-            _navigationManager.NavigateTo($"/item-details/{CollectionId}/{Id}", true);
             StateHasChanged();
         }
     }
@@ -181,12 +188,31 @@ public partial class ItemDetails
         InitializeData();
     }
 
+    private void RemoveTag(int id)
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        Tag temp = adc.Tags.Where(x => x.Id == id).First();
+        adc.Tags.Remove(temp);
+        adc.SaveChanges();
+        InitializeData();
+        StateHasChanged();
+    }
+
     private void UpdateItem()
     {
         using var context = _contextFactory.CreateDbContext();
         var tmp = context.Items.First(x => x.Id == _itemDetails!.Id);
         tmp.Name = ItemModel!.Name;
-        tmp.ImageLink = ItemModel.ImageLink;
+        //tmp.ImageLink = ItemModel.ImageLink;
+        context.SaveChanges();
+    }
+
+    private void UpdateItemPhoto()
+    {
+        using var context = _contextFactory.CreateDbContext();
+        var tmp = context.Items.First(x => x.Id == _itemDetails!.Id);
+        //tmp.Name = ItemModel!.Name;
+        tmp.ImageLink = ItemModel!.ImageLink;
         context.SaveChanges();
     }
 
@@ -199,12 +225,30 @@ public partial class ItemDetails
                 _itemDetails!.Name = ItemModel.Name;
             }
 
+            //if (!string.IsNullOrWhiteSpace(ItemModel.ImageLink))
+            //{
+            //    _itemDetails!.ImageLink = ItemModel.ImageLink;
+            //}
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool ValidateItemPhotoModel()
+    {
+        if (ItemModel is not null)
+        {
             if (!string.IsNullOrWhiteSpace(ItemModel.ImageLink))
             {
                 _itemDetails!.ImageLink = ItemModel.ImageLink;
+                return true;
             }
-
-            return true;
+            else
+            {
+                return false;
+            }
         }
 
         return false;
@@ -243,6 +287,29 @@ public partial class ItemDetails
     private void ToggleDeleteItemRequestStatus()
     {
         deleteItemRequested = !deleteItemRequested;
+    }
+
+    private void ToggleEditPhotoRequestStatus()
+    {
+        editPhotoRequested = !editPhotoRequested;
+    }
+
+    private async Task SubmitEditPhoto()
+    {
+        if (!string.IsNullOrWhiteSpace(UploadedFileName))
+        {
+            if (UploadedFileName != _itemDetails!.ImageLink)
+            {
+                await ChangeItemImage();
+            }
+
+            UpdateItemPhoto();
+        }
+
+        editPhotoRequested = !editPhotoRequested;
+
+        InitializeData();
+        StateHasChanged();
     }
 
     protected override async Task OnInitializedAsync()

@@ -28,11 +28,11 @@ public partial class CollectionDetails
 
     private async Task UploadImageToStorage()
     {
-        await _blobService.UploadFileBlobAsync("C:\\Users\\Smith\\source\\repos\\CollectionsWebApp\\Collections\\Collections\\admin.png",
-            $"{collection!.Id}.png",
-            "collections");
+        //await _blobService.UploadFileBlobAsync("C:\\Users\\Smith\\source\\repos\\CollectionsWebApp\\Collections\\Collections\\admin.png",
+        //    $"{collection!.Id}.png",
+        //    "collections");
 
-        var res = await _blobService.ListBlobsAsync("collections");
+        //var res = await _blobService.ListBlobsAsync("collections");
     }
 
     public string? ThemeNameChoosen { get; set; }
@@ -204,7 +204,6 @@ public partial class CollectionDetails
 
     private void SubmitEditCollection()
     {
-        _ = UploadImageToStorage();
         Console.WriteLine("Edit collection submitted!");
         if (ValidateCollectionModel())
         {

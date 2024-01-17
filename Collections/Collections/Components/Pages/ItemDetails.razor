@@ -221,9 +221,11 @@ else
                                                     <div class="px-5 py-2">
                                                         @if (!string.IsNullOrWhiteSpace(FileError))
                                                         {
-                                                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                                                <strong>Holy guacamole!</strong> @FileError.
-                                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                            <div class="alert alert-warning d-flex align-items-center" role="alert">
+                                                                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+                                                                <div>
+                                                                    @FileError.
+                                                                </div>
                                                             </div>
                                                         }
                                                         @if (ItemModel is not null)
@@ -389,7 +391,7 @@ else
                                               required
                                               placeholder="Enter your comment..."
                                               aria-label="With textarea">
-                                                                                                        </textarea>
+                                                                                                            </textarea>
                                 </div>
                                 <div class="text-end pb-3 pe-2">
                                     @if (CommentText is null)
@@ -451,7 +453,7 @@ else
                                         justify-content-center my-1 py-2">
                             <div class="card h-100 fade-in"
                                  style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
-                                                                        ">
+                                                                            ">
                                 <div class="card-body text-center">
                                     <p>Register now to leave comments, likes and more!</p>
                                     <p>Or <span class="text-success">Log in</span> if you're already have an account</p>

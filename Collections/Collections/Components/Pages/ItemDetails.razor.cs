@@ -140,7 +140,7 @@ public partial class ItemDetails
                 TempImg = Path.Combine(blobTempDirectory, UploadedFileName);
                 
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
                 FileError = $"File Error: {ex}";
                 InitializeData();

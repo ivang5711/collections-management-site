@@ -79,9 +79,12 @@ public partial class ItemDetails
 
     private void GetConfigurationData()
     {
-        itemBlobContainerName = _configuration.GetValue<string>("ItemBlobContainerName") ?? string.Empty;
-        blobTempDirectoryPath = _configuration.GetValue<string>("BlobTempDirectoryPath") ?? string.Empty;
-        blobTempDirectory = _configuration.GetValue<string>("BlobTempDirectory") ?? string.Empty;
+        itemBlobContainerName = _configuration
+            .GetValue<string>("ItemBlobContainerName") ?? string.Empty;
+        blobTempDirectoryPath = _configuration
+            .GetValue<string>("BlobTempDirectoryPath") ?? string.Empty;
+        blobTempDirectory = _configuration
+            .GetValue<string>("BlobTempDirectory") ?? string.Empty;
         maxFileSize = _configuration.GetValue<int>("MaxFileSize");
     }
 
@@ -101,7 +104,8 @@ public partial class ItemDetails
     private string GetAuthor()
     {
         using var adc = _contextFactory.CreateDbContext();
-        return adc.Users.First(x => x.Id == collection!.ApplicationUserId).FullName;
+        return adc.Users
+            .First(x => x.Id == collection!.ApplicationUserId).FullName;
     }
 
     private void CreateItemModel()
@@ -117,18 +121,15 @@ public partial class ItemDetails
 
     public async Task UploadFile(InputFileChangeEventArgs e)
     {
-        if (!string.IsNullOrWhiteSpace(UploadedFileName))
-        {
-            _fileTransferManager.DeleteFileFromDisk(UploadedFileName);
-        }
-
+        RemovePreviousPhotoIfExists();
         FileError = string.Empty;
         IBrowserFile file = e.File;
         if (file is not null)
         {
             if (file.Size > maxFileSize)
             {
-                FileError = $"File is too big! The file size is limited to {maxFileSize / (1024 * 1024)} MB";
+                FileError = "File is too big! The file size is limited to " +
+                    $"{maxFileSize / (1024 * 1024)} MB";
                 InitializeData();
                 StateHasChanged();
                 return;
@@ -136,9 +137,10 @@ public partial class ItemDetails
 
             try
             {
-                UploadedFileName = await _fileTransferManager.SaveFileToDisk(file);
+                UploadedFileName = await _fileTransferManager
+                    .SaveFileToDisk(file);
                 TempImg = Path.Combine(blobTempDirectory, UploadedFileName);
-                
+
             }
             catch (Exception ex)
             {
@@ -148,6 +150,14 @@ public partial class ItemDetails
         }
 
         StateHasChanged();
+    }
+
+    private void RemovePreviousPhotoIfExists()
+    {
+        if (!string.IsNullOrWhiteSpace(UploadedFileName))
+        {
+            _fileTransferManager.DeleteFileFromDisk(UploadedFileName);
+        }
     }
 
     private async Task ChangeItemImage()

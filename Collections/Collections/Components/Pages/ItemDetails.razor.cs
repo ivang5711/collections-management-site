@@ -12,10 +12,10 @@ public partial class ItemDetails
 {
     private Collection? collection;
     private ElementReference inputToFocus;
+    private int maxFileSize;
     private bool editItemRequested = false;
     private bool editPhotoRequested = false;
     private bool deleteItemRequested = false;
-    private const int maxFileSize = 1024 * 1024 * 5;
     private string blobTempDirectory = string.Empty;
     private string itemBlobContainerName = string.Empty;
     private string blobTempDirectoryPath = string.Empty;
@@ -57,7 +57,7 @@ public partial class ItemDetails
 
     private void SetUpFileTransferManager()
     {
-        _fileTransferManager.SetUpMaxFileSize(1024 * 1024 * 10);
+        _fileTransferManager.SetUpMaxFileSize(maxFileSize);
         _fileTransferManager.SetUpWorkingDirectory(blobTempDirectoryPath);
     }
 
@@ -88,6 +88,7 @@ public partial class ItemDetails
         itemBlobContainerName = _configuration.GetValue<string>("ItemBlobContainerName") ?? string.Empty;
         blobTempDirectoryPath = _configuration.GetValue<string>("BlobTempDirectoryPath") ?? string.Empty;
         blobTempDirectory = _configuration.GetValue<string>("BlobTempDirectory") ?? string.Empty;
+        maxFileSize = _configuration.GetValue<int>("MaxFileSize");
     }
 
     private void GetItemData()

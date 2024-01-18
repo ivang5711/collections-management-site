@@ -10,6 +10,7 @@
 @inject IDbContextFactory<ApplicationDbContext> _contextFactory
 @inject IConfiguration _configuration
 @inject IBlobService _blobService
+@inject IFileTransferManager _fileTransferManager
 
 @rendermode InteractiveServer
 
@@ -95,7 +96,20 @@
                                             <ValidationSummary />
                                             @* Identifier: *@
                                             <InputText @bind-Value="ItemModel!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Item Name..." />
-                                            <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to item photo (optional)..." />
+                                            @* <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to item photo (optional)..." /> *@
+                                            @if (!string.IsNullOrWhiteSpace(FileError))
+                                            {
+                                                <div class="alert alert-warning d-flex align-items-center" role="alert">
+                                                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+                                                    <div>
+                                                        @FileError
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (ItemModel is not null)
+                                            {
+                                                <InputFile OnChange="UploadFile" class="form-control my-2" type="file" id="formFile" accept=".png,.jpg,.jpeg,.tiff" />
+                                            }
                                         </div>
                                     </div>
                                     <div class="pb-2 pe-3 mx-0 d-flex justify-content-end row col-md

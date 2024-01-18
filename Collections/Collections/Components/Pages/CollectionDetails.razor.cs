@@ -3,6 +3,7 @@ using Collections.Models;
 using Markdig;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
@@ -18,6 +19,7 @@ public partial class CollectionDetails
 
     private const string roleBlocked = "Blocked";
     private const string loginPageURL = "/Account/Login";
+    private int maxFileSize;
     private Collection? collection;
     private List<Item>? itemsBunch;
     private ApplicationUser? ThisUser;
@@ -29,11 +31,19 @@ public partial class CollectionDetails
     private bool collectionChangeRequestValid = true;
     private bool newThemeAddFinishedSuccessfully = true;
 
+    private string blobTempDirectory = string.Empty;
+    private string collectionBlobContainerName = string.Empty;
+    private string itemBlobContainerName = string.Empty;
+    private string blobTempDirectoryPath = string.Empty;
+
     public string? NewTheme { get; set; }
     public string? ThemeNameChoosen { get; set; }
+    public string? UploadedFileName { get; set; }
     public Collection? CollectionModel { get; set; }
     public List<Theme> Themes { get; set; } = [];
     private string? TempImg { get; set; } = string.Empty;
+
+    public string FileError { get; set; } = string.Empty;
 
     public class ItemCandidate
     {
@@ -45,6 +55,147 @@ public partial class CollectionDetails
         [Required]
         public string? Name { get; set; }
     }
+
+    private void GetConfigurationData()
+    {
+        collectionBlobContainerName = _configuration
+            .GetValue<string>("CollectionBlobContainerName") ?? string.Empty;
+        itemBlobContainerName = _configuration
+            .GetValue<string>("itemBlobContainerName") ?? string.Empty;
+        blobTempDirectoryPath = _configuration
+            .GetValue<string>("BlobTempDirectoryPath") ?? string.Empty;
+        blobTempDirectory = _configuration
+            .GetValue<string>("BlobTempDirectory") ?? string.Empty;
+        maxFileSize = _configuration.GetValue<int>("MaxFileSize");
+    }
+
+    private void SetUpFileTransferManager()
+    {
+        _fileTransferManager.SetUpMaxFileSize(maxFileSize);
+        _fileTransferManager.SetUpWorkingDirectory(blobTempDirectoryPath);
+    }
+
+    public async Task UploadFile(InputFileChangeEventArgs e)
+    {
+        RemovePreviousPhotoIfExists();
+        FileError = string.Empty;
+        IBrowserFile file = e.File;
+        if (file is not null)
+        {
+            if (file.Size > maxFileSize)
+            {
+                FileError = "File is too big! The file size is limited to " +
+                    $"{maxFileSize / (1024 * 1024)} MB";
+                InitializeData();
+                StateHasChanged();
+                return;
+            }
+
+            try
+            {
+                UploadedFileName = await _fileTransferManager
+                    .SaveFileToDisk(file);
+                TempImg = Path.Combine(blobTempDirectory, UploadedFileName);
+                await AddItemImage();
+            }
+            catch (Exception ex)
+            {
+                FileError = $"File Error: {ex}";
+                InitializeData();
+            }
+        }
+
+        StateHasChanged();
+    }
+
+    private void RemovePreviousPhotoIfExists()
+    {
+        if (!string.IsNullOrWhiteSpace(UploadedFileName))
+        {
+            _fileTransferManager.DeleteFileFromDisk(UploadedFileName);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    private async Task AddItemImage()
+    {
+        string path = Path.Combine(Directory.GetCurrentDirectory(),
+            blobTempDirectoryPath, UploadedFileName!);
+        await UploadFileToCloud(path, itemBlobContainerName);
+        AssignNewImageToItem(itemBlobContainerName);
+        //await DeleteOldPhotoFromCloud();
+        //_fileTransferManager.DeleteFileFromDisk(UploadedFileName!);
+    }
+
+    private async Task UploadFileToCloud(string path, string blobContainerName)
+    {
+        await _blobService.UploadFileBlobAsync(path, UploadedFileName!,
+            blobContainerName);
+    }
+
+    private void AssignNewImageToItem(string blobContainerName)
+    {
+        ItemModel!.ImageLink = _blobService.GetBlobUrl(UploadedFileName!,
+            blobContainerName);
+    }
+
+    //private async Task DeleteOldPhotoFromCloud()
+    //{
+    //    if (!string.IsNullOrWhiteSpace(OldImage))
+    //    {
+    //        string filename = Path.GetFileName(new Uri(OldImage).LocalPath);
+    //        await _blobService.DeleteBlobAsync(filename, collectionBlobContainerName);
+    //    }
+    //}
+
+    //private void ToggleEditPhotoRequestStatus()
+    //{
+    //    editPhotoRequested = !editPhotoRequested;
+    //}
+
+    //private async Task SubmitEditPhoto()
+    //{
+    //    if (!string.IsNullOrWhiteSpace(UploadedFileName))
+    //    {
+    //        if (UploadedFileName != CurrentItem!.ImageLink)
+    //        {
+    //            await ChangeItemImage();
+    //        }
+
+    //        UpdateItemPhoto();
+    //    }
+
+    //    editPhotoRequested = !editPhotoRequested;
+    //    InitializeData();
+    //}
+
+    //private void UpdateItemPhoto()
+    //{
+    //    using var context = _contextFactory.CreateDbContext();
+    //    var tmp = context.Items.First(x => x.Id == CurrentItem!.Id);
+    //    tmp.ImageLink = ItemModel!.ImageLink;
+    //    context.SaveChanges();
+    //}
+
+
+
+
+
+
+
+
+
+
+
+
 
     private void ResetCollectionChangeRequestValidStatus()
     {
@@ -102,6 +253,8 @@ public partial class CollectionDetails
     protected override async Task OnInitializedAsync()
     {
         await CheckAuthorizationLevel();
+        GetConfigurationData();
+        SetUpFileTransferManager();
         InitializeData();
     }
 
@@ -186,7 +339,13 @@ public partial class CollectionDetails
 
     private void SubmitNewItem()
     {
-        ItemModel!.ImageLink = TempImg;
+        if (!string.IsNullOrWhiteSpace(UploadedFileName))
+        {
+            _fileTransferManager.DeleteFileFromDisk(UploadedFileName!);
+        }
+
+        //ItemModel!.ImageLink = TempImg;
+
         ItemModel!.CollectionId = collection!.Id;
         CreateNewItem();
         newItemRequested = false;

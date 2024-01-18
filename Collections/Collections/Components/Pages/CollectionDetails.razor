@@ -173,7 +173,21 @@
                                                 @* Identifier: *@
                                                 <InputText @bind-Value="CollectionModel!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection New Name..." />
                                                 <InputTextArea @bind-Value="CollectionModel.Description" type="text" class="text-start input-group-text input-group-lg w-100 my-2" placeholder="Collection New Description" />
-                                                <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection new photo (optional)..." />
+                                               
+                                                @* <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection new photo (optional)..." /> *@
+                                                @if (!string.IsNullOrWhiteSpace(FileError2))
+                                                {
+                                                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+                                                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+                                                        <div>
+                                                            @FileError2
+                                                        </div>
+                                                    </div>
+                                                }
+                                                @if (ItemModel is not null)
+                                                {
+                                                    <InputFile OnChange="UploadFile2" class="form-control my-2" type="file" id="formFile" accept=".png,.jpg,.jpeg,.tiff" />
+                                                }
                                                 <div class="row row-cols-1 row-cols-md-3">
                                                     <div class="flex-fill pe-md-0 mx-0">
                                                         <input @bind="ThemeNameChoosen" class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Theme...">

@@ -42,8 +42,9 @@ public partial class CollectionDetails
     public Collection? CollectionModel { get; set; }
     public List<Theme> Themes { get; set; } = [];
     private string? TempImg { get; set; } = string.Empty;
-
+    private string OldImage { get; set; } = string.Empty;
     public string FileError { get; set; } = string.Empty;
+    public string FileError2 { get; set; } = string.Empty;
 
     public class ItemCandidate
     {
@@ -108,6 +109,39 @@ public partial class CollectionDetails
         StateHasChanged();
     }
 
+    public async Task UploadFile2(InputFileChangeEventArgs e)
+    {
+        RemovePreviousPhotoIfExists();
+        FileError2 = string.Empty;
+        IBrowserFile file = e.File;
+        if (file is not null)
+        {
+            if (file.Size > maxFileSize)
+            {
+                FileError2 = "File is too big! The file size is limited to " +
+                    $"{maxFileSize / (1024 * 1024)} MB";
+                InitializeData();
+                StateHasChanged();
+                return;
+            }
+
+            try
+            {
+                UploadedFileName = await _fileTransferManager
+                    .SaveFileToDisk(file);
+                TempImg = Path.Combine(blobTempDirectory, UploadedFileName);
+                //await AddCollectionImage();                
+            }
+            catch (Exception ex)
+            {
+                FileError2 = $"File Error: {ex}";
+                InitializeData();
+            }
+        }
+
+        StateHasChanged();
+    }
+
     private void RemovePreviousPhotoIfExists()
     {
         if (!string.IsNullOrWhiteSpace(UploadedFileName))
@@ -121,7 +155,16 @@ public partial class CollectionDetails
 
 
 
+    private async Task AddCollectionImage()
+    {
+        string path = Path.Combine(Directory.GetCurrentDirectory(),
+            blobTempDirectoryPath, UploadedFileName!);
+        await UploadFileToCloud(path, collectionBlobContainerName);
 
+        AssignNewImageToCollection(collectionBlobContainerName);
+        //await DeleteOldPhotoFromCloud();
+        //_fileTransferManager.DeleteFileFromDisk(UploadedFileName!);
+    }
 
 
 
@@ -147,14 +190,20 @@ public partial class CollectionDetails
             blobContainerName);
     }
 
-    //private async Task DeleteOldPhotoFromCloud()
-    //{
-    //    if (!string.IsNullOrWhiteSpace(OldImage))
-    //    {
-    //        string filename = Path.GetFileName(new Uri(OldImage).LocalPath);
-    //        await _blobService.DeleteBlobAsync(filename, collectionBlobContainerName);
-    //    }
-    //}
+    private void AssignNewImageToCollection(string blobContainerName)
+    {
+        collection!.ImageLink = _blobService.GetBlobUrl(UploadedFileName!,
+            blobContainerName);
+    }
+
+    private async Task DeleteOldPhotoFromCloud()
+    {
+        if (!string.IsNullOrWhiteSpace(OldImage))
+        {
+            string filename = Path.GetFileName(new Uri(OldImage).LocalPath);
+            await _blobService.DeleteBlobAsync(filename, collectionBlobContainerName);
+        }
+    }
 
     //private void ToggleEditPhotoRequestStatus()
     //{
@@ -277,6 +326,7 @@ public partial class CollectionDetails
         }
 
         ThemeNameChoosen = Themes.First(x => x.Id == CollectionModel.ThemeID).Name;
+        OldImage = collection!.ImageLink!;
     }
 
     private void ToggleNewItemRequestStatus()
@@ -288,6 +338,7 @@ public partial class CollectionDetails
     private void ToggleEditCollectionRequestStatus()
     {
         TempImg = collection!.ImageLink;
+
         editItemRequested = !editItemRequested;
     }
 
@@ -351,10 +402,16 @@ public partial class CollectionDetails
         newItemRequested = false;
     }
 
-    private void SubmitEditCollection()
+    private async Task SubmitEditCollection()
     {
         if (ValidateCollectionModel())
         {
+            if (!string.IsNullOrWhiteSpace(UploadedFileName) && collection!.ImageLink != UploadedFileName)
+            {
+                await AddCollectionImage();
+                await DeleteOldPhotoFromCloud();
+                _fileTransferManager.DeleteFileFromDisk(UploadedFileName!);
+            }
             UpdateCollection();
             editItemRequested = !editItemRequested;
             InitializeData();
@@ -365,26 +422,26 @@ public partial class CollectionDetails
     {
         if (CollectionModel is not null)
         {
-            if (string.IsNullOrWhiteSpace(CollectionModel.Name) && CollectionModel.Name != collection!.Name)
-            {
-                CollectionModel.Name = collection!.Name;
-            }
+            //if (!string.IsNullOrWhiteSpace(collection!.Name) && CollectionModel.Name != collection!.Name)
+            //{
+            //    CollectionModel.Name = collection!.Name;
+            //}
 
-            if (string.IsNullOrWhiteSpace(CollectionModel.Description) && CollectionModel.Description != collection!.Description)
-            {
-                CollectionModel.Description = collection!.Description;
-            }
+            //if (!string.IsNullOrWhiteSpace(collection!.Description) && CollectionModel.Description != collection!.Description)
+            //{
+            //    CollectionModel.Description = collection!.Description;
+            //}
 
-            if (string.IsNullOrWhiteSpace(CollectionModel.ImageLink) && CollectionModel.ImageLink != collection!.ImageLink)
+            if (!string.IsNullOrWhiteSpace(collection!.ImageLink) && CollectionModel.ImageLink != collection!.ImageLink)
             {
                 CollectionModel.ImageLink = collection!.ImageLink;
             }
-            else
-            {
-                CollectionModel.ImageLink = TempImg;
-            }
+            //else
+            //{
+            //    CollectionModel.ImageLink = TempImg;
+            //}
 
-            CollectionModel.Id = collection!.Id;
+            //CollectionModel.Id = collection!.Id;
 
             return true;
         }
@@ -421,7 +478,7 @@ public partial class CollectionDetails
 
         if (CollectionModel.ImageLink != collection.ImageLink)
         {
-            tmp.ImageLink = TempImg;
+            tmp.ImageLink = collection.ImageLink;
         }
 
         context.SaveChanges();

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System.ComponentModel.DataAnnotations;
 
 namespace Collections.Components.Pages;
@@ -15,7 +14,6 @@ public partial class CollectionsPage
     private int maxFileSize;
     private const string roleBlocked = "Blocked";
     private const string loginPageURL = "/Account/Login";
-    private bool themeIsUnique = true;
     private bool newThemeAddFinishedSuccessfully = true;
     private bool newCollectionRequested = false;
     private bool addNewThemeRequested = false;
@@ -51,7 +49,6 @@ public partial class CollectionsPage
 
     public async Task UploadFile(InputFileChangeEventArgs e)
     {
-        RemovePreviousPhotoIfExists();
         FileError = string.Empty;
         IBrowserFile file = e.File;
         if (file is not null)
@@ -87,9 +84,7 @@ public partial class CollectionsPage
         string path = Path.Combine(Directory.GetCurrentDirectory(),
             blobTempDirectoryPath, UploadedFileName!);
         await UploadFileToCloud(path, collectionBlobContainerName);
-
         AssignNewImageToCollection(collectionBlobContainerName);
-        
     }
 
     private void AssignNewImageToCollection(string blobContainerName)
@@ -102,14 +97,6 @@ public partial class CollectionsPage
     {
         await _blobService.UploadFileBlobAsync(path, UploadedFileName!,
             blobContainerName);
-    }
-
-    private void RemovePreviousPhotoIfExists()
-    {
-        if (!string.IsNullOrWhiteSpace(UploadedFileName))
-        {
-            _fileTransferManager.DeleteFileFromDisk(UploadedFileName);
-        }
     }
 
     private string CreateMarkdown(string input)
@@ -146,20 +133,10 @@ public partial class CollectionsPage
     private void SubmitNewTheme()
     {
         newThemeAddFinishedSuccessfully = true;
-        themeIsUnique = true;
         if (!string.IsNullOrWhiteSpace(NewTheme))
         {
             GetThemes();
-            foreach (var theme in Themes)
-            {
-                if (theme.Name == NewTheme)
-                {
-                    themeIsUnique = false;
-                    break;
-                }
-            }
-
-            if (themeIsUnique)
+            if (CheckIfThemeIsUnique())
             {
                 CreateNewTheme();
                 NewTheme = string.Empty;
@@ -172,26 +149,39 @@ public partial class CollectionsPage
         }
     }
 
+    private bool CheckIfThemeIsUnique()
+    {
+        foreach (var theme in Themes)
+        {
+            if (theme.Name == NewTheme)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private async Task CreateNewCollection()
     {
         CreateCollection(Model!);
-        _fileTransferManager.DeleteFileFromDisk(UploadedFileName!);
+        ClearStoredImageFromDisk();
         newCollectionRequested = !newCollectionRequested;
         TempImg = string.Empty;
-        Model ??= new();
-        await GetCollectionsFromDataSource();
+        await InitializeData();
+    }
+
+    private void ClearStoredImageFromDisk()
+    {
+        if (Model!.ImageLink is not null)
+        {
+            _fileTransferManager.DeleteFileFromDisk(UploadedFileName!);
+        }
     }
 
     private async Task GetCollectionsFromDataSource()
     {
         await Task.Run(() => CreateData());
-        if (collections is not null)
-        {
-            foreach (Collection t in collections)
-            {
-                t.TotalItems = t.Items.Count;
-            }
-        }
     }
 
     private void GetThemes()
@@ -227,7 +217,6 @@ public partial class CollectionsPage
 
     private async Task InitializeData()
     {
-        
         Model ??= new();
         GetThemes();
         await GetCollectionsFromDataSource();

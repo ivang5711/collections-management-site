@@ -47,6 +47,60 @@ public partial class CollectionsPage
         public new string? Description { get; set; }
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckAuthorizationLevel();
+        GetConfigurationData();
+        SetUpFileTransferManager();
+        await InitializeData();
+    }
+
+    private void GetConfigurationData()
+    {
+        collectionBlobContainerName = _configuration
+            .GetValue<string>("CollectionBlobContainerName") ?? string.Empty;
+        blobTempDirectoryPath = _configuration
+            .GetValue<string>("BlobTempDirectoryPath") ?? string.Empty;
+        blobTempDirectory = _configuration
+            .GetValue<string>("BlobTempDirectory") ?? string.Empty;
+        maxFileSize = _configuration.GetValue<int>("MaxFileSize");
+    }
+
+    private void SetUpFileTransferManager()
+    {
+        _fileTransferManager.SetUpMaxFileSize(maxFileSize);
+        _fileTransferManager.SetUpWorkingDirectory(blobTempDirectoryPath);
+    }
+
+    private async Task InitializeData()
+    {
+        Model ??= new();
+        GetThemes();
+        await GetCollectionsFromDataSource();
+    }
+
+    private void GetThemes()
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        Themes = [.. adc.Themes];
+    }
+
+    private async Task GetCollectionsFromDataSource()
+    {
+        await Task.Run(() => CreateData());
+    }
+
+    private void CreateData()
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        var t = adc.Collections
+            .Include(e => e.Theme)
+            .Include(e => e.Items)
+            .ToList();
+        collections = [.. t.Where(x => x.ApplicationUserId == ThisUser!.Id)
+            .OrderByDescending(u => u.Items.Count)];
+    }
+
     public async Task UploadFile(InputFileChangeEventArgs e)
     {
         FileError = string.Empty;
@@ -87,22 +141,16 @@ public partial class CollectionsPage
         AssignNewImageToCollection(collectionBlobContainerName);
     }
 
-    private void AssignNewImageToCollection(string blobContainerName)
-    {
-        Model!.ImageLink = _blobService.GetBlobUrl(UploadedFileName!,
-            blobContainerName);
-    }
-
     private async Task UploadFileToCloud(string path, string blobContainerName)
     {
         await _blobService.UploadFileBlobAsync(path, UploadedFileName!,
             blobContainerName);
     }
 
-    private string CreateMarkdown(string input)
+    private void AssignNewImageToCollection(string blobContainerName)
     {
-        var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseSoftlineBreakAsHardlineBreak().Build();
-        return Markdown.ToHtml(input, pipeline);
+        Model!.ImageLink = _blobService.GetBlobUrl(UploadedFileName!,
+            blobContainerName);
     }
 
     private async Task SubmitNewCollectionForm()
@@ -111,6 +159,46 @@ public partial class CollectionsPage
         Model!.ThemeID = Themes.First(x => x.Name == ThemeNameChoosen).Id;
         await CreateNewCollection();
         newCollectionRequested = false;
+    }
+
+    private async Task CreateNewCollection()
+    {
+        CreateCollection(Model!);
+        ClearStoredImageFromDisk();
+        newCollectionRequested = !newCollectionRequested;
+        TempImg = string.Empty;
+        await InitializeData();
+    }
+
+    private void CreateCollection(CollectionCandidate collectionCandidate)
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        var collection = new Collection
+        {
+            Name = collectionCandidate!.Name!,
+            ThemeID = collectionCandidate!.ThemeID,
+            ApplicationUserId = collectionCandidate!.ApplicationUserId!,
+            Description = CreateMarkdown(collectionCandidate!.Description!),
+            ImageLink = collectionCandidate.ImageLink,
+            CreationDateTime = DateTime.UtcNow
+        };
+
+        adc.Collections.Add(collection);
+        adc.SaveChanges();
+    }
+
+    private string CreateMarkdown(string input)
+    {
+        var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseSoftlineBreakAsHardlineBreak().Build();
+        return Markdown.ToHtml(input, pipeline);
+    }
+
+    private void ClearStoredImageFromDisk()
+    {
+        if (Model!.ImageLink is not null)
+        {
+            _fileTransferManager.DeleteFileFromDisk(UploadedFileName!);
+        }
     }
 
     private void RequestNewCollection()
@@ -122,12 +210,6 @@ public partial class CollectionsPage
     private void ResetNewTHemeAddFinishedSuccessfullyStatus()
     {
         newThemeAddFinishedSuccessfully = true;
-    }
-
-    private void RequestNewTheme()
-    {
-        GetThemes();
-        addNewThemeRequested = !addNewThemeRequested;
     }
 
     private void SubmitNewTheme()
@@ -162,66 +244,6 @@ public partial class CollectionsPage
         return true;
     }
 
-    private async Task CreateNewCollection()
-    {
-        CreateCollection(Model!);
-        ClearStoredImageFromDisk();
-        newCollectionRequested = !newCollectionRequested;
-        TempImg = string.Empty;
-        await InitializeData();
-    }
-
-    private void ClearStoredImageFromDisk()
-    {
-        if (Model!.ImageLink is not null)
-        {
-            _fileTransferManager.DeleteFileFromDisk(UploadedFileName!);
-        }
-    }
-
-    private async Task GetCollectionsFromDataSource()
-    {
-        await Task.Run(() => CreateData());
-    }
-
-    private void GetThemes()
-    {
-        using var adc = _contextFactory.CreateDbContext();
-        Themes = [.. adc.Themes];
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await CheckAuthorizationLevel();
-        GetConfigurationData();
-        SetUpFileTransferManager();
-        await InitializeData();
-    }
-
-    private void GetConfigurationData()
-    {
-        collectionBlobContainerName = _configuration
-            .GetValue<string>("CollectionBlobContainerName") ?? string.Empty;
-        blobTempDirectoryPath = _configuration
-            .GetValue<string>("BlobTempDirectoryPath") ?? string.Empty;
-        blobTempDirectory = _configuration
-            .GetValue<string>("BlobTempDirectory") ?? string.Empty;
-        maxFileSize = _configuration.GetValue<int>("MaxFileSize");
-    }
-
-    private void SetUpFileTransferManager()
-    {
-        _fileTransferManager.SetUpMaxFileSize(maxFileSize);
-        _fileTransferManager.SetUpWorkingDirectory(blobTempDirectoryPath);
-    }
-
-    private async Task InitializeData()
-    {
-        Model ??= new();
-        GetThemes();
-        await GetCollectionsFromDataSource();
-    }
-
     private void CreateNewTheme()
     {
         using var adc = _contextFactory.CreateDbContext();
@@ -229,32 +251,10 @@ public partial class CollectionsPage
         adc.SaveChanges();
     }
 
-    private void CreateCollection(CollectionCandidate collectionCandidate)
+    private void RequestNewTheme()
     {
-        using var adc = _contextFactory.CreateDbContext();
-        var collection = new Collection
-        {
-            Name = collectionCandidate!.Name!,
-            ThemeID = collectionCandidate!.ThemeID,
-            ApplicationUserId = collectionCandidate!.ApplicationUserId!,
-            Description = CreateMarkdown(collectionCandidate!.Description!),
-            ImageLink = collectionCandidate.ImageLink,
-            CreationDateTime = DateTime.UtcNow
-        };
-
-        adc.Collections.Add(collection);
-        adc.SaveChanges();
-    }
-
-    private void CreateData()
-    {
-        using var adc = _contextFactory.CreateDbContext();
-        var t = adc.Collections
-            .Include(e => e.Theme)
-            .Include(e => e.Items)
-            .ToList();
-        collections = [.. t.Where(x => x.ApplicationUserId == ThisUser!.Id)
-            .OrderByDescending(u => u.Items.Count)];
+        GetThemes();
+        addNewThemeRequested = !addNewThemeRequested;
     }
 
     private async Task CheckAuthorizationLevel()

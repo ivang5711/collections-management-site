@@ -157,7 +157,7 @@
                                                 type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                             <i class="bi bi-plus-square"></i> Close
                                         </button>
-                                        @if (addNewThemeRequested || string.IsNullOrWhiteSpace(ThemeNameChoosen))
+                                        @if (addNewThemeRequested || string.IsNullOrWhiteSpace(ThemeNameChoosen) || !Themes.Exists(x => x.Name == ThemeNameChoosen))
                                         {
 
                                             <button class="btn btn-outline-success text-nowrap"

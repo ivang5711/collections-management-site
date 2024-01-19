@@ -24,8 +24,6 @@ public partial class CollectionsPage
     private string collectionBlobContainerName = string.Empty;
     private string? NewTheme { get; set; }
     private string? UploadedFileName { get; set; }
-
-    [SupplyParameterFromForm]
     public string? ThemeNameChoosen { get; set; }
     private List<Theme> Themes { get; set; } = [];
     private string TempImg { get; set; } = string.Empty;

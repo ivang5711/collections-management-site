@@ -11,26 +11,23 @@ namespace Collections.Components.Pages;
 
 public partial class CollectionsPage
 {
-    private int maxFileSize;
     private const string roleBlocked = "Blocked";
     private const string loginPageURL = "/Account/Login";
-    private bool newThemeAddFinishedSuccessfully = true;
-    private bool newCollectionRequested = false;
+    private int maxFileSize;
+    private ApplicationUser? thisUser = null;
     private bool addNewThemeRequested = false;
-    public string? ThemeNameChoosen { get; set; }
+    private bool newCollectionRequested = false;
     private List<Collection>? collections = null;
-    private ApplicationUser? ThisUser = null;
-    private string TempImg { get; set; } = string.Empty;
-    public string FileError { get; set; } = string.Empty;
-    public string? NewTheme { get; set; }
-
-    public List<Theme> Themes { get; set; } = [];
-
-    public string? UploadedFileName { get; set; }
-
     private string blobTempDirectory = string.Empty;
-    private string collectionBlobContainerName = string.Empty;
     private string blobTempDirectoryPath = string.Empty;
+    private bool newThemeAddFinishedSuccessfully = true;
+    private string collectionBlobContainerName = string.Empty;
+    private string? NewTheme { get; set; }
+    private string? UploadedFileName { get; set; }
+    private string? ThemeNameChoosen { get; set; }
+    private List<Theme> Themes { get; set; } = [];
+    private string TempImg { get; set; } = string.Empty;
+    private string FileError { get; set; } = string.Empty;
 
     [SupplyParameterFromForm]
     public CollectionCandidate? Model { get; set; }
@@ -97,7 +94,7 @@ public partial class CollectionsPage
             .Include(e => e.Theme)
             .Include(e => e.Items)
             .ToList();
-        collections = [.. t.Where(x => x.ApplicationUserId == ThisUser!.Id)
+        collections = [.. t.Where(x => x.ApplicationUserId == thisUser!.Id)
             .OrderByDescending(u => u.Items.Count)];
     }
 
@@ -155,7 +152,7 @@ public partial class CollectionsPage
 
     private async Task SubmitNewCollectionForm()
     {
-        Model!.ApplicationUserId = ThisUser!.Id;
+        Model!.ApplicationUserId = thisUser!.Id;
         Model!.ThemeID = Themes.First(x => x.Name == ThemeNameChoosen).Id;
         await CreateNewCollection();
         newCollectionRequested = false;
@@ -261,13 +258,13 @@ public partial class CollectionsPage
     {
         AuthenticationState authenticationState = Task.Run(() =>
             _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        ThisUser = Task.Run(() =>
+        thisUser = Task.Run(() =>
             _UserManager.GetUserAsync(authenticationState.User)).Result;
-        if (ThisUser is not null)
+        if (thisUser is not null)
         {
             bool userInRoleBlocked = Task.Run(() =>
-                _UserManager.IsInRoleAsync(ThisUser, roleBlocked)).Result;
-            bool userIsBlocked = ThisUser.LockoutEnd is not null;
+                _UserManager.IsInRoleAsync(thisUser, roleBlocked)).Result;
+            bool userIsBlocked = thisUser.LockoutEnd is not null;
             if (userInRoleBlocked || userIsBlocked)
             {
                 await _SignInManager.SignOutAsync();

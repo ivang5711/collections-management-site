@@ -10,6 +10,9 @@
 @inject IDbContextFactory<ApplicationDbContext> _contextFactory
 @using System.ComponentModel.DataAnnotations
 @inject ILogger<CollectionsPage> Logger
+@inject IBlobService _blobService
+@inject IFileTransferManager _fileTransferManager
+@inject IConfiguration _configuration
 
 @* @rendermode InteractiveServer *@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
@@ -68,8 +71,21 @@
                                             <DataAnnotationsValidator />
                                             <ValidationSummary />
                                             <InputText @bind-Value="Model!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Name..." />
-                                            <InputTextArea @bind-Value="Model.Description" type="text" class="text-start input-group-text input-group-lg w-100 my-2" placeholder="Collection New Description" />                                            <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection photo (optional)..." />
-
+                                            <InputTextArea @bind-Value="Model.Description" type="text" class="text-start input-group-text input-group-lg w-100 my-2" placeholder="Collection New Description" />
+                                            @* <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection photo (optional)..." /> *@
+                                            @if (!string.IsNullOrWhiteSpace(FileError))
+                                            {
+                                                <div class="alert alert-warning d-flex align-items-center" role="alert">
+                                                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+                                                    <div>
+                                                        @FileError
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (Model is not null)
+                                            {
+                                                <InputFile OnChange="UploadFile" class="form-control my-2" type="file" id="formFile" accept=".png,.jpg,.jpeg,.tiff" />
+                                            }
                                             <div class="row row-cols-1 row-cols-md-auto">
                                                 <div class="flex-fill pe-md-0 mx-0">
            

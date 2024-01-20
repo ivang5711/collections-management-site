@@ -95,6 +95,11 @@ public partial class ItemDetails
         CurrentItem = adc.Items
                         .Include(e => e.Tags)
                         .Include(e => e.Likes)
+                        .Include(e => e.NumericalFields)
+                        .Include(e => e.StringFields)
+                        .Include(e => e.TextFields)
+                        .Include(e => e.LogicalFields)
+                        .Include(e => e.DateFields)
                         .Include(e => e.Comments)
                         .ThenInclude(e => e.ApplicationUser)
                         .Include(e => e.Collection)

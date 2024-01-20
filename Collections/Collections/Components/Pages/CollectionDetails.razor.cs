@@ -26,6 +26,7 @@ public partial class CollectionDetails
     private bool themeIsUnique = true;
     private bool newItemRequested = false;
     private bool editItemRequested = false;
+    private bool addFieldRequested = false;
     private bool deleteItemRequested = false;
     private bool addNewThemeRequested = false;
     private bool collectionChangeRequestValid = true;
@@ -46,6 +47,18 @@ public partial class CollectionDetails
     public string FileError { get; set; } = string.Empty;
     public string FileError2 { get; set; } = string.Empty;
 
+    public string? FieldToAdd { get; set; }
+
+    private bool addSomeFieldRequested = false;
+
+    public NumericalField NewNumericField { get; set; } = new();
+    public StringField NewStringField { get; set; } = new();
+    public TextField NewTextField { get; set; } = new();
+    public LogicalField NewLogicalField { get; set; } = new();
+    public DateField NewDateField { get; set; } = new();
+
+    public string MaxFieldsError { get; set; } = string.Empty;
+
     public class ItemCandidate
     {
         public string? ImageLink { get; set; }
@@ -55,6 +68,91 @@ public partial class CollectionDetails
 
         [Required]
         public string? Name { get; set; }
+
+        public List<NumericalField> NumericalFields { get; set; } = [];
+
+        public List<StringField> StringFields { get; set; } = [];
+
+        public List<TextField> TextFields { get; set; } = [];
+
+        public List<LogicalField> LogicalFields { get; set; } = [];
+
+        public List<DateField> DateFields { get; set; } = [];
+    }
+
+    private void ToggleAddFieldRequested()
+    {
+        MaxFieldsError = string.Empty;
+        addFieldRequested = !addFieldRequested;
+    }
+
+    private void AddNewField()
+    {
+        MaxFieldsError = string.Empty;
+        if (FieldToAdd == typeof(NumericalField).FullName && ItemModel!.NumericalFields.Count == 3)
+        {
+            MaxFieldsError = "You've reached maximum amount of fields of this type";
+            return;
+        }
+        if (FieldToAdd == typeof(StringField).FullName && ItemModel!.StringFields.Count == 3)
+        {
+            MaxFieldsError = "You've reached maximum amount of fields of this type";
+            return;
+        }
+        if (FieldToAdd == typeof(TextField).FullName && ItemModel!.TextFields.Count == 3)
+        {
+            MaxFieldsError = "You've reached maximum amount of fields of this type";
+            return;
+        }
+        if (FieldToAdd == typeof(LogicalField).FullName && ItemModel!.LogicalFields.Count == 3)
+        {
+            MaxFieldsError = "You've reached maximum amount of fields of this type";
+            return;
+        }
+        if (FieldToAdd == typeof(DateField).FullName && ItemModel!.DateFields.Count == 3)
+        {
+            MaxFieldsError = "You've reached maximum amount of fields of this type";
+            return;
+        }
+
+        addSomeFieldRequested = true;
+    }
+
+    private void SubmitNewField()
+    {
+        addSomeFieldRequested = false;
+        if (FieldToAdd == typeof(NumericalField).FullName)
+        {
+            Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
+            ItemModel!.NumericalFields.Add(NewNumericField);
+            NewNumericField = new();
+        }
+        else if (FieldToAdd == typeof(StringField).FullName)
+        {
+            Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
+            ItemModel!.StringFields.Add(NewStringField);
+            NewStringField = new();
+        }
+        else if (FieldToAdd == typeof(TextField).FullName)
+        {
+            Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
+            ItemModel!.TextFields.Add(NewTextField);
+            NewTextField = new();
+        }
+        else if (FieldToAdd == typeof(LogicalField).FullName)
+        {
+            Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
+            ItemModel!.LogicalFields.Add(NewLogicalField);
+            NewLogicalField = new();
+        }
+        else if (FieldToAdd == typeof(DateField).FullName)
+        {
+            Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
+            ItemModel!.DateFields.Add(NewDateField);
+            NewDateField = new();
+        }
+
+        StateHasChanged();
     }
 
     private void GetConfigurationData()
@@ -130,7 +228,7 @@ public partial class CollectionDetails
                 UploadedFileName = await _fileTransferManager
                     .SaveFileToDisk(file);
                 TempImg = Path.Combine(blobTempDirectory, UploadedFileName);
-                //await AddCollectionImage();                
+                //await AddCollectionImage();
             }
             catch (Exception ex)
             {
@@ -150,11 +248,6 @@ public partial class CollectionDetails
         }
     }
 
-
-
-
-
-
     private async Task AddCollectionImage()
     {
         string path = Path.Combine(Directory.GetCurrentDirectory(),
@@ -165,8 +258,6 @@ public partial class CollectionDetails
         //await DeleteOldPhotoFromCloud();
         //_fileTransferManager.DeleteFileFromDisk(UploadedFileName!);
     }
-
-
 
     private async Task AddItemImage()
     {
@@ -233,18 +324,6 @@ public partial class CollectionDetails
     //    tmp.ImageLink = ItemModel!.ImageLink;
     //    context.SaveChanges();
     //}
-
-
-
-
-
-
-
-
-
-
-
-
 
     private void ResetCollectionChangeRequestValidStatus()
     {
@@ -360,6 +439,16 @@ public partial class CollectionDetails
                            .ThenInclude(e => e.Tags)
                            .Include(e => e.Items)
                            .ThenInclude(e => e.Likes)
+                           .Include(e => e.Items)
+                           .ThenInclude(e => e.NumericalFields)
+                           .Include(e => e.Items)
+                           .ThenInclude(e => e.StringFields)
+                           .Include(e => e.Items)
+                           .ThenInclude(e => e.TextFields)
+                           .Include(e => e.Items)
+                           .ThenInclude(e => e.LogicalFields)
+                           .Include(e => e.Items)
+                           .ThenInclude(e => e.DateFields)
             ];
         }
         return t;
@@ -368,13 +457,26 @@ public partial class CollectionDetails
     private void CreateItem(ItemCandidate itemCandidate)
     {
         using var adc = _contextFactory.CreateDbContext();
+        adc.NumericalFields.AddRange(itemCandidate.NumericalFields);
+        adc.StringFields.AddRange(itemCandidate.StringFields);
+        adc.TextFields.AddRange(itemCandidate.TextFields);
+        adc.LogicalFields.AddRange(itemCandidate.LogicalFields);
+        adc.DateFields.AddRange(itemCandidate.DateFields);
+        adc.SaveChanges();
+
         Item item = new()
         {
             Name = itemCandidate.Name!,
             CollectionId = collection!.Id,
             ImageLink = itemCandidate.ImageLink,
-            CreationDateTime = DateTime.UtcNow
+            CreationDateTime = DateTime.UtcNow,
         };
+
+        item.NumericalFields.AddRange(itemCandidate.NumericalFields);
+        item.StringFields.AddRange(itemCandidate.StringFields);
+        item.TextFields.AddRange(itemCandidate.TextFields);
+        item.LogicalFields.AddRange(itemCandidate.LogicalFields);
+        item.DateFields.AddRange(itemCandidate.DateFields);
 
         adc.Items.Add(item);
         adc.SaveChanges();

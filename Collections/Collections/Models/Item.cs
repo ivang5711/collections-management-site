@@ -8,6 +8,16 @@ public class Item
 
     public List<Tag> Tags { get; } = [];
 
+    public List<NumericalField> NumericalFields { get; } = [];
+
+    public List<StringField> StringFields { get; } = [];
+        
+    public List<TextField> TextFields { get; } = [];
+
+    public List<LogicalField> LogicalFields { get; } = [];
+
+    public List<DateField> DateFields { get; } = [];
+
     public Collection Collection { get; set; }
 
     public int CollectionId { get; set; }
@@ -17,8 +27,6 @@ public class Item
     public List<Comment> Comments { get; set; } = [];
 
     public string? ImageLink { get; set; } = null;
-
-    public int LikesTotal { get; set; }
 
     public DateTime CreationDateTime { get; set; }
 }

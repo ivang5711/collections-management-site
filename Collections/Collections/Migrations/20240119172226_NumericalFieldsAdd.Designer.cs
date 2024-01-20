@@ -4,6 +4,7 @@ using Collections.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Collections.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240119172226_NumericalFieldsAdd")]
+    partial class NumericalFieldsAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,26 +172,6 @@ namespace Collections.Migrations
                     b.ToTable("Comments", (string)null);
                 });
 
-            modelBuilder.Entity("Collections.Models.DateField", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateOnly>("Value")
-                        .HasColumnType("date");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DateFields", (string)null);
-                });
-
             modelBuilder.Entity("Collections.Models.Item", b =>
                 {
                     b.Property<int>("Id")
@@ -242,26 +225,6 @@ namespace Collections.Migrations
                     b.ToTable("Likes", (string)null);
                 });
 
-            modelBuilder.Entity("Collections.Models.LogicalField", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Value")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LogicalFields", (string)null);
-                });
-
             modelBuilder.Entity("Collections.Models.NumericalField", b =>
                 {
                     b.Property<int>("Id")
@@ -282,27 +245,6 @@ namespace Collections.Migrations
                     b.ToTable("NumericalFields", (string)null);
                 });
 
-            modelBuilder.Entity("Collections.Models.StringField", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StringFields", (string)null);
-                });
-
             modelBuilder.Entity("Collections.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -318,27 +260,6 @@ namespace Collections.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tags", (string)null);
-                });
-
-            modelBuilder.Entity("Collections.Models.TextField", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TextFields", (string)null);
                 });
 
             modelBuilder.Entity("Collections.Models.Theme", b =>
@@ -358,36 +279,6 @@ namespace Collections.Migrations
                     b.ToTable("Themes", (string)null);
                 });
 
-            modelBuilder.Entity("DateFieldItem", b =>
-                {
-                    b.Property<int>("DateFieldsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ItemsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DateFieldsId", "ItemsId");
-
-                    b.HasIndex("ItemsId");
-
-                    b.ToTable("DateFieldItem");
-                });
-
-            modelBuilder.Entity("ItemLogicalField", b =>
-                {
-                    b.Property<int>("ItemsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LogicalFieldsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ItemsId", "LogicalFieldsId");
-
-                    b.HasIndex("LogicalFieldsId");
-
-                    b.ToTable("ItemLogicalField");
-                });
-
             modelBuilder.Entity("ItemNumericalField", b =>
                 {
                     b.Property<int>("ItemsId")
@@ -403,21 +294,6 @@ namespace Collections.Migrations
                     b.ToTable("ItemNumericalField");
                 });
 
-            modelBuilder.Entity("ItemStringField", b =>
-                {
-                    b.Property<int>("ItemsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StringFieldsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ItemsId", "StringFieldsId");
-
-                    b.HasIndex("StringFieldsId");
-
-                    b.ToTable("ItemStringField");
-                });
-
             modelBuilder.Entity("ItemTag", b =>
                 {
                     b.Property<int>("ItemsId")
@@ -431,21 +307,6 @@ namespace Collections.Migrations
                     b.HasIndex("TagsId");
 
                     b.ToTable("ItemTag");
-                });
-
-            modelBuilder.Entity("ItemTextField", b =>
-                {
-                    b.Property<int>("ItemsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TextFieldsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ItemsId", "TextFieldsId");
-
-                    b.HasIndex("TextFieldsId");
-
-                    b.ToTable("ItemTextField");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -649,36 +510,6 @@ namespace Collections.Migrations
                     b.Navigation("Item");
                 });
 
-            modelBuilder.Entity("DateFieldItem", b =>
-                {
-                    b.HasOne("Collections.Models.DateField", null)
-                        .WithMany()
-                        .HasForeignKey("DateFieldsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Collections.Models.Item", null)
-                        .WithMany()
-                        .HasForeignKey("ItemsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ItemLogicalField", b =>
-                {
-                    b.HasOne("Collections.Models.Item", null)
-                        .WithMany()
-                        .HasForeignKey("ItemsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Collections.Models.LogicalField", null)
-                        .WithMany()
-                        .HasForeignKey("LogicalFieldsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ItemNumericalField", b =>
                 {
                     b.HasOne("Collections.Models.Item", null)
@@ -694,21 +525,6 @@ namespace Collections.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ItemStringField", b =>
-                {
-                    b.HasOne("Collections.Models.Item", null)
-                        .WithMany()
-                        .HasForeignKey("ItemsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Collections.Models.StringField", null)
-                        .WithMany()
-                        .HasForeignKey("StringFieldsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ItemTag", b =>
                 {
                     b.HasOne("Collections.Models.Item", null)
@@ -720,21 +536,6 @@ namespace Collections.Migrations
                     b.HasOne("Collections.Models.Tag", null)
                         .WithMany()
                         .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ItemTextField", b =>
-                {
-                    b.HasOne("Collections.Models.Item", null)
-                        .WithMany()
-                        .HasForeignKey("ItemsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Collections.Models.TextField", null)
-                        .WithMany()
-                        .HasForeignKey("TextFieldsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

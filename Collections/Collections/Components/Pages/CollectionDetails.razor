@@ -96,6 +96,138 @@
                                             <ValidationSummary />
                                             @* Identifier: *@
                                             <InputText @bind-Value="ItemModel!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Item Name..." />
+                                            @* <button class="btn btn-outline-dark" @onclick="ToggleAddFieldRequested">Add field</button> *@
+                                            @if (ItemModel.NumericalFields.Count > 0)
+                                            {
+                                                @foreach (var item in ItemModel.NumericalFields)
+                                                {
+                                                    <div class="row g-3 align-items-center">
+                                                        <div class="col-auto">
+                                                            <label for="inputNumber" class="col-form-label">@item.Name</label>
+                                                        </div>
+                                                        <div class="col-auto d-flex flex-fill">
+                                                            <input type="number" value="@item.Value" id="inputNumber" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            @if (ItemModel.StringFields.Count > 0)
+                                            {
+                                                @foreach (var item in ItemModel.StringFields)
+                                                {
+                                                    <div class="row g-3 align-items-center">
+                                                        <div class="col-auto">
+                                                            <label for="inputNumber" class="col-form-label">@item.Name</label>
+                                                        </div>
+                                                        <div class="col-auto d-flex flex-fill">
+                                                            <input type="text" value="@item.Value" id="inputNumber" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            @if (ItemModel.TextFields.Count > 0)
+                                            {
+                                                @foreach (var item in ItemModel.TextFields)
+                                                {
+                                                    <div class="row g-3 align-items-center">
+                                                        <div class="col-auto">
+                                                            <label for="inputNumber" class="col-form-label">@item.Name</label>
+                                                        </div>
+                                                        <div class="col-auto d-flex flex-fill">
+                                                            <input type="text" value="@item.Value" id="inputNumber" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            @if (ItemModel.LogicalFields.Count > 0)
+                                            {
+                                                @foreach (var item in ItemModel.LogicalFields)
+                                                {
+                                                    <div class="row g-3 align-items-center">
+                                                        <div class="col-auto">
+                                                            <label for="inputNumber" class="col-form-label">@item.Name</label>
+                                                        </div>
+                                                        <div class="col-auto d-flex flex-fill">
+                                                            <InputCheckbox @bind-Value="@item.Value" disabled />
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            @if (ItemModel.DateFields.Count > 0)
+                                            {
+                                                @foreach (var item in ItemModel.DateFields)
+                                                {
+                                                    <div class="row g-3 align-items-center">
+                                                        <div class="col-auto">
+                                                            <label for="inputNumber" class="col-form-label">@item.Name</label>
+                                                        </div>
+                                                        <div class="col-auto d-flex flex-fill">
+                                                            <input type="text" value="@item.Value" id="inputNumber" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            @if (!addSomeFieldRequested)
+                                            {
+                                                @if (!string.IsNullOrWhiteSpace(MaxFieldsError))
+                                                {
+                                                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+                                                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+                                                        <div>
+                                                            @MaxFieldsError.
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                                <div class="input-group">
+                                                    <select @bind="FieldToAdd" class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+                                                        <option selected>Pick field type...</option>
+                                                        <option value="@(new NumericalField())">Numeric</option>
+                                                        <option value="@(new StringField())">String</option>
+                                                        <option value="@(new TextField())">Text</option>
+                                                        <option value="@(new LogicalField())">Logical</option>
+                                                        <option value="@(new DateField())">Date</option>
+                                                    </select>
+                                                    <button class="btn btn-outline-secondary" @onclick="AddNewField" type="button"><i class="bi bi-plus-square"></i></button>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                if (FieldToAdd == typeof(NumericalField).FullName)
+                                                {
+                                                    <input type="text" class="form-control" placeholder="Name" @bind="NewNumericField.Name" />
+                                                    <input type="text" class="form-control" placeholder="Name" @bind="NewNumericField.Value" />
+                                                }
+                                                else if (FieldToAdd == typeof(StringField).FullName)
+                                                {
+                                                    <input type="text" class="form-control" placeholder="Name" @bind="NewStringField.Name" />
+                                                    <input type="text" class="form-control" placeholder="Name" @bind="NewStringField.Value" />
+                                                }
+                                                else if (FieldToAdd == typeof(TextField).FullName)
+                                                {
+                                                    <input type="text" class="form-control" placeholder="Name" @bind="NewTextField.Name" />
+                                                    <input type="text" class="form-control" placeholder="Name" @bind="NewTextField.Value" />
+                                                }
+                                                else if (FieldToAdd == typeof(LogicalField).FullName)
+                                                {
+                                                    <div class="form-check form-switch d-flex align-items-center gap-2">
+                                                        <input class="form-check-input" @bind="NewLogicalField.Value" type="checkbox" id="flexSwitchCheckDefault">
+                                                        <input type="text" class="form-control" placeholder="Name" @bind="NewLogicalField.Name" />
+                                                    </div>
+                                                }
+                                                else if (FieldToAdd == typeof(DateField).FullName)
+                                                {
+                                                    <input type="text" class="form-control" placeholder="Name" @bind="NewDateField.Name" />
+                                                    <input type="date" class="form-control" placeholder="Name" @bind="NewDateField.Value" />
+                                                }
+
+                                                <button class="btn btn-outline-success text-nowrap" @onclick="SubmitNewField"
+                                                        type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                    <i class="bi bi-plus-square"></i> Submit
+                                                </button>
+                                            }
+
+
                                             @* <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to item photo (optional)..." /> *@
                                             @if (!string.IsNullOrWhiteSpace(FileError))
                                             {
@@ -173,7 +305,7 @@
                                                 @* Identifier: *@
                                                 <InputText @bind-Value="CollectionModel!.Name" type="text" class="input-group-text input-group-lg w-100 my-2" placeholder="Collection New Name..." />
                                                 <InputTextArea @bind-Value="CollectionModel.Description" type="text" class="text-start input-group-text input-group-lg w-100 my-2" placeholder="Collection New Description" />
-                                               
+
                                                 @* <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection new photo (optional)..." /> *@
                                                 @if (!string.IsNullOrWhiteSpace(FileError2))
                                                 {

@@ -122,7 +122,7 @@ else
                             else
                             {
 
-                                <a href="@ItemModel.ImageLink">
+                                <a href="@ItemModel!.ImageLink">
                                     <img src="@CurrentItem.ImageLink"
                                          alt="item poster" />
                                 </a>
@@ -316,11 +316,15 @@ else
         </div>
     </div>
     <div class="container-xxl">
+        
+
+                    <div class="header-container pb-3 ">
         @if (!(editItemRequested || deleteItemRequested || editPhotoRequested))
         {
             <div class="overview d-flex flex-column">
                 <h3 class="text-dark">@CurrentItem.Name</h3>
                 <h5 class="text-secondary">Author: @GetAuthor()</h5>
+
                 <AuthorizeView>
                     @if (!(editItemRequested || deleteItemRequested || editPhotoRequested))
                     {
@@ -349,16 +353,77 @@ else
                 </AuthorizeView>
             </div>
         }
+        
+        </div>
         <AuthorizeView>
             <Authorized>
                 <div class="d-flex flex-column flex-lg-col
                         justify-content-between my-3">
 
                     <div class="comment-container pb-3 ">
+                        <div class="row justify-content-center example pb-3">
+                            <div class="row row-cols-8 row-cols-lg-8
+                                            row-cols-x1-5 g-3
+                                justify-content-center my-1" style="width: 90%;">
+
+                                @if (CurrentItem.NumericalFields.Count > 0)
+                                {
+                                    <ul class="list-group custom-field">
+                                        @foreach (var item in CurrentItem.NumericalFields)
+                                        {
+                                            <li class="list-group-item">@(item.Name): @item.Value</li>
+                                        }
+                                    </ul>
+                                }
+                                @if (CurrentItem.StringFields.Count > 0)
+                                {
+                                    <ul class="list-group custom-field">
+                                        @foreach (var item in CurrentItem.StringFields)
+                                        {
+                                            <li class="list-group-item">@(item.Name): @item.Value</li>
+                                        }
+                                    </ul>
+                                }
+                                @if (CurrentItem.TextFields.Count > 0)
+                                {
+                                    <ul class="list-group custom-field">
+                                        @foreach (var item in CurrentItem.TextFields)
+                                        {
+                                            <li class="list-group-item">@(item.Name): @item.Value</li>
+                                        }
+                                    </ul>
+                                }
+                                @if (CurrentItem.LogicalFields.Count > 0)
+                                {
+                                    <ul class="list-group custom-field">
+                                        @foreach (var item in CurrentItem.LogicalFields)
+                                        {
+                                            <li class="list-group-item">@(item.Name): @item.Value.ToString()</li>
+                                        }
+                                    </ul>
+                                }
+                                @if (CurrentItem.DateFields.Count > 0)
+                                {
+                                    <ul class="list-group custom-field">
+                                        @foreach (var item in CurrentItem.DateFields)
+                                        {
+                                            <li class="list-group-item">@(item.Name): @item.Value.ToString()</li>
+                                        }
+                                    </ul>
+                                }
+                            </div>
+                        </div>
+                        <div class="row justify-content-center example py-2">
+                            <div class="row row-cols-8 row-cols-lg-8
+                                            row-cols-x1-5 g-3
+                                justify-content-center my-1" style="width: 75%;">
+                                <hr />
+                            </div>
+                        </div>
                         @if (CurrentItem.Comments.Count != 0)
                         {
                             <div class="row justify-content-center example pb-3"
-                                 style="overflow-y:scroll; max-height: 50vh;">
+                                 style="overflow-y:scroll; max-height: 100vh;">
                                 <Virtualize Items="@Comments" Context="comment">
                                     <ItemContent>
                                         <div class="row row-cols-8 row-cols-lg-8
@@ -391,7 +456,7 @@ else
                                               required
                                               placeholder="Enter your comment..."
                                               aria-label="With textarea">
-                                                                                                            </textarea>
+                                                                                                                            </textarea>
                                 </div>
                                 <div class="text-end pb-3 pe-2">
                                     @if (CommentText is null)
@@ -453,7 +518,7 @@ else
                                         justify-content-center my-1 py-2">
                             <div class="card h-100 fade-in"
                                  style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
-                                                                            ">
+                                                                                            ">
                                 <div class="card-body text-center">
                                     <p>Register now to leave comments, likes and more!</p>
                                     <p>Or <span class="text-success">Log in</span> if you're already have an account</p>

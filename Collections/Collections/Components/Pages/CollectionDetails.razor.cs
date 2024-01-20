@@ -124,35 +124,60 @@ public partial class CollectionDetails
         if (FieldToAdd == typeof(NumericalField).FullName)
         {
             Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
-            ItemModel!.NumericalFields.Add(NewNumericField);
+            if (!string.IsNullOrWhiteSpace(NewNumericField.Name))
+            {
+                ItemModel!.NumericalFields.Add(NewNumericField);
+            }
             NewNumericField = new();
         }
         else if (FieldToAdd == typeof(StringField).FullName)
         {
             Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
-            ItemModel!.StringFields.Add(NewStringField);
+            if (!string.IsNullOrWhiteSpace(NewStringField.Name))
+            {
+                ItemModel!.StringFields.Add(NewStringField);
+            }
             NewStringField = new();
         }
         else if (FieldToAdd == typeof(TextField).FullName)
         {
             Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
-            ItemModel!.TextFields.Add(NewTextField);
+            if (!string.IsNullOrWhiteSpace(NewTextField.Name))
+            {
+                ItemModel!.TextFields.Add(NewTextField);
+            }
             NewTextField = new();
         }
         else if (FieldToAdd == typeof(LogicalField).FullName)
         {
             Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
-            ItemModel!.LogicalFields.Add(NewLogicalField);
+            if (!string.IsNullOrWhiteSpace(NewLogicalField.Name))
+            {
+                ItemModel!.LogicalFields.Add(NewLogicalField);
+            }
             NewLogicalField = new();
         }
         else if (FieldToAdd == typeof(DateField).FullName)
         {
             Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
-            ItemModel!.DateFields.Add(NewDateField);
+            if (!string.IsNullOrWhiteSpace(NewDateField.Name))
+            {
+                ItemModel!.DateFields.Add(NewDateField);
+            }
             NewDateField = new();
         }
 
         StateHasChanged();
+    }
+
+    private void CancelSubmitNewField()
+    {
+        NewNumericField = new();
+        NewStringField = new();
+        NewTextField = new();
+        NewLogicalField = new();
+        NewDateField = new();
+        addSomeFieldRequested = false;
     }
 
     private void GetConfigurationData()

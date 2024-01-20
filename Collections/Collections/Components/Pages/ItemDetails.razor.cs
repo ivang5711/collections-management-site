@@ -122,6 +122,12 @@ public partial class ItemDetails
             ImageLink = CurrentItem.ImageLink,
             CreationDateTime = CurrentItem.CreationDateTime,
         };
+
+        ItemModel.NumericalFields.AddRange(CurrentItem.NumericalFields);
+        ItemModel.StringFields.AddRange(CurrentItem.StringFields);
+        ItemModel.TextFields.AddRange(CurrentItem.TextFields);
+        ItemModel.LogicalFields.AddRange(CurrentItem.LogicalFields);
+        ItemModel.DateFields.AddRange(CurrentItem.DateFields);
     }
 
     public async Task UploadFile(InputFileChangeEventArgs e)

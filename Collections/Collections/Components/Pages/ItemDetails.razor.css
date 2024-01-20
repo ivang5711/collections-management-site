@@ -28,8 +28,8 @@
 
 .poster-container2 {
     position: relative;
-    margin: 0 2rem 2rem 2rem;
-    transform: translateY(15%);
+    margin: 2rem 2rem 2rem 2rem;
+    /*transform: translateY(15%);*/
 }
 
     .poster-container img {

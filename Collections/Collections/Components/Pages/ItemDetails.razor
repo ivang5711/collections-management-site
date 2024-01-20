@@ -163,7 +163,77 @@ else
                                                             <DataAnnotationsValidator />
                                                             <ValidationSummary />
                                                             <InputText @bind-Value="ItemModel!.Name" type="text" class="input-group-text input-group-lg my-2 w-100" placeholder="Item New Name..." />
+                                                            @if (ItemModel.NumericalFields.Count > 0)
+                                                            {
+                                                                <ul class="list-group custom-field">
+                                                                    @foreach (var item in ItemModel.NumericalFields)
+                                                                    {
+                                                                        <li class="list-group-item">
+                                                                            <div class="d-flex row row-cols-md-auto">
+                                                                                <div class="p-2"><input type="text" class="form-control" @bind="@item.Name" placeholder="Numerical field name..." /></div>
+                                                                                <div class="p-2 flex-fill"><input type="text" class="form-control" placeholder="Numerical field value..." @bind="@item.Value" /></div>
+                                                                            </div>
 
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                            @if (ItemModel.StringFields.Count > 0)
+                                                            {
+                                                                <ul class="list-group custom-field">
+                                                                    @foreach (var item in ItemModel.StringFields)
+                                                                    {
+                                                                        <li class="list-group-item">
+                                                                            <div class="d-flex row row-cols-md-auto">
+                                                                                <div class="p-2"><input type="text" class="form-control" @bind="@item.Name" placeholder="String field name..." /></div>
+                                                                                <div class="p-2 flex-fill"><input type="text" class="form-control" placeholder="String field value..." @bind="@item.Value" /></div>
+                                                                            </div>
+
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                            @if (ItemModel.TextFields.Count > 0)
+                                                            {
+                                                                <ul class="list-group custom-field">
+                                                                    @foreach (var item in ItemModel.TextFields)
+                                                                    {
+                                                                        <li class="list-group-item">
+                                                                            <input type="text" for="exampleFormControlTextarea1" class="form-control mb-1" @bind="@item.Name">
+                                                                            <textarea class="form-control" id="exampleFormControlTextarea1" @bind="@item.Value" rows="3"></textarea>
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                            @if (ItemModel.LogicalFields.Count > 0)
+                                                            {
+                                                                <ul class="list-group custom-field">
+                                                                    @foreach (var item in ItemModel.LogicalFields)
+                                                                    {
+                                                                        <li class="list-group-item row-cols-2 d-flex align-items-center">
+                                                                            <span class="form-check col-auto form-switch">
+                                                                                <input class="form-check-input" @bind="item.Value" type="checkbox" id="flexSwitchCheckDefault" />
+                                                                            </span>
+                                                                            <input type="text" class="flex-fill form-control" @bind="@item.Name" placeholder="Logical field name..." />
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                            @if (ItemModel.DateFields.Count > 0)
+                                                            {
+                                                                <ul class="list-group custom-field">
+                                                                    @foreach (var item in ItemModel.DateFields)
+                                                                    {
+                                                                        <li class="list-group-item">
+                                                                            <div class="d-flex row row-cols-md-auto">
+                                                                                <div class="p-2 flex-fill "><input type="text" class="form-control" @bind="@item.Name" placeholder="Logical field name..." /></div>
+                                                                                <div class="p-2 "><input type="date" class="form-control w-md-auto" @bind="@item.Value" /></div>
+                                                                            </div>
+
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            }
                                                         }
                                                     </div>
                                                 </div>
@@ -316,236 +386,243 @@ else
         </div>
     </div>
     <div class="container-xxl">
-        
 
-                    <div class="header-container pb-3 ">
+
+        <div class="header-container pb-3 ">
+            @if (!(editItemRequested || deleteItemRequested || editPhotoRequested))
+            {
+                <div class="overview d-flex flex-column">
+                    <h3 class="text-dark">@CurrentItem.Name</h3>
+                    <h5 class="text-secondary">Author: @GetAuthor()</h5>
+
+                    <AuthorizeView>
+                        @if (!(editItemRequested || deleteItemRequested || editPhotoRequested))
+                        {
+                            <div class="pb-2 d-flex justify-content-start m-0 row col-md
+                        row-cols-md-auto gap-1">
+                                <button @onclick="ToggleEditItemRequestStatus"
+                                        class="btn btn-outline-secondary btn-sm text-nowrap"
+                                        asp-formaction="Block" name="Block"
+                                        type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                    <i class="bi bi-pencil"></i> Edit Item
+                                </button>
+                                <button @onclick="ToggleEditPhotoRequestStatus"
+                                        class="btn btn-outline-dark btn-sm text-nowrap"
+                                        asp-formaction="Block" name="Block"
+                                        type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                    <i class="bi bi-pencil"></i> Edit Image
+                                </button>
+                                <button @onclick="ToggleDeleteItemRequestStatus"
+                                        class="btn btn-outline-danger btn-sm text-nowrap"
+                                        asp-formaction="Block" name="Block"
+                                        type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                    <i class="bi bi-trash3-fill"></i> Delete Item
+                                </button>
+                            </div>
+                        }
+                    </AuthorizeView>
+                </div>
+            }
+
+        </div>
         @if (!(editItemRequested || deleteItemRequested || editPhotoRequested))
         {
-            <div class="overview d-flex flex-column">
-                <h3 class="text-dark">@CurrentItem.Name</h3>
-                <h5 class="text-secondary">Author: @GetAuthor()</h5>
-
-                <AuthorizeView>
-                    @if (!(editItemRequested || deleteItemRequested || editPhotoRequested))
-                    {
-                        <div class="pb-2 d-flex justify-content-start m-0 row col-md
-                        row-cols-md-auto gap-1">
-                            <button @onclick="ToggleEditItemRequestStatus"
-                                    class="btn btn-outline-secondary btn-sm text-nowrap"
-                                    asp-formaction="Block" name="Block"
-                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                <i class="bi bi-pencil"></i> Edit Item
-                            </button>
-                            <button @onclick="ToggleEditPhotoRequestStatus"
-                                    class="btn btn-outline-dark btn-sm text-nowrap"
-                                    asp-formaction="Block" name="Block"
-                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                <i class="bi bi-pencil"></i> Edit Image
-                            </button>
-                            <button @onclick="ToggleDeleteItemRequestStatus"
-                                    class="btn btn-outline-danger btn-sm text-nowrap"
-                                    asp-formaction="Block" name="Block"
-                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                <i class="bi bi-trash3-fill"></i> Delete Item
-                            </button>
-                        </div>
-                    }
-                </AuthorizeView>
-            </div>
-        }
-        
-        </div>
-        <AuthorizeView>
-            <Authorized>
-                <div class="d-flex flex-column flex-lg-col
+            <AuthorizeView>
+                <Authorized>
+                    <div class="d-flex flex-column flex-lg-col
                         justify-content-between my-3">
 
-                    <div class="comment-container pb-3 ">
-                        <div class="row justify-content-center example pb-3">
-                            <div class="row row-cols-8 row-cols-lg-8
+                        <div class="comment-container pb-3 ">
+                            <div class="row justify-content-center example pb-3">
+                                <div class="row row-cols-8 row-cols-lg-8
                                             row-cols-x1-5 g-3
                                 justify-content-center my-1" style="width: 90%;">
 
-                                @if (CurrentItem.NumericalFields.Count > 0)
-                                {
-                                    <ul class="list-group custom-field">
-                                        @foreach (var item in CurrentItem.NumericalFields)
-                                        {
-                                            <li class="list-group-item">@(item.Name): @item.Value</li>
-                                        }
-                                    </ul>
-                                }
-                                @if (CurrentItem.StringFields.Count > 0)
-                                {
-                                    <ul class="list-group custom-field">
-                                        @foreach (var item in CurrentItem.StringFields)
-                                        {
-                                            <li class="list-group-item">@(item.Name): @item.Value</li>
-                                        }
-                                    </ul>
-                                }
-                                @if (CurrentItem.TextFields.Count > 0)
-                                {
-                                    <ul class="list-group custom-field">
-                                        @foreach (var item in CurrentItem.TextFields)
-                                        {
-                                            <li class="list-group-item">@(item.Name): @item.Value</li>
-                                        }
-                                    </ul>
-                                }
-                                @if (CurrentItem.LogicalFields.Count > 0)
-                                {
-                                    <ul class="list-group custom-field">
-                                        @foreach (var item in CurrentItem.LogicalFields)
-                                        {
-                                            <li class="list-group-item">@(item.Name): @item.Value.ToString()</li>
-                                        }
-                                    </ul>
-                                }
-                                @if (CurrentItem.DateFields.Count > 0)
-                                {
-                                    <ul class="list-group custom-field">
-                                        @foreach (var item in CurrentItem.DateFields)
-                                        {
-                                            <li class="list-group-item">@(item.Name): @item.Value.ToString()</li>
-                                        }
-                                    </ul>
-                                }
+                                    @if (CurrentItem.NumericalFields.Count > 0)
+                                    {
+                                        <ul class="list-group custom-field">
+                                            @foreach (var item in CurrentItem.NumericalFields)
+                                            {
+                                                <li class="list-group-item">@(item.Name): @item.Value</li>
+                                            }
+                                        </ul>
+                                    }
+                                    @if (CurrentItem.StringFields.Count > 0)
+                                    {
+                                        <ul class="list-group custom-field">
+                                            @foreach (var item in CurrentItem.StringFields)
+                                            {
+                                                <li class="list-group-item">@(item.Name): @item.Value</li>
+                                            }
+                                        </ul>
+                                    }
+                                    @if (CurrentItem.TextFields.Count > 0)
+                                    {
+                                        <ul class="list-group custom-field">
+                                            @foreach (var item in CurrentItem.TextFields)
+                                            {
+                                                <li class="list-group-item">
+
+                                                    <label for="exampleFormControlTextarea1" class="form-label">@(item.Name):</label>
+                                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">@item.Value</textarea>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                    @if (CurrentItem.LogicalFields.Count > 0)
+                                    {
+                                        <ul class="list-group custom-field">
+                                            @foreach (var item in CurrentItem.LogicalFields)
+                                            {
+                                                <li class="list-group-item">@(item.Name): @item.Value.ToString()</li>
+                                            }
+                                        </ul>
+                                    }
+                                    @if (CurrentItem.DateFields.Count > 0)
+                                    {
+                                        <ul class="list-group custom-field">
+                                            @foreach (var item in CurrentItem.DateFields)
+                                            {
+                                                <li class="list-group-item">@(item.Name): @item.Value.ToString()</li>
+                                            }
+                                        </ul>
+                                    }
+                                </div>
                             </div>
-                        </div>
-                        <div class="row justify-content-center example py-2">
-                            <div class="row row-cols-8 row-cols-lg-8
+                            <div class="row justify-content-center example py-2">
+                                <div class="row row-cols-8 row-cols-lg-8
                                             row-cols-x1-5 g-3
                                 justify-content-center my-1" style="width: 75%;">
-                                <hr />
+                                    <hr />
+                                </div>
                             </div>
-                        </div>
-                        @if (CurrentItem.Comments.Count != 0)
-                        {
-                            <div class="row justify-content-center example pb-3"
-                                 style="overflow-y:scroll; max-height: 100vh;">
-                                <Virtualize Items="@Comments" Context="comment">
-                                    <ItemContent>
-                                        <div class="row row-cols-8 row-cols-lg-8
+                            @if (CurrentItem.Comments.Count != 0)
+                            {
+                                <div class="row justify-content-center example pb-3"
+                                     style="overflow-y:scroll; max-height: 100vh;">
+                                    <Virtualize Items="@Comments" Context="comment">
+                                        <ItemContent>
+                                            <div class="row row-cols-8 row-cols-lg-8
                                             row-cols-x1-5 g-3
                                 justify-content-center my-1">
-                                            <CommentCard Comment="comment" />
-                                        </div>
-                                    </ItemContent>
-                                    <Placeholder>
-                                        <p>
-                                            Loading&hellip;
-                                        </p>
-                                    </Placeholder>
-                                    <EmptyContent>
-                                        <p>
-                                            There are no records to display.
-                                        </p>
-                                    </EmptyContent>
-                                </Virtualize>
-                            </div>
-                        }
-                        <div class="row row-cols-8 row-cols-lg-8
+                                                <CommentCard Comment="comment" />
+                                            </div>
+                                        </ItemContent>
+                                        <Placeholder>
+                                            <p>
+                                                Loading&hellip;
+                                            </p>
+                                        </Placeholder>
+                                        <EmptyContent>
+                                            <p>
+                                                There are no records to display.
+                                            </p>
+                                        </EmptyContent>
+                                    </Virtualize>
+                                </div>
+                            }
+                            <div class="row row-cols-8 row-cols-lg-8
                                         row-cols-x1-5 g-3
                                         justify-content-center my-1 py-2">
-                            <div class="card h-100 fade-in"
-                                 style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
-                                <div class="card-body ">
-                                    <textarea @ref="inputToFocus" class="form-control"
-                                              @bind="CommentText"
-                                              required
-                                              placeholder="Enter your comment..."
-                                              aria-label="With textarea">
-                                                                                                                            </textarea>
-                                </div>
-                                <div class="text-end pb-3 pe-2">
-                                    @if (CommentText is null)
-                                    {
+                                <div class="card h-100 fade-in"
+                                     style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
+                                    <div class="card-body ">
+                                        <textarea @ref="inputToFocus" class="form-control"
+                                                  @bind="CommentText"
+                                                  required
+                                                  placeholder="Enter your comment..."
+                                                  aria-label="With textarea">
+                                                                                </textarea>
+                                    </div>
+                                    <div class="text-end pb-3 pe-2">
+                                        @if (CommentText is null)
+                                        {
 
-                                        <button @onclick="Focus"
-                                                class="btn btn-outline-secondary btn-sm text-nowrap"
-                                                asp-formaction="Block" name="Block"
-                                                type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                            <i class="bi bi-chat-left-text"></i> Leave Comment
-                                        </button>
-                                    }
-                                    else
-                                    {
-                                        <button @onclick="SubmitComment"
-                                                class="btn btn-outline-secondary btn-sm text-nowrap"
-                                                asp-formaction="Block" name="Block"
-                                                type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                            <i class="bi bi-chat-left-text"></i> Leave Comment
-                                        </button>
-                                    }
+                                            <button @onclick="Focus"
+                                                    class="btn btn-outline-secondary btn-sm text-nowrap"
+                                                    asp-formaction="Block" name="Block"
+                                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                <i class="bi bi-chat-left-text"></i> Leave Comment
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button @onclick="SubmitComment"
+                                                    class="btn btn-outline-secondary btn-sm text-nowrap"
+                                                    asp-formaction="Block" name="Block"
+                                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                <i class="bi bi-chat-left-text"></i> Leave Comment
+                                            </button>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </Authorized>
-            <NotAuthorized>
-                <div class="comment-overview d-flex flex-column flex-lg-col
+                </Authorized>
+                <NotAuthorized>
+                    <div class="comment-overview d-flex flex-column flex-lg-col
                         justify-content-between my-3">
-                    <div class="comment-container pb-3 ">
-                        @if (CurrentItem.Comments.Count != 0)
-                        {
-                            <div class="row justify-content-center example pb-3"
-                                 style="overflow-y:scroll; max-height: 50vh;">
-                                <Virtualize Items="@Comments" Context="comment">
-                                    <ItemContent>
-                                        <div class="row row-cols-8 row-cols-lg-8
+                        <div class="comment-container pb-3 ">
+                            @if (CurrentItem.Comments.Count != 0)
+                            {
+                                <div class="row justify-content-center example pb-3"
+                                     style="overflow-y:scroll; max-height: 50vh;">
+                                    <Virtualize Items="@Comments" Context="comment">
+                                        <ItemContent>
+                                            <div class="row row-cols-8 row-cols-lg-8
                                             row-cols-x1-5 g-3
                                 justify-content-center my-1">
-                                            <CommentCard Comment="comment" />
-                                        </div>
-                                    </ItemContent>
-                                    <Placeholder>
-                                        <p>
-                                            Loading&hellip;
-                                        </p>
-                                    </Placeholder>
-                                    <EmptyContent>
-                                        <p>
-                                            There are no records to display.
-                                        </p>
-                                    </EmptyContent>
-                                </Virtualize>
-                            </div>
-                        }
-                        <div class="row row-cols-8 row-cols-lg-8
+                                                <CommentCard Comment="comment" />
+                                            </div>
+                                        </ItemContent>
+                                        <Placeholder>
+                                            <p>
+                                                Loading&hellip;
+                                            </p>
+                                        </Placeholder>
+                                        <EmptyContent>
+                                            <p>
+                                                There are no records to display.
+                                            </p>
+                                        </EmptyContent>
+                                    </Virtualize>
+                                </div>
+                            }
+                            <div class="row row-cols-8 row-cols-lg-8
                                         row-cols-x1-5 g-3
                                         justify-content-center my-1 py-2">
-                            <div class="card h-100 fade-in"
-                                 style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
-                                                                                            ">
-                                <div class="card-body text-center">
-                                    <p>Register now to leave comments, likes and more!</p>
-                                    <p>Or <span class="text-success">Log in</span> if you're already have an account</p>
-                                </div>
-                                <div class="text-center pb-3 pe-2">
+                                <div class="card h-100 fade-in"
+                                     style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
+                                                                                                                                            ">
+                                    <div class="card-body text-center">
+                                        <p>Register now to leave comments, likes and more!</p>
+                                        <p>Or <span class="text-success">Log in</span> if you're already have an account</p>
+                                    </div>
+                                    <div class="text-center pb-3 pe-2">
 
-                                    <button @onclick="OnRegisterSubmit"
-                                            class="btn btn-outline-dark btn-sm text-nowrap mx-1"
-                                            asp-formaction="Block" name="Block"
-                                            type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                        <i class="bi bi-person-fill-add"></i> Register
-                                    </button>
+                                        <button @onclick="OnRegisterSubmit"
+                                                class="btn btn-outline-dark btn-sm text-nowrap mx-1"
+                                                asp-formaction="Block" name="Block"
+                                                type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                            <i class="bi bi-person-fill-add"></i> Register
+                                        </button>
 
-                                    <button @onclick="OnLoginSubmit"
-                                            class="btn btn-outline-success btn-sm text-nowrap mx-1"
-                                            asp-formaction="Block" name="Block"
-                                            type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                        <span class="bi bi-person-fill" aria-hidden="true" /> Log in
-                                    </button>
+                                        <button @onclick="OnLoginSubmit"
+                                                class="btn btn-outline-success btn-sm text-nowrap mx-1"
+                                                asp-formaction="Block" name="Block"
+                                                type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                            <span class="bi bi-person-fill" aria-hidden="true" /> Log in
+                                        </button>
 
 
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
+                </NotAuthorized>
+            </AuthorizeView>
+        }
     </div>
 }

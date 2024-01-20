@@ -314,6 +314,46 @@ public partial class ItemDetails
         using var context = _contextFactory.CreateDbContext();
         var tmp = context.Items.First(x => x.Id == CurrentItem!.Id);
         tmp.Name = ItemModel!.Name;
+        var numericalFields = context.NumericalFields.Where(x => x.Items.Contains(tmp)).ToList();
+
+        foreach (var item in numericalFields)
+        {
+            item.Name = ItemModel!.NumericalFields.First(x => x.Id == item.Id).Name;
+            item.Value = ItemModel!.NumericalFields.First(x => x.Id == item.Id).Value;
+        }
+
+        var stringFields = context.StringFields.Where(x => x.Items.Contains(tmp)).ToList();
+
+        foreach (var item in stringFields)
+        {
+            item.Name = ItemModel!.StringFields.First(x => x.Id == item.Id).Name;
+            item.Value = ItemModel!.StringFields.First(x => x.Id == item.Id).Value;
+        }
+
+        var textFields = context.TextFields.Where(x => x.Items.Contains(tmp)).ToList();
+
+        foreach (var item in textFields)
+        {
+            item.Name = ItemModel!.TextFields.First(x => x.Id == item.Id).Name;
+            item.Value = ItemModel!.TextFields.First(x => x.Id == item.Id).Value;
+        }
+
+        var logicalFields = context.LogicalFields.Where(x => x.Items.Contains(tmp)).ToList();
+
+        foreach (var item in logicalFields)
+        {
+            item.Name = ItemModel!.LogicalFields.First(x => x.Id == item.Id).Name;
+            item.Value = ItemModel!.LogicalFields.First(x => x.Id == item.Id).Value;
+        }
+
+        var dateFields = context.DateFields.Where(x => x.Items.Contains(tmp)).ToList();
+
+        foreach (var item in dateFields)
+        {
+            item.Name = ItemModel!.DateFields.First(x => x.Id == item.Id).Name;
+            item.Value = ItemModel!.DateFields.First(x => x.Id == item.Id).Value;
+        }
+
         context.SaveChanges();
     }
 

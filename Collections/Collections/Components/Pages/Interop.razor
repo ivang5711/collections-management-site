@@ -1,5 +1,8 @@
 ﻿@page "/interop"
 @inject IJSRuntime JsRuntime
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager NavManager
+@implements IAsyncDisposable
 
 @rendermode InteractiveServer
 
@@ -39,59 +42,70 @@
 </div>
 
 
-
-<h2>Selected file</h2>
-
-@if(Error != string.Empty)
-{
-    <p>@Error</p>
-}
-
-
-
-<div style="margin-bottom: 20px; display:flex; ">
-    <div>Select your file:</div>
-<InputFile OnChange="UploadFile" accept=".png,.jpg,.jpeg,.tiff" />
+<div class="form-group">
+    <label>
+        User: <input @bind="userInput" />
+    </label>
 </div>
+<div class="form-group">
+    <label>
+        Message: <input @bind="messageInput" />
+    </label>
+</div>
+<button @onclick="Send" disabled="@(IsConnected == false)">Send</button>
+
+<hr />
+
+<ul>
+    @foreach(string message in messages)
+    {
+        <li>@message</li>
+    }
+</ul>
+
 
 
 @code {
-    public string FileName { get; set; } = string.Empty;
-    const int maxFileSize = 1024 * 1024 * 1; // 5 MB
-    public string Error { get; set; } = string.Empty;
 
-    public async Task UploadFile(InputFileChangeEventArgs e)
+
+    private HubConnection? hubConnection;
+    private List<string> messages = [];
+    private string? userInput;
+    private string? messageInput;
+
+    protected override async Task OnInitializedAsync()
     {
+        hubConnection = new HubConnectionBuilder()
+        .WithUrl(NavManager.ToAbsoluteUri("/chathub"))
+        .WithAutomaticReconnect()
+        .Build();
 
-        Error = string.Empty;
-        var file = e.File;
-
-        if (file is not null)
+        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
         {
-            FileName = file.Name;
-            if (file.Size > maxFileSize)
-            {
-                Error = $"File is too big! The file size is limited to {maxFileSize}";
-                StateHasChanged();
-                return;
-            }
+            var formattedMessage = $"{user}: {message}";
+            messages.Add(formattedMessage);
+            NavManager.Refresh(true);
+            InvokeAsync(StateHasChanged);
+        });
 
-            try
-            {
-                var randomFileName = Path.GetRandomFileName();
-                var fileExtension = Path.GetExtension(file.Name);
-                var newFileName = Path.ChangeExtension(randomFileName, fileExtension);
-                var basePath = Directory.GetCurrentDirectory();
-                string path = Path.Combine(basePath, "bloobtempfolder", newFileName);
-                Directory.CreateDirectory(Path.Combine(basePath, "bloobtempfolder"));
-                using FileStream fs = new(path, FileMode.Create);
-                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
-            }
-            catch(Exception exception)
-            {
-                Error = $"File Error: {exception}";
-                StateHasChanged();
-            }
+        await hubConnection.StartAsync();
+    }
+
+    private async Task Send()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("SendMessage", userInput, messageInput);
+        }
+    }
+
+    public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
         }
     }
 

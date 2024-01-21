@@ -3,6 +3,7 @@ using Collections.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 
@@ -39,8 +40,42 @@ public partial class ItemDetails
     private string OldImage { get; set; } = string.Empty;
     public string FileError { get; set; } = string.Empty;
 
+    private HubConnection? hubConnection;
+    private readonly string userInput = string.Empty;
+    private readonly string messageInput = string.Empty;
+
+    private async Task Send()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("SendMessage", userInput, messageInput);
+        }
+    }
+
+    public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
+        hubConnection = new HubConnectionBuilder()
+        .WithUrl(_navigationManager.ToAbsoluteUri("/chathub"))
+        .WithAutomaticReconnect()
+        .Build();
+
+        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        {
+            InitializeData();
+            InvokeAsync(StateHasChanged);
+        });
+
+        await hubConnection.StartAsync();
         await Task.Run(() => InitializeData());
     }
 
@@ -151,7 +186,6 @@ public partial class ItemDetails
                 UploadedFileName = await _fileTransferManager
                     .SaveFileToDisk(file);
                 TempImg = Path.Combine(blobTempDirectory, UploadedFileName);
-
             }
             catch (Exception ex)
             {
@@ -390,13 +424,13 @@ public partial class ItemDetails
         adc.SaveChanges();
     }
 
-    private void SubmitComment()
+    private async Task SubmitComment()
     {
         if (!string.IsNullOrWhiteSpace(CommentText))
         {
             AddComment();
         }
-
+        await Send();
         InitializeData();
     }
 

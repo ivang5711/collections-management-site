@@ -21,9 +21,10 @@
 
 <AuthorizeView>
     <div class="container-xxl py-3 ">
+
         @if (!newCollectionRequested)
         {
-            <h3>My Collections</h3>
+            <h3 class="text-center pb-3">My Collections</h3>
             @if (collections is not null && collections.Count == 0)
             {
                 <p>You don't have any collection yet, </p>

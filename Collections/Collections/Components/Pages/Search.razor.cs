@@ -1,37 +1,22 @@
 using Collections.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using System.Linq;
-using System.Collections.Generic;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Collections.Components.Pages;
 
 public partial class Search
 {
+    private int totalCountUnique;
     private List<Collection> Collections { get; set; } = [];
-
     private List<Item> Items { get; set; } = [];
     public string? SearchQuery { get; set; }
-
     public List<Collection> CollectionNameSearchResults { get; set; } = [];
-
     public List<Collection> CollectionDescriptionSearchResults { get; set; } = [];
-
     public List<Collection> ThemeSearchResults { get; set; } = [];
-
     public List<Item> ItemNameSearchResults { get; set; } = [];
-
     public List<Item> ItemCommentsSearchResults { get; set; } = [];
-
     public List<Item> TagSearchResults { get; set; } = [];
-
     public List<Item> ItemStringFieldSearchResults { get; set; } = [];
-
     public List<Item> ItemTextFieldSearchResults { get; set; } = [];
-
-    private int totalCount;
-    private int totalCountUnique;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -44,20 +29,16 @@ public partial class Search
     private async Task LoadStateAsync()
     {
         var result = await ProtectedLocalStore.GetAsync<string>("searchText");
-        SearchQuery = result.Success ? result.Value : "no data so far...";
+        SearchQuery = result.Success ? result.Value : string.Empty;
         var test = SearchQuery;
         Console.WriteLine("Test:" + test);
         StateHasChanged();
         await ProtectedLocalStore.DeleteAsync("searchText");
-        SubmitSearch();
+        if (!string.IsNullOrWhiteSpace(SearchQuery))
+        {
+            SubmitSearch();
+        }
     }
-
-    //private List<Collection> SearchForIt(string query)
-    //{
-    //    using var adc = _contextFactory.CreateDbContext();
-    //    var results = adc.Collections.Where(f => EF.Functions.FreeText(f.Name, query));
-    //    return [.. results];
-    //}
 
     private List<Collection> SearchInCollectionName(string query)
     {
@@ -73,7 +54,6 @@ public partial class Search
     {
         using (var adc = _contextFactory.CreateDbContext())
         {
-
             var results = from p in adc.Collections
                           where EF.Functions.FreeText(p.Description, query)
                           select p;
@@ -102,7 +82,6 @@ public partial class Search
     {
         using (var adc = _contextFactory.CreateDbContext())
         {
-
             var results = from p in adc.Items
                           where EF.Functions.FreeText(p.Name, query)
                           select p;
@@ -194,11 +173,9 @@ public partial class Search
         collectionsFound.AddRange(CollectionNameSearchResults);
         collectionsFound.AddRange(CollectionDescriptionSearchResults);
         collectionsFound.AddRange(ThemeSearchResults);
-
         Collections = collectionsFound
                 .GroupBy(y => y.Id)
                 .Select(y => y.First()).ToList();
-
 
         List<Item> itemsFound = [];
         itemsFound.AddRange(ItemNameSearchResults);
@@ -206,13 +183,10 @@ public partial class Search
         itemsFound.AddRange(TagSearchResults);
         itemsFound.AddRange(ItemStringFieldSearchResults);
         itemsFound.AddRange(ItemTextFieldSearchResults);
-
-
         Items = itemsFound
         .GroupBy(y => y.Id)
         .Select(y => y.First()).ToList();
 
-        totalCount = collectionsFound.Count + itemsFound.Count;
         totalCountUnique = Collections.Count + Items.Count;
         InvokeAsync(StateHasChanged);
     }

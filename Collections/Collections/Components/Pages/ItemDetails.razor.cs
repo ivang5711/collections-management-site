@@ -41,18 +41,14 @@ public partial class ItemDetails
     public string FileError { get; set; } = string.Empty;
 
     private HubConnection? hubConnection;
-    private readonly string userInput = string.Empty;
-    private readonly string messageInput = string.Empty;
 
     private async Task Send()
     {
         if (hubConnection is not null)
         {
-            await hubConnection.SendAsync("SendMessage", userInput, messageInput);
+            await hubConnection.SendAsync("UpdateComments");
         }
     }
-
-    public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
 
     public async ValueTask DisposeAsync()
     {
@@ -65,11 +61,11 @@ public partial class ItemDetails
     protected override async Task OnInitializedAsync()
     {
         hubConnection = new HubConnectionBuilder()
-        .WithUrl(_navigationManager.ToAbsoluteUri("/chathub"))
+        .WithUrl(_navigationManager.ToAbsoluteUri("/commentshub"))
         .WithAutomaticReconnect()
         .Build();
 
-        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        hubConnection.On("ReceiveUpdateComments", () =>
         {
             InitializeData();
             InvokeAsync(StateHasChanged);

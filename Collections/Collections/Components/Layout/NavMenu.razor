@@ -1,5 +1,9 @@
 ﻿@implements IDisposable
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage ProtectedLocalStore
+
+@rendermode InteractiveServer
 
 <nav class="navbar navbar-expand-lg navStyle align-items-center" data-bs-theme="light">
     <div class="container-xxl">
@@ -31,9 +35,9 @@
                         </NavLink>
                     </li>
                     <li class="ps-3" >
-                        <form class="d-flex text-nowrap" role="search">
-                            <input class="form-control" style="min-width: 100px" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-secondary mx-lg-1" type="submit"><i class="bi bi-search d-flex mx-auto align-items-center h-100 w-100 justify-content-center"></i></button>
+                        <form class="d-flex text-nowrap" role="search" @onsubmit="SubmitSearch">
+                            <input class="form-control" style="min-width: 100px" @bind="SearchInput" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-secondary mx-lg-1"  type="submit"><i class="bi bi-search d-flex mx-auto align-items-center h-100 w-100 justify-content-center"></i></button>
                         </form>
                     </li>
                 </ul>
@@ -99,6 +103,8 @@
 @code {
     private string? currentUrl;
 
+    public string SearchInput { get; set; } = string.Empty;
+
     protected override void OnInitialized()
     {
         currentUrl = NavigationManager
@@ -115,5 +121,11 @@
     public void Dispose()
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+
+    private async Task SubmitSearch()
+    {
+        await ProtectedLocalStore.SetAsync("searchText", SearchInput);
+        NavigationManager.NavigateTo($"/search", true);
     }
 }

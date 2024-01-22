@@ -112,7 +112,7 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Counter).Assembly);
 
-app.MapHub<ChatHub>("/chathub");
+app.MapHub<CommentsHub>("/commentshub");
 
 // Add additional endpoints required by
 // the Identity /Account Razor components.

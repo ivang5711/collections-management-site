@@ -1,0 +1,70 @@
+﻿@page "/search/"
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage ProtectedLocalStore
+
+@rendermode InteractiveServer
+
+<h3> Search </h3>
+
+<p> Myvalue: @SearchQuery </p>
+
+@code {
+
+    public string? SearchQuery { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadStateAsync();
+        }
+    }
+
+    private async Task LoadStateAsync()
+    {
+        var result = await ProtectedLocalStore.GetAsync<string>("searchText");
+        SearchQuery = result.Success ? result.Value : "no data so far...";
+        var test = SearchQuery;
+        Console.WriteLine("Test:" + test);
+        StateHasChanged();
+        await ProtectedLocalStore.DeleteAsync("searchText");
+    }
+
+    // [Parameter]
+    // public int SearchQuery { get; set; }
+
+    // public IQueryable<Address> GetFullText(
+    //         Expression<Func<Address, string>> predicate,
+    //         string query,
+    //         int currentPage = 0,
+    //         int pageSize = 0)
+    // {
+    //     if (pageSize == 0)
+    //     {
+    //         return Context.Addresses
+    //             .Where(e => EF.Functions.Contains(e.FullAddress, $"\"{query}\""));
+    //     }
+
+    //     return Context.Addresses
+    //             .Where(e => EF.Functions.Contains(e.FullAddress, $"\"{query}\""))
+    //             .Skip((currentPage - 1) * pageSize)
+    //             .Take(pageSize);
+    // }
+
+
+
+    // public async Task<IEnumerable<AddressViewModel>> GetAddresses(string query)
+    // {
+    //     var foundAddresses = await LocationApiRepository.AddressRepository.GetFullText(t => t.FullAddress, query)
+    //         .Select(c => new AddressViewModel()
+    //             {
+    //                 Id = c.Id,
+    //                 FullAddress = c.FullAddress,
+    //             })
+    //         .Take(30)
+    //         .ToListAsync();
+
+    //     return foundAddresses;
+    // }
+
+}

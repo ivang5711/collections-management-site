@@ -1,70 +1,59 @@
 ﻿@page "/search/"
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using Collections.Models
 @inject ProtectedLocalStorage ProtectedLocalStore
+@inject IDbContextFactory<ApplicationDbContext> _contextFactory
 
 @rendermode InteractiveServer
 
-<h3> Search </h3>
+<div class="container-xxl py-3 ">
 
-<p> Myvalue: @SearchQuery </p>
+<h3 class="text-center pb-3">Search results: @totalCountUnique</h3>
 
-@code {
-
-    public string? SearchQuery { get; set; }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    @if (Collections is not null)
     {
-        if (firstRender)
-        {
-            await LoadStateAsync();
-        }
+        <div class="d-flex justify-content-center">
+            <table class="table table-sm table-hover table-striped table-bordered
+                              rounded-2 overflow-hidden" style="box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int j = 1;
+                        foreach (Collection collection in Collections)
+                        {
+                            <tr>
+                                <th>@(j++)</th>
+                                <td>@collection.Name</td>
+                                <td>Collection</td>
+                                <td>
+                                    <a class="btn-sm btn-outline-secondary"
+                                       href="/collection-details/@collection.Id">Details</a>
+                                </td>
+                            </tr>
+                        }
+
+                        foreach (Item item in Items)
+                        {
+                            <tr>
+                                <th>@(j++)</th>
+                                <td>@item.Name</td>
+                                <td>Item</td>
+                                <td>
+                                    <a class="btn-sm btn-outline-secondary"
+                                       href="/item-details/@item.CollectionId/@item.Id">Details</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
     }
-
-    private async Task LoadStateAsync()
-    {
-        var result = await ProtectedLocalStore.GetAsync<string>("searchText");
-        SearchQuery = result.Success ? result.Value : "no data so far...";
-        var test = SearchQuery;
-        Console.WriteLine("Test:" + test);
-        StateHasChanged();
-        await ProtectedLocalStore.DeleteAsync("searchText");
-    }
-
-    // [Parameter]
-    // public int SearchQuery { get; set; }
-
-    // public IQueryable<Address> GetFullText(
-    //         Expression<Func<Address, string>> predicate,
-    //         string query,
-    //         int currentPage = 0,
-    //         int pageSize = 0)
-    // {
-    //     if (pageSize == 0)
-    //     {
-    //         return Context.Addresses
-    //             .Where(e => EF.Functions.Contains(e.FullAddress, $"\"{query}\""));
-    //     }
-
-    //     return Context.Addresses
-    //             .Where(e => EF.Functions.Contains(e.FullAddress, $"\"{query}\""))
-    //             .Skip((currentPage - 1) * pageSize)
-    //             .Take(pageSize);
-    // }
-
-
-
-    // public async Task<IEnumerable<AddressViewModel>> GetAddresses(string query)
-    // {
-    //     var foundAddresses = await LocationApiRepository.AddressRepository.GetFullText(t => t.FullAddress, query)
-    //         .Select(c => new AddressViewModel()
-    //             {
-    //                 Id = c.Id,
-    //                 FullAddress = c.FullAddress,
-    //             })
-    //         .Take(30)
-    //         .ToListAsync();
-
-    //     return foundAddresses;
-    // }
-
-}
+</div>

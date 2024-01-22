@@ -75,24 +75,24 @@
                         <thead class="table-secondary">
                             <tr>
                                 <th scope="col">
-                                    <div class="form-check">
+                                    <div class="form-check px-2">
                                         <input type="checkbox" onClick="toggle(this)"
                                                @ref="InputToToggle"
                                                @onchange="SelectAll"
                                                value="" id="flexCheckDefault">
                                     </div>
                                 </th>
-                                <th scope="col">Id</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">E-mail</th>
-                                <th scope="col" class="text-end">
+                                <th scope="col" class="text-end px-2">#</th>
+                                <th scope="col" class="px-2">Name</th>
+                                <th scope="col" class="px-2">E-mail</th>
+                                <th scope="col" class="text-end px-2">
                                     Last login time (UTC)
                                 </th>
-                                <th scope="col" class="text-end">
+                                <th scope="col" class="text-end px-2">
                                     Registration time (UTC)
                                 </th>
-                                <th scope="col">Role</th>
-                                <th scope="col">Status</th>
+                                <th scope="col" class="px-2">Role</th>
+                                <th scope="col" class="px-2">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -106,7 +106,7 @@
                                 {
                                     <tr>
                                         <td>
-                                            <div class="form-check">
+                                            <div class="form-check px-2">
                                                 <input type="checkbox" name="row"
                                                        @bind="@item.IsChecked" />
                                             </div>
@@ -114,20 +114,20 @@
                                         @if (@item.Status == "Blocked")
                                         {
                                             <th scope="row"
-                                                class="text-secondary text-opacity-50">
+                                                class="text-secondary text-opacity-50 text-end px-2">
                                                 @(item.Id)
                                             </th>
-                                            <td class="text-secondary text-opacity-50">
+                                            <td class="text-secondary text-opacity-50 px-2">
                                                 @item.Name
                                             </td>
-                                            <td class="text-secondary text-opacity-50">
+                                            <td class="text-secondary text-opacity-50 px-2">
                                                 @item.Email
                                             </td>
-                                            <td class="text-secondary text-opacity-50
+                                            <td class="text-secondary text-opacity-50 px-2
                                                text-end">
                                                 @item.LastLoginDate
                                             </td>
-                                            <td class="text-secondary text-opacity-50
+                                            <td class="text-secondary text-opacity-50 px-2
                                                text-end">
                                                 @item.RegistrationDate
                                             </td>
@@ -135,38 +135,38 @@
                                             @if (item.Role == "Admin")
                                             {
                                                 <td class="text-secondary
-                                                   text-opacity-50 text-start">
+                                                   text-opacity-50 text-start px-2">
                                                     Admin
                                                 </td>
                                             }
                                             else
                                             {
                                                 <td class="text-secondary
-                                                   text-opacity-50 text-start">
+                                                   text-opacity-50 text-start px-2">
                                                     Regular User
                                                 </td>
                                             }
                                         }
                                         else
                                         {
-                                            <th scope="row">@(item.Id)</th>
-                                            <td>@item.Name</td>
-                                            <td>@item.Email</td>
-                                            <td class="text-end">
+                                            <th scope="row" class="text-end px-2">@(item.Id)</th>
+                                            <td class="px-2">@item.Name</td>
+                                            <td class="px-2">@item.Email</td>
+                                            <td class="text-end px-2">
                                                 @item.LastLoginDate
                                             </td>
-                                            <td class="text-end">
+                                            <td class="text-end px-2">
                                                 @item.RegistrationDate
                                             </td>
                                             @if (item.Role == "Admin")
                                             {
-                                                <td class="text-start">
+                                                <td class="text-start px-2">
                                                     Admin
                                                 </td>
                                             }
                                             else
                                             {
-                                                <td class="text-start">
+                                                <td class="text-start px-2">
                                                     Regular User
                                                 </td>
                                             }
@@ -174,13 +174,13 @@
 
                                         @if (@item.Status == "Blocked")
                                         {
-                                            <td class="text-danger text-start">
+                                            <td class="text-danger text-start px-2">
                                                 Blocked
                                             </td>
                                         }
                                         else if (true == true)
                                         {
-                                            <td class="text-success text-start">
+                                            <td class="text-success text-start px-2">
                                                 Active
                                             </td>
                                         }

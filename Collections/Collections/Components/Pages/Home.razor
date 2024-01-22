@@ -22,12 +22,12 @@
                               rounded-2 overflow-hidden" style=" box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
                     <thead class="table-secondary">
                         <tr>
-                            <th>Id</th>
-                            <th>name</th>
-                            <th>Collection</th>
-                            <th>Author</th>
-                            <th>Link</th>
-                            <td>Added</td>
+                            <th class="text-end px-2">#</th>
+                            <th class="px-2">Name</th>
+                            <th class="px-2">Collection</th>
+                            <th class="px-2">Author</th>
+                            <th class="text-end px-2">Added</th>
+                            <th class="px-2">Link</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,12 +36,12 @@
                             foreach (Item item in items)
                             {
                                 <tr>
-                                    <th>@(i++)</th>
-                                    <td>@item.Name</td>
-                                    <td>@item.Collection.Name</td>
-                                    <td>@GetAuthor(item.Collection)</td>
-                                    <td>@item.CreationDateTime</td>
-                                    <td>
+                                    <th class="text-end px-2">@(i++)</th>
+                                    <td class="px-2">@item.Name</td>
+                                    <td class="px-2">@item.Collection.Name</td>
+                                    <td class="px-2">@GetAuthor(item.Collection)</td>
+                                    <td class="text-end px-2">@item.CreationDateTime</td>
+                                    <td class="px-2">
                                         <a class="btn-sm btn-outline-secondary"
                                            href="/item-details/@item.Collection.Id/@item.Id">Details</a>
                                     </td>
@@ -73,11 +73,11 @@
                               rounded-2 overflow-hidden" style=" box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
                     <thead class="table-secondary">
                         <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>Theme</th>
-                            <th>Total Items</th>
-                            <th>Link</th>
+                            <th class="text-end px-2">#</th>
+                            <th class="px-2">Name</th>
+                            <th class="px-2">Theme</th>
+                            <th class="text-end px-2">Total Items</th>
+                            <th class="px-2">Link</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -86,11 +86,11 @@
                             foreach (Collection collection in collections)
                             {
                                 <tr>
-                                    <th>@(j++)</th>
-                                    <td>@collection.Name</td>
-                                    <td>@collection.Theme!.Name</td>
-                                    <td>@collection.TotalItems</td>
-                                    <td>
+                                    <th class="text-end px-2">@(j++)</th>
+                                    <td class="px-2">@collection.Name</td>
+                                    <td class="px-2">@collection.Theme!.Name</td>
+                                    <td class="text-end px-2">@collection.TotalItems</td>
+                                    <td class="px-2">
                                         <a class="btn-sm btn-outline-secondary"
                                            href="/collection-details/@collection.Id">Details</a>
                                     </td>

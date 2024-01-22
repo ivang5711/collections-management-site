@@ -15,37 +15,34 @@
 @rendermode InteractiveServer
 
 <PageTitle>Collection details</PageTitle>
-<AuthorizeView>
-    @if (collection is null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else
-    {
-        <div class="container-xxl py-3">
-            <div class="pb-1">
-                <h1 class="display-6">
-                    @collection.Name
-                </h1>
-                <h3>
-                    <span class="badge border bg-light text-dark">
-                        <i class="text-success bi bi-arrow-right-circle"></i>
-                        @collection.Theme!.Name
-                    </span>
-                </h3>
-                <div class="card mb-3 w-100" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                    <div class="row g-0">
-                        <div class="col-md">
-                            <h5 class="card-header">Description:</h5>
-                            <div class="card-body">
-                                <div class="px-5 py-2">
-                                    @((MarkupString)@collection.Description)
-                                </div>
+@if (collection is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="container-xxl py-3">
+        <div class="pb-1">
+            <h1 class="display-6">
+                @collection.Name
+            </h1>
+            <h5 class="pb-3">
+                Theme: @collection.Theme!.Name
+            </h5>
+            <div class="card mb-3 w-100" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                <div class="row g-0">
+                    <div class="col-md">
+                        <h5 class="card-header">Description:</h5>
+                        <div class="card-body">
+                            <div class="px-5 py-2">
+                                @((MarkupString)@collection.Description)
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <AuthorizeView>
             @if (!(newItemRequested || editItemRequested || deleteItemRequested))
             {
                 <div class="pb-2 d-flex justify-content-start m-0 row col-md
@@ -444,29 +441,29 @@
                     </div>
                 </div>
             }
-            <div class="justify-content-between my-3">
-                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3
+        </AuthorizeView>
+        <div class="justify-content-between my-3">
+            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3
                             justify-content-center justify-content-md-start">
-                    @if (itemsBunch is not null)
+                @if (itemsBunch is not null)
+                {
+                    @foreach (Item item in itemsBunch)
                     {
-                        @foreach (Item item in itemsBunch)
-                        {
-                            <div class="col" style="min-width: 100px;">
-                                <ItemCard Item="item" Collection="collection" />
-                            </div>
-                        }
+                        <div class="col" style="min-width: 100px;">
+                            <ItemCard Item="item" Collection="collection" />
+                        </div>
                     }
-                    else
+                }
+                else
+                {
+                    for (int i = 0; i < 10; i++)
                     {
-                        for (int i = 0; i < 10; i++)
-                        {
-                            <div class="col">
-                                <ItemCard />
-                            </div>
-                        }
+                        <div class="col">
+                            <ItemCard />
+                        </div>
                     }
-                </div>
+                }
             </div>
         </div>
-    }
-</AuthorizeView>
+    </div>
+}

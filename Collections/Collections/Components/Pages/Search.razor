@@ -17,10 +17,10 @@
                               rounded-2 overflow-hidden" style="box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
                 <thead class="table-secondary">
                     <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Link</th>
+                        <th class="text-end px-2">#</th>
+                        <th class="px-2">Name</th>
+                        <th class ="px-2">Type</th>
+                        <th class ="px-2">Link</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,10 +29,10 @@
                         foreach (Collection collection in Collections)
                         {
                             <tr>
-                                <th>@(j++)</th>
-                                <td>@collection.Name</td>
-                                <td>Collection</td>
-                                <td>
+                                <th class="text-end px-2">@(j++)</th>
+                                <td class="px-2">@collection.Name</td>
+                                <td class="px-2">Collection</td>
+                                <td class="px-2">
                                     <a class="btn-sm btn-outline-secondary"
                                        href="/collection-details/@collection.Id">Details</a>
                                 </td>
@@ -42,10 +42,10 @@
                         foreach (Item item in Items)
                         {
                             <tr>
-                                <th>@(j++)</th>
-                                <td>@item.Name</td>
-                                <td>Item</td>
-                                <td>
+                                <th class="text-end px-2">@(j++)</th>
+                                <td class="px-2">@item.Name</td>
+                                <td class="px-2">Item</td>
+                                <td class="px-2">
                                     <a class="btn-sm btn-outline-secondary"
                                        href="/item-details/@item.CollectionId/@item.Id">Details</a>
                                 </td>

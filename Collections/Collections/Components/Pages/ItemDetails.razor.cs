@@ -42,6 +42,12 @@ public partial class ItemDetails
 
     private HubConnection? hubConnection;
 
+    private void CancelEditItem()
+    {
+        InitializeData();
+        ToggleEditItemRequestStatus();
+    }
+
     private async Task Send()
     {
         if (hubConnection is not null)

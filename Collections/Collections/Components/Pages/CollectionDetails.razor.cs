@@ -80,6 +80,18 @@ public partial class CollectionDetails
         public List<DateField> DateFields { get; set; } = [];
     }
 
+    private void CancelEditItem()
+    {
+        InitializeData();
+        ToggleEditCollectionRequestStatus();
+    }
+
+    private void CancelAddNewItem()
+    {
+        InitializeData();
+        ToggleNewItemRequestStatus();
+    }
+
     private void ToggleAddFieldRequested()
     {
         MaxFieldsError = string.Empty;

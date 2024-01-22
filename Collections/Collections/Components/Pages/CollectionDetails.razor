@@ -22,26 +22,29 @@
 else
 {
     <div class="container-xxl py-3">
-        <div class="pb-1">
-            <h1 class="display-6">
-                @collection.Name
-            </h1>
-            <h5 class="pb-3">
-                Theme: @collection.Theme!.Name
-            </h5>
-            <div class="card mb-3 w-100" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                <div class="row g-0">
-                    <div class="col-md">
-                        <h5 class="card-header">Description:</h5>
-                        <div class="card-body">
-                            <div class="px-5 py-2">
-                                @((MarkupString)@collection.Description)
+        @if (!(newItemRequested || editItemRequested || deleteItemRequested))
+        {
+            <div class="pb-1">
+                <h1 class="display-6">
+                    @collection.Name
+                </h1>
+                <h5 class="pb-3">
+                    Theme: @collection.Theme!.Name
+                </h5>
+                <div class="card mb-3 w-100" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                    <div class="row g-0">
+                        <div class="col-md">
+                            <h5 class="card-header">Description:</h5>
+                            <div class="card-body">
+                                <div class="px-5 py-2">
+                                    @((MarkupString)@collection.Description)
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
         <AuthorizeView>
             @if (!(newItemRequested || editItemRequested || deleteItemRequested))
             {
@@ -173,14 +176,8 @@ else
                                             }
                                             else
                                             {
-
                                                 <div class="card">
                                                     <div class="card-body">
-
-
-
-
-
                                                         @if (FieldToAdd == typeof(NumericalField).FullName)
                                                         {
                                                             <input type="text" class="form-control my-2" placeholder="Numerical Field Name..." @bind="NewNumericField.Name" />
@@ -243,7 +240,7 @@ else
                                     </div>
                                     <div class="pb-2 pe-3 mx-0 d-flex justify-content-end row col-md
                                  row-cols-md-auto gap-1 card-footer">
-                                        <button @onclick="ToggleNewItemRequestStatus"
+                                        <button @onclick="CancelAddNewItem"
                                                 class="btn btn-outline-secondary text-nowrap"
                                                 asp-formaction="Block" name="Block"
                                                 type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
@@ -358,7 +355,7 @@ else
                                                         }
                                                         <input type="text" @bind="NewTheme" class="form-control mt-3" placeholder="Enter new collection category...">
                                                         <div class="d-flex justify-content-end me-0 ms-0 mt-3 mb-0 row col-md
-                                 row-cols-md-auto gap-1">
+                                                            row-cols-md-auto gap-1">
                                                             <button @onclick="RequestNewTheme"
                                                                     class="btn btn-outline-secondary text-nowrap"
                                                                     asp-formaction="Block" name="Block"
@@ -378,7 +375,7 @@ else
                                     </div>
                                     <div class="pb-2 pe-3 mx-0 d-flex justify-content-end row col-md
                                  row-cols-md-auto gap-1 card-footer">
-                                        <button @onclick="ToggleEditCollectionRequestStatus"
+                                        <button @onclick="CancelEditItem"
                                                 class="btn btn-outline-secondary text-nowrap"
                                                 asp-formaction="Block" name="Block"
                                                 type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
@@ -442,28 +439,31 @@ else
                 </div>
             }
         </AuthorizeView>
-        <div class="justify-content-between my-3">
-            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3
+        @if (!(newItemRequested || editItemRequested || deleteItemRequested))
+        {
+            <div class="justify-content-between my-3">
+                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3
                             justify-content-center justify-content-md-start">
-                @if (itemsBunch is not null)
-                {
-                    @foreach (Item item in itemsBunch)
+                    @if (itemsBunch is not null)
                     {
-                        <div class="col" style="min-width: 100px;">
-                            <ItemCard Item="item" Collection="collection" />
-                        </div>
+                        @foreach (Item item in itemsBunch)
+                        {
+                            <div class="col" style="min-width: 100px;">
+                                <ItemCard Item="item" Collection="collection" />
+                            </div>
+                        }
                     }
-                }
-                else
-                {
-                    for (int i = 0; i < 10; i++)
+                    else
                     {
-                        <div class="col">
-                            <ItemCard />
-                        </div>
+                        for (int i = 0; i < 10; i++)
+                        {
+                            <div class="col">
+                                <ItemCard />
+                            </div>
+                        }
                     }
-                }
+                </div>
             </div>
-        </div>
+        }
     </div>
 }

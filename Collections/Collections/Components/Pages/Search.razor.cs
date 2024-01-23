@@ -1,5 +1,6 @@
 using Collections.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.JSInterop;
 
 namespace Collections.Components.Pages;
 
@@ -28,16 +29,29 @@ public partial class Search
 
     private async Task LoadStateAsync()
     {
-        var result = await ProtectedLocalStore.GetAsync<string>("searchText");
-        SearchQuery = result.Success ? result.Value : string.Empty;
+        var result = await GetLSData("searchText");
+
+        SearchQuery = !string.IsNullOrWhiteSpace(result) ? result : string.Empty;
         var test = SearchQuery;
         Console.WriteLine("Test:" + test);
         StateHasChanged();
-        await ProtectedLocalStore.DeleteAsync("searchText");
+        await DeleteLSData("searchText");
+
         if (!string.IsNullOrWhiteSpace(SearchQuery))
         {
             SubmitSearch();
         }
+    }
+
+    private async Task<string> GetLSData(string key)
+    {
+        var response = await JSRuntime.InvokeAsync<string>("getLocalStoreData", key);
+        return response;
+    }
+
+    private async Task DeleteLSData(string key)
+    {
+        await JSRuntime.InvokeVoidAsync("removeLocalStoreData", key);
     }
 
     private List<Collection> SearchInCollectionName(string query)

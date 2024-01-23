@@ -3,7 +3,6 @@ using Collections.Data;
 using Collections.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Collections.Components.Pages;
 

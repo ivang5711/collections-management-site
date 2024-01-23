@@ -2,6 +2,7 @@
 @inject NavigationManager NavigationManager
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedLocalStorage ProtectedLocalStore
+@inject IJSRuntime JSRuntime
 
 @rendermode InteractiveServer
 
@@ -21,12 +22,12 @@
             <div>
                 <ul class="navbar-nav align-items-lg-center">
                     <AuthorizeView>
-                    <li class="nav-item">
-                        <NavLink class="nav-link text-nowrap me-2"
-                                 href="/collections" Match="NavLinkMatch.All">
-                            <i class="bi bi-box2-heart-fill-nav-menu"></i> My Collections
-                        </NavLink>
-                    </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link text-nowrap me-2"
+                                     href="/collections" Match="NavLinkMatch.All">
+                                <i class="bi bi-box2-heart-fill-nav-menu"></i> My Collections
+                            </NavLink>
+                        </li>
                     </AuthorizeView>
                     <li class="nav-item">
                         <NavLink class="nav-link text-nowrap me-2"
@@ -34,10 +35,10 @@
                             <i class="bi bi-globe2-nav-menu"></i> See All
                         </NavLink>
                     </li>
-                    <li class="ps-3" >
+                    <li class="ps-3">
                         <form class="d-flex text-nowrap" role="search" @onsubmit="SubmitSearch">
                             <input class="form-control" style="min-width: 100px" @bind="SearchInput" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-secondary mx-lg-1"  type="submit"><i class="bi bi-search d-flex mx-auto align-items-center h-100 w-100 justify-content-center"></i></button>
+                            <button class="btn btn-outline-secondary mx-lg-1" type="submit"><i class="bi bi-search d-flex mx-auto align-items-center h-100 w-100 justify-content-center"></i></button>
                         </form>
                     </li>
                 </ul>
@@ -125,7 +126,12 @@
 
     private async Task SubmitSearch()
     {
-        await ProtectedLocalStore.SetAsync("searchText", SearchInput);
+        await SetLSData("searchText", SearchInput);
         NavigationManager.NavigateTo($"/search", true);
+    }
+
+    async Task SetLSData(string key, string value)
+    {
+        await JSRuntime.InvokeVoidAsync("setLocalStoreData", key, value);
     }
 }

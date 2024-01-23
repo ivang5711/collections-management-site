@@ -22,14 +22,12 @@ function runMe() {
             return { text: d, size: 10 + Math.random() * 90, test: "haha" };
         }))
         .padding(5)
-        .rotate(function () { return ~~(Math.random() * 2) * 45; })
+        .rotate(function () { return ~~(Math.random() * 2) * 90; })
         .font("Impact")
         .fontSize(function (d) { return d.size; })
         .on("end", draw);
 
     layout.start();
-
-    let urlMy = "https://www.google.com/search?q=";
 
     function draw(words) {
         d3.select("#world-cloud").append("svg")
@@ -46,14 +44,27 @@ function runMe() {
             .style("fill", function (d, i) { return fill(i); })
             .attr("text-anchor", "middle")
             .attr("transform", function (d) {
-                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate +")";
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
             })
             .text(function (d) { return d.text; })
-            .on("click", function (d, i) {
-                window.open(urlMy += d.text);
-            })
-            ;
+            .on("click", function (d) {
+                setLocalStoreData("searchText", d.text);
+                window.open("/search");
+            });
     }
+}
+
+function setLocalStoreData(key, value) {
+    localStorage.setItem(key, value);
+}
+
+function getLocalStoreData(key) {
+    let lastname = localStorage.getItem(key);
+    return lastname;
+}
+
+function removeLocalStoreData(key) {
+    localStorage.removeItem(key);
 }
 
 function createAlert() {

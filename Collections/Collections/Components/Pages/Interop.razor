@@ -1,8 +1,8 @@
 ﻿@page "/interop"
-@inject IJSRuntime JsRuntime
+@inject IJSRuntime JSRuntime
 @using Microsoft.AspNetCore.SignalR.Client
 @inject NavigationManager NavManager
-@implements IAsyncDisposable
+@inject IDbContextFactory<ApplicationDbContext> _contextFactory
 
 @rendermode InteractiveServer
 
@@ -41,104 +41,77 @@
     <button class="btn btn-success" style="opacity: 0" @ref="InputToFade">fade me</button>
 </div>
 
+<hr />
 
-<div class="form-group">
-    <label>
-        User: <input @bind="userInput" />
-    </label>
-</div>
-<div class="form-group">
-    <label>
-        Message: <input @bind="messageInput" />
-    </label>
-</div>
-<button @onclick="Send" disabled="@(IsConnected == false)">Send</button>
+<p>Your choice is: @ParaContent</p>
 
 <hr />
 
-<ul>
-    @foreach(string message in messages)
-    {
-        <li>@message</li>
-    }
-</ul>
+<div class="d-flex col-md-3 pt-3 text-start align-items-center justify-content-center my-auto">
+    <div class="d-flex ">
+        <div class="flex-shrink-0 rounded-2" style=" box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
+            <WordCloud WordsImport="WordsToShow" />
+        </div>
+    </div>
+</div>
 
+<div>Value to search: <span id="valueToSearch"></span></div>
+
+
+
+
+<h1>Change C# property value from JavaScript</h1>
+<br />
+<button @onclick='ButtonClickHandler'>Change Content - JS</button>
+<br />
+<p>@ParaContent</p>
+
+
+
+<button class="btn btn-info" @onclick="SetLSData">Set LS Data</button>
+<button class="btn btn-info" @onclick="GetLSData">Get LS Data</button>
+<button class="btn btn-info" @onclick="DeleteLSData">Delete LS Data</button>
+
+<p>@lsData</p>
 
 
 @code {
-
-
-    private HubConnection? hubConnection;
-    private List<string> messages = [];
-    private string? userInput;
-    private string? messageInput;
-
-    protected override async Task OnInitializedAsync()
-    {
-        hubConnection = new HubConnectionBuilder()
-        .WithUrl(NavManager.ToAbsoluteUri("/chathub"))
-        .WithAutomaticReconnect()
-        .Build();
-
-        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
-        {
-            var formattedMessage = $"{user}: {message}";
-            messages.Add(formattedMessage);
-            NavManager.Refresh(true);
-            InvokeAsync(StateHasChanged);
-        });
-
-        await hubConnection.StartAsync();
-    }
-
-    private async Task Send()
-    {
-        if (hubConnection is not null)
-        {
-            await hubConnection.SendAsync("SendMessage", userInput, messageInput);
-        }
-    }
-
-    public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
-
-    public async ValueTask DisposeAsync()
-    {
-        if (hubConnection is not null)
-        {
-            await hubConnection.DisposeAsync();
-        }
-    }
+    string lsData = "no data yet";
 
     string questionText = string.Empty;
     ElementReference InputToFocus;
     ElementReference InputToToggle;
     ElementReference InputToFade;
+    private string myValue = string.Empty;
+    // public static string MyProperty { get; set; }
+
+    private List<string> WordsToShow { get; set; } = [];
 
     async Task ToggleMe()
     {
-        await JsRuntime.InvokeVoidAsync("toggleIt", InputToToggle);
+        await JSRuntime.InvokeVoidAsync("toggleIt", InputToToggle);
     }
 
     async Task Focus()
     {
-        await JsRuntime.InvokeVoidAsync("focusOnElement", InputToFocus);
+        await JSRuntime.InvokeVoidAsync("focusOnElement", InputToFocus);
     }
 
     async Task Fade()
     {
-        await JsRuntime.InvokeVoidAsync("unfade", InputToFade);
+        await JSRuntime.InvokeVoidAsync("unfade", InputToFade);
 
     }
 
     async Task AskQuestion()
     {
-        var response = await JsRuntime.InvokeAsync<string>("createPrompt", questionText);
-        await JsRuntime.InvokeVoidAsync("setElementTextById", "answerSpan", response);
+        var response = await JSRuntime.InvokeAsync<string>("createPrompt", questionText);
+        await JSRuntime.InvokeVoidAsync("setElementTextById", "answerSpan", response);
     }
 
     async Task ShowAlert()
     {
-        await JsRuntime.InvokeVoidAsync("createAlert");
+        await JSRuntime.InvokeVoidAsync("createAlert");
     }
 
     private string[] wor = ["me", "you", "they", "him", "her"];
@@ -147,9 +120,63 @@
     {
         if (firstRender)
         {
-            JsRuntime.InvokeVoidAsync("runMe");
+            JSRuntime.InvokeVoidAsync("runMe");
             _ = Fade();
         }
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        List<Tag> tagsGenerated = [];
+        using (var adc = _contextFactory.CreateDbContext())
+        {
+            tagsGenerated = adc.Tags.AsEnumerable<Tag>().ToList<Tag>();
+        }
+
+        WordsToShow.Clear();
+        foreach (var tag in tagsGenerated)
+        {
+            WordsToShow.Add(tag.Name);
+        }
+    }
+
+    public string ParaContent = "Some Text Content 8";
+
+    public async Task ButtonClickHandler()
+    {
+        await JSRuntime.InvokeAsync<string>("ChangeContentJS");
+    }
+
+    [JSInvokable]
+    public void ChangeParaContentValue(string value)
+    {
+        ParaContent = value;
+        this.StateHasChanged();
+        Console.WriteLine("Hey!");
+    }
+
+    // private async Task ButtonClickHandler()
+    // {
+    //     var result = await JSRuntime.InvokeAsync<string>("ChangeContentJS");
+    //     ParaContent = result;
+    // }
+
+
+
+
+    async Task SetLSData()
+    {
+        await JSRuntime.InvokeVoidAsync("setLocalStoreData", "cars");
+    }
+
+    async Task GetLSData()
+    {
+        var response = await JSRuntime.InvokeAsync<string>("getLocalStoreData", "searchText");
+        lsData = response;
+    }
+
+    async Task DeleteLSData()
+    {
+        await JSRuntime.InvokeVoidAsync("removeLocalStoreData");
+    }
 }

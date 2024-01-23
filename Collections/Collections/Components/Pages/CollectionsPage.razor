@@ -13,30 +13,32 @@
 @inject IBlobService _blobService
 @inject IFileTransferManager _fileTransferManager
 @inject IConfiguration _configuration
+@inject IStringLocalizer<Resource> localizer
 
 @* @rendermode InteractiveServer *@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-<PageTitle>My Collections</PageTitle>
+<PageTitle>@localizer["My Collections"]</PageTitle>
 
 <AuthorizeView>
     <div class="container-xxl py-3 ">
 
         @if (!newCollectionRequested)
         {
-            <h3 class="text-center pb-3">My Collections</h3>
+            <h3 class="text-center pb-3">@localizer["My Collections"]</h3>
             @if (collections is not null && collections.Count == 0)
             {
-                <p>You don't have any collection yet, </p>
-                <p>but you are welcome to add as many as you wish!</p>
+                <p>@localizer["You don't have any collection yet,"] </p>
+                <p>@localizer["but you are welcome to add as many as you wish!"]</p>
             }
             <div class="pb-2 d-flex justify-content-start m-0 row col-md
                         row-cols-md-auto gap-1">
                 <button @onclick="RequestNewCollection"
                         class="btn btn-outline-success btn-sm text-nowrap"
                         asp-formaction="Block" name="Block"
-                        type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                    <i class="bi bi-plus-square"></i> New Collection
+                        type="submit" value="true" 
+                        style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                    <i class="bi bi-plus-square"></i> @localizer["New Collection"]
                 </button>
             </div>
         }
@@ -44,40 +46,42 @@
         @if (newCollectionRequested)
         {
             <div class="d-flex justify-content-center py-5">
-                <div class="card mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
+                <div class="card mb-3" 
+                style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
                     <div class="row g-0">
                         @if (string.IsNullOrWhiteSpace(TempImg))
                         {
 
                             <div class="col-md-4">
-                                <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" />
+                                <canvas class="img-fluid h-100 rounded-start" 
+                                style="background-color: lightgray;  object-fit:cover;" />
                             </div>
                         }
                         else
                         {
                             <div class="col-md-4">
-                                <img src="@TempImg" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
+                                <img src="@TempImg" class="img-fluid h-100 rounded-start" 
+                                style="background-color: lightgray;  object-fit:cover;" alt="...">
                             </div>
                         }
                         <div class="col-md-8">
                             <EditForm Context="formContext" Model="@Model" OnValidSubmit="@SubmitNewCollectionForm" FormName="NewCollectionForm">
                                 <div class="card-body">
-                                    <h5 class="card-title">Create New Collection</h5>
-                                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                    <h5 class="card-title">@localizer["Create New Collection"]</h5>                                    
                                     <div class="px-5 py-2">
                                         @if (!addNewThemeRequested)
                                         {
-
                                             <DataAnnotationsValidator />
                                             <ValidationSummary />
-                                            <InputText @bind-Value="Model!.Name" type="text" required class="input-group-text input-group-lg w-100 my-2" placeholder="Collection Name..." />
-                                            <InputTextArea @bind-Value="Model.Description" required type="text" class="text-start input-group-text input-group-lg w-100 my-2" placeholder="Collection New Description" />
+                                            <InputText @bind-Value="Model!.Name" type="text" required
+            class= "input-group-text input-group-lg w-100 my-2" placeholder = "@localizer["Collection Name"]"..." />
+                                            <InputTextArea @bind-Value="Model.Description" required type="text"
+            class= "text-start input-group-text input-group-lg w-100 my-2" placeholder = "@localizer["Collection New Description"]" />
                                             @* <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection photo (optional)..." /> *@
                                             @if (!string.IsNullOrWhiteSpace(FileError))
                                             {
                                                 <div class="alert alert-warning d-flex align-items-center" role="alert">
-                                                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+                                                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="@localizer["Warning"]":"><use xlink:href="#exclamation-triangle-fill" /></svg>
                                                     <div>
                                                         @FileError
                                                     </div>
@@ -85,12 +89,14 @@
                                             }
                                             @if (Model is not null)
                                             {
-                                                <InputFile OnChange="UploadFile" class="form-control my-2" type="file" id="formFile" accept=".png,.jpg,.jpeg,.tiff" />
+                                                <InputFile OnChange="UploadFile" class="form-control my-2" type="file" id="formFile" 
+                                                accept=".png,.jpg,.jpeg,.tiff" />
                                             }
                                             <div class="row row-cols-1 row-cols-md-auto">
                                                 <div class="flex-fill pe-md-0 mx-0">
 
-                                                    <InputText @bind-Value="ThemeNameChoosen" required class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Theme..." />
+                                                    <InputText @bind-Value="ThemeNameChoosen" required class="form-control" 
+                                                    list="datalistOptions" id="exampleDataList" placeholder="@localizer["Theme"]"..." />
                                                     <datalist id="datalistOptions">
                                                         @foreach (var t in Themes)
                                                         {
@@ -103,7 +109,7 @@
                                                             class="btn btn-outline-secondary text-nowrap"
                                                             asp-formaction="Block" name="Block"
                                                             type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                        <i class="bi bi-plus-square"></i> Add Theme
+                                                        <i class="bi bi-plus-square"></i> @localizer["Add Theme"]
                                                     </button>
                                                 </div>
                                             </div>
@@ -120,27 +126,29 @@
                                                     {
                                                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
                                                             <div>
-                                                                <strong>Holy guacamole!</strong> This category already exists
+                                                                @localizer["This category already exists"]
                                                             </div>
                                                             <div>
-                                                                <button @onclick="ResetNewTHemeAddFinishedSuccessfullyStatus" type="button" class="btn-close " data-dismiss="alert" aria-label="Close">
+                                                                <button @onclick="ResetNewTHemeAddFinishedSuccessfullyStatus" type="button" 
+                                                                class="btn-close " data-dismiss="alert" aria-label="Close">
                                                                 </button>
                                                             </div>
                                                         </div>
                                                     }
-                                                    <input type="text" @bind="NewTheme" class="form-control mt-3" placeholder="Enter new collection category...">
+                                                    <input type="text" @bind="NewTheme" class="form-control mt-3" 
+                                                    placeholder="@localizer["Enter new collection category"]"...">
                                                     <div class="d-flex justify-content-end me-0 ms-0 mt-3 mb-0 row col-md
                                  row-cols-md-auto gap-1">
                                                         <button @onclick="RequestNewTheme"
                                                                 class="btn btn-outline-secondary text-nowrap"
                                                                 asp-formaction="Block" name="Block"
                                                                 type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                            <i class="bi bi-plus-square"></i> Cancel
+                                                            <i class="bi bi-plus-square"></i> @localizer["Cancel"]
                                                         </button>
                                                         <button @onclick="SubmitNewTheme"
                                                                 class="btn btn-outline-success text-nowrap"
                                                                 type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                            <i class="bi bi-plus-square"></i> Add
+                                                            <i class="bi bi-plus-square"></i> @localizer["Add"]
                                                         </button>
                                                     </div>
                                                 </div>
@@ -155,21 +163,22 @@
                                         <button @onclick="RequestNewCollection"
                                                 class="btn btn-outline-secondary text-nowrap"
                                                 asp-formaction="Block" name="Block"
-                                                type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                            <i class="bi bi-plus-square"></i> Close
+                                                type="button" value="true" 
+                                                style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                            <i class="bi bi-plus-square"></i> @localizer["Close"]
                                         </button>
                                         @if (addNewThemeRequested || string.IsNullOrWhiteSpace(ThemeNameChoosen) || !Themes.Exists(x => x.Name == ThemeNameChoosen))
                                         {
                                             <button class="btn btn-outline-success text-nowrap"
                                                     type="submit" value="true" disabled style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                <i class="bi bi-plus-square"></i> Create
+                                                <i class="bi bi-plus-square"></i> @localizer["Create"]
                                             </button>
                                         }
                                         else
                                         {
                                             <button class="btn btn-outline-success text-nowrap"
                                                     type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                <i class="bi bi-plus-square"></i> Create
+                                                <i class="bi bi-plus-square"></i> @localizer["Create"]
                                             </button>
                                         }
                                     </div>
@@ -183,7 +192,7 @@
 
         @if (collections is null)
         {
-            <p>Loading...</p>
+            <p>@localizer["Loading..."]</p>
         }
         else if (collections.Count > 0)
         {
@@ -192,11 +201,11 @@
                               rounded-2 overflow-hidden" style="box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
                     <thead class="table-secondary">
                         <tr>
-                            <th class="text-end px-2">#</th>
-                            <th class="px-2">Name</th>
-                            <th class="px-2">Theme</th>
-                            <th class="text-end px-2">Total Items</th>
-                            <th class="px-2">Link</th>
+                            <th class="text-end px-2">@localizer["#"]</th>
+                            <th class="px-2">@localizer["Name"]</th>
+                            <th class="px-2">@localizer["Theme"]</th>
+                            <th class="text-end px-2">@localizer["Total Items"]</th>
+                            <th class="px-2">@localizer["Link"]</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -6,6 +6,7 @@
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager _navigationManager
 @inject IDbContextFactory<ApplicationDbContext> _contextFactory
+@inject IStringLocalizer<Resource> localizer
 
 @rendermode InteractiveServer
 
@@ -20,7 +21,7 @@
             }
             <div class="card-img-overlay" style="text-shadow: 1px 1px #000000;">
                 <h5 class="card-title">@Item.Name</h5>
-                <p class="card-text"><small>Created: @Item.CreationDateTime.ToLocalTime()</small></p>
+                <p class="card-text"><small>@localizer["Created"]: @Item.CreationDateTime.ToLocalTime()</small></p>
                 @if (Item.StringFields.Count > 0)
                 {
                     @foreach (var item in Item.StringFields)

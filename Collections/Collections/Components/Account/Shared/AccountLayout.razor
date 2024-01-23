@@ -1,10 +1,12 @@
 ﻿@inherits LayoutComponentBase
 @layout Collections.Components.Layout.MainLayout
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<Resource> localizer
+
 <div class="container-xxl py-3">
 @if (HttpContext is null)
 {
-    <p>Loading...</p>
+    <p>@localizer["Loading..."]</p>
 }
 else
 {

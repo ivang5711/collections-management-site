@@ -1,11 +1,13 @@
-﻿<div class="p-3 footerStyle" data-bs-theme="dark">
+﻿@inject IStringLocalizer<Resource> localizer
+
+<div class="p-3 footerStyle" data-bs-theme="dark">
     <div class="container-xxl">
         <div class="row row-cols-1 row-cols-md-3 text-center
                     align-items-center g-3">
             <div class="col text-md-start order-last order-md-first">
                 <div class="row">
                     <div class="col-12">
-                        <span class="me-1">Built By:</span>
+                        <span class="me-1">@localizer["Built By:"]</span>
                         <img src="/stack.svg" height="30" />
                     </div>
                     <div class="col-12">
@@ -17,7 +19,7 @@
                 <img src="/stack.svg" height="50" />
                 <div class="d-flex align-items-center justify-content-center
                             flex-wrap gap-1">
-                    Powered by Blazor
+                    @localizer["Powered by"] Blazor
                     <img src="/favicon.png" height="20" />
                 </div>
             </div>
@@ -30,11 +32,11 @@
                         <a href="#"><i class="bg bi-linkedin"></i></a>
                     </div>
                     <div class="col-12">
-                        <a href="#">Blog</a>
+                        <a href="#">@localizer["Blog"]</a>
                         &bull;
-                        <a href="#">Portfolio</a>
+                        <a href="#">@localizer["Portfolio"]</a>
                         &bull;
-                        <a href="#">Bug Tracker</a>
+                        <a href="#">@localizer["Bug Tracker"]</a>
                     </div>
                 </div>
             </div>

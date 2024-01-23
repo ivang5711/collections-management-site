@@ -1,8 +1,9 @@
 ﻿@inherits LayoutComponentBase
 @layout AccountLayout
+@inject IStringLocalizer<Resource> localizer
 
 <div>
-    <h2 class="text-center pb-2">Account settings</h2>
+    <h2 class="text-center pb-2">@localizer["Account settings"]</h2>
     <hr />
     <div class="row">
         <div class="col-md-3">

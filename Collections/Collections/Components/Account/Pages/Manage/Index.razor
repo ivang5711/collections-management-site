@@ -8,10 +8,11 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityUserAccessor UserAccessor
 @inject IdentityRedirectManager RedirectManager
+@inject IStringLocalizer<Resource> localizer
 
-<PageTitle>Profile</PageTitle>
+<PageTitle>@localizer["Profile"]</PageTitle>
 
-<h3>Profile</h3>
+<h3>@localizer["Profile"]</h3>
 <StatusMessage />
 
 <div class="row">
@@ -20,12 +21,12 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
-                <input type="text" value="@username" class="form-control" placeholder="Please choose your username." disabled />
-                <label for="username" class="form-label">Username</label>
+                <input type="text" value="@username" class="form-control" placeholder="@localizer["Please choose your username."]" disabled />
+                <label for="username" class="form-label">@localizer["Username"]</label>
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.FullName" class="form-control" placeholder="Please enter your full name." />
-                <label for="Full name" class="form-label">Full name</label>
+                <InputText @bind-Value="Input.FullName" class="form-control" placeholder="@localizer["Please enter your full name."]" />
+                <label for="Full name" class="form-label">@localizer["Full name"]</label>
                 <ValidationMessage For="() => Input.FullName" class="text-danger" />
             </div>
             <button type="submit" class="w-100 btn btn-lg btn-outline-secondary">Save</button>

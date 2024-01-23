@@ -7,27 +7,28 @@
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager _navigationManager
 @inject IDbContextFactory<ApplicationDbContext> _contextFactory
+@inject IStringLocalizer<Resource> localizer
 
 @rendermode InteractiveServer
 
-<PageTitle>Collections home page</PageTitle>
+<PageTitle>@localizer["Collections home page"]</PageTitle>
 
 <div class="container-xxl py-3 text-between ">
     @if (collections is not null)
     {
         <div class="row align-items-start row-cols-1 row-cols-md-2 ">
             <div class="col-md-9 order-md-first order-last">
-                <h5>Recently added Items</h5>
+                <h5>@localizer["Recently added Items"]</h5>
                 <table class="table table-sm table-hover table-striped table-bordered
                               rounded-2 overflow-hidden" style=" box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
                     <thead class="table-secondary">
                         <tr>
-                            <th class="text-end px-2">#</th>
-                            <th class="px-2">Name</th>
-                            <th class="px-2">Collection</th>
-                            <th class="px-2">Author</th>
-                            <th class="text-end px-2">Added</th>
-                            <th class="px-2">Link</th>
+                            <th class="text-end px-2">@localizer["#"]</th>
+                            <th class="px-2">@localizer["Name"]</th>
+                            <th class="px-2">@localizer["Collection"]</th>
+                            <th class="px-2">@localizer["Author"]</th>
+                            <th class="text-end px-2">@localizer["Added"]</th>
+                            <th class="px-2">@localizer["Link"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,7 +44,7 @@
                                     <td class="text-end px-2">@item.CreationDateTime</td>
                                     <td class="px-2">
                                         <a class="btn-sm btn-outline-secondary"
-                                           href="/item-details/@item.Collection.Id/@item.Id">Details</a>
+                                           href="/item-details/@item.Collection.Id/@item.Id">@localizer["Details"]</a>
                                     </td>
                                 </tr>
                             }
@@ -55,11 +56,11 @@
                 <div class="justify-content-center align-items-center my-auto  ">
                     <div class="card" style="width: auto; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
                         <div class="card-body">
-                            <h5 class="card-title">Welcome to the Collections!</h5>
+                            <h5 class="card-title">@localizer["Welcome to the Collections!"]</h5>
                             <p class="card-text">
-                                Here you can enjoy your digital collection, leave comments, collect expressions and likes.
+                                @localizer["Here you can enjoy your digital collection, leave comments, collect expressions and likes."]
                                 <br />
-                                Sign Up now and create your first digital collection!
+                                @localizer["Sign Up now and create your first digital collection!"]
                             </p>
                         </div>
                     </div>
@@ -68,16 +69,16 @@
         </div>
         <div class="row align-items-center">
             <div class="col-md-9 ">
-                <h5>Top 5 collections</h5>
+                <h5>@localizer["Top 5 collections"]</h5>
                 <table class="table table-sm table-hover table-striped table-bordered
                               rounded-2 overflow-hidden" style=" box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
                     <thead class="table-secondary">
                         <tr>
-                            <th class="text-end px-2">#</th>
-                            <th class="px-2">Name</th>
-                            <th class="px-2">Theme</th>
-                            <th class="text-end px-2">Total Items</th>
-                            <th class="px-2">Link</th>
+                            <th class="text-end px-2">@localizer["#"]</th>
+                            <th class="px-2">@localizer["Name"]</th>
+                            <th class="px-2">@localizer["Theme"]</th>
+                            <th class="text-end px-2">@localizer["Total Items"]</th>
+                            <th class="px-2">@localizer["Link"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,7 +93,7 @@
                                     <td class="text-end px-2">@collection.TotalItems</td>
                                     <td class="px-2">
                                         <a class="btn-sm btn-outline-secondary"
-                                           href="/collection-details/@collection.Id">Details</a>
+                                           href="/collection-details/@collection.Id">@localizer["Details"]</a>
                                     </td>
                                 </tr>
                             }
@@ -111,6 +112,6 @@
     }
     else
     {
-        <p>Loading...</p>
+        <p>@localizer["Loading..."]</p>
     }
 </div>

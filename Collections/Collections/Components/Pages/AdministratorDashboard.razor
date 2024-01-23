@@ -11,10 +11,11 @@
 @* @rendermode @(new InteractiveServerRenderMode(false)) *@
 @rendermode InteractiveServer
 @inject IJSRuntime JsRuntime
+@inject IStringLocalizer<Resource> localizer
 @attribute [Authorize(Roles = "Admin")]
 
 <AuthorizeView Roles="Admin">
-    <PageTitle>Administrator dashboard</PageTitle>
+    <PageTitle>@localizer["Administrator dashboard"]</PageTitle>
     @if(ViewUsers.Count < 1)
     {
         <div class="modal modal-backdrop" tabindex="-1"
@@ -23,7 +24,7 @@
                 <div class="modal-content">
                     <div class="d-flex modal-body align-items-center justify-content-center">
                         <div class="d-flex align-items-center">
-                            <strong class="pe-2">Loading...</strong>
+                            <strong class="pe-2">@localizer["Loading..."]</strong>
                             <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
                         </div>
                     </div>
@@ -42,25 +43,25 @@
                             class="btn btn-outline-dark btn-sm text-nowrap"
                             asp-formaction="Block" name="Block"
                             type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                        <i class="bi bi-lock-fill"></i> Block
+                        <i class="bi bi-lock-fill"></i> @localizer["Block"]
                     </button>
                     <button @onclick="SubmitUnblockUser"
                             class="btn btn-outline-dark btn-sm text-nowrap"
                             asp-formaction="Unblock"
                             name="Unblock" type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                        <i class="bi bi-unlock-fill"></i> Unblock
+                        <i class="bi bi-unlock-fill"></i> @localizer["Unblock"]
                     </button>
                     <button @onclick="SubmitAddToAdmins"
                             class="btn btn-outline-dark btn-sm text-nowrap"
                             asp-formaction="AddToAdmins"
                             name="AddToAdmins" type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                        <i class="bi bi-person-fill-add"></i> Add to admins
+                        <i class="bi bi-person-fill-add"></i> @localizer["Add to admins"]
                     </button>
                     <button @onclick="SubmitRemoveFromAdmins"
                             class="btn btn-outline-dark btn-sm text-nowrap"
                             asp-formaction="RemoveFromAdmins"
                             name="RemoveFromAdmins" type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                        <i class="bi bi-person-fill-dash"></i> Remove from admins
+                        <i class="bi bi-person-fill-dash"></i> @localizer["Remove from admins"]
                     </button>
                     <button @onclick="SubmitDeleteUser"
                             class="btn btn-danger btn-sm text-nowrap"
@@ -82,17 +83,17 @@
                                                value="" id="flexCheckDefault">
                                     </div>
                                 </th>
-                                <th scope="col" class="text-end px-2">#</th>
-                                <th scope="col" class="px-2">Name</th>
-                                <th scope="col" class="px-2">E-mail</th>
+                                <th scope="col" class="text-end px-2">@localizer["#"]</th>
+                                <th scope="col" class="px-2">@localizer["Name"]</th>
+                                <th scope="col" class="px-2">@localizer["E-mail"]</th>
                                 <th scope="col" class="text-end px-2">
-                                    Last login time (UTC)
+                                    @localizer["Last login time (UTC)"]
                                 </th>
                                 <th scope="col" class="text-end px-2">
-                                    Registration time (UTC)
+                                    @localizer["Registration time (UTC)"]
                                 </th>
-                                <th scope="col" class="px-2">Role</th>
-                                <th scope="col" class="px-2">Status</th>
+                                <th scope="col" class="px-2">@localizer["Role"]</th>
+                                <th scope="col" class="px-2">@localizer["Status"]</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -136,14 +137,14 @@
                                             {
                                                 <td class="text-secondary
                                                    text-opacity-50 text-start px-2">
-                                                    Admin
+                                                    @localizer["Admin"]
                                                 </td>
                                             }
                                             else
                                             {
                                                 <td class="text-secondary
                                                    text-opacity-50 text-start px-2">
-                                                    Regular User
+                                                    @localizer["Regular User"]
                                                 </td>
                                             }
                                         }
@@ -161,13 +162,13 @@
                                             @if (item.Role == "Admin")
                                             {
                                                 <td class="text-start px-2">
-                                                    Admin
+                                                    @localizer["Admin"]
                                                 </td>
                                             }
                                             else
                                             {
                                                 <td class="text-start px-2">
-                                                    Regular User
+                                                    @localizer["Regular User"]
                                                 </td>
                                             }
                                         }
@@ -175,13 +176,13 @@
                                         @if (@item.Status == "Blocked")
                                         {
                                             <td class="text-danger text-start px-2">
-                                                Blocked
+                                                @localizer["Blocked"]
                                             </td>
                                         }
                                         else if (true == true)
                                         {
                                             <td class="text-success text-start px-2">
-                                                Active
+                                                @localizer["Active"]
                                             </td>
                                         }
                                     </tr>
@@ -198,7 +199,7 @@
                             <div class="modal-content">
                                 <div class="d-flex modal-body align-items-center justify-content-center">
                                     <div class="d-flex align-items-center">
-                                        <strong class="pe-2">Loading...</strong>
+                                        <strong class="pe-2">@localizer["Loading..."]</strong>
                                         <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
                                     </div>
                                 </div>

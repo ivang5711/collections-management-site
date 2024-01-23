@@ -1,26 +1,27 @@
 ﻿@page "/Account/Manage/PersonalData"
 
 @inject IdentityUserAccessor UserAccessor
+@inject IStringLocalizer<Resource> localizer
 
-<PageTitle>Personal Data</PageTitle>
+<PageTitle>@localizer["Personal Data"]</PageTitle>
 
 <StatusMessage />
-<h3>Personal Data</h3>
+<h3>@localizer["Personal Data"]</h3>
 
 <div class="row">
     <div class="col-md-12 px-5">
-        <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
+        <p>@localizer["Your account contains personal data that you have given us. This page allows you to download or delete that data."]</p>
         <p>
-            <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+            <strong>@localizer["Deleting this data will permanently remove your account, and this cannot be recovered."]</strong>
         </p>
         <form action="Account/Manage/DownloadPersonalData" method="post">
             <AntiforgeryToken />
-            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-cloud-download-fill"></i> Download</button>
+            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-cloud-download-fill"></i> @localizer["Download"]</button>
         </form>
         <p class="pt-3">
             @* <a href="Account/Manage/DeletePersonalData" class="btn btn-danger">Delete</a> *@
             <button href="Account/Manage/DeletePersonalData" class="btn btn-danger text-nowrap">
-                <i class="bi bi-trash3-fill"></i> Delete
+                <i class="bi bi-trash3-fill"></i> @localizer["Delete"]
             </button>
         </p>
     </div>

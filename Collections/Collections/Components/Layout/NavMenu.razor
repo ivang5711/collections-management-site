@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedLocalStorage ProtectedLocalStore
 @inject IJSRuntime JSRuntime
+@inject IStringLocalizer<Resource> localizer
 
 @rendermode InteractiveServer
 
@@ -25,22 +26,27 @@
                         <li class="nav-item">
                             <NavLink class="nav-link text-nowrap me-2"
                                      href="/collections" Match="NavLinkMatch.All">
-                                <i class="bi bi-box2-heart-fill-nav-menu"></i> My Collections
+                                <i class="bi bi-box2-heart-fill-nav-menu"></i> @localizer["My Collections"]
                             </NavLink>
                         </li>
                     </AuthorizeView>
                     <li class="nav-item">
                         <NavLink class="nav-link text-nowrap me-2"
                                  href="/all">
-                            <i class="bi bi-globe2-nav-menu"></i> See All
+                            <i class="bi bi-globe2-nav-menu"></i> @localizer["See All"]
                         </NavLink>
                     </li>
                     <li class="ps-3">
                         <form class="d-flex text-nowrap" role="search" @onsubmit="SubmitSearch">
-                            <input class="form-control" style="min-width: 100px" @bind="SearchInput" type="search" placeholder="Search" aria-label="Search">
+                            <input class="form-control" style="min-width: 100px" @bind="SearchInput" type="search" placeholder="@localizer["Search"]" aria-label="Search">
                             <button class="btn btn-outline-secondary mx-lg-1" type="submit"><i class="bi bi-search d-flex mx-auto align-items-center h-100 w-100 justify-content-center"></i></button>
                         </form>
                     </li>
+                    
+                    <li class="ps-3">
+                        <CultureSelector />
+                    </li>
+
                 </ul>
             </div>
             <span class="navbar-nav">
@@ -59,7 +65,7 @@
                                 <NavLink class="nav-link text-nowrap me-2" href="Account/Manage">
                                     <span class="bi bi-person-fill-nav-menu"
                                           aria-hidden="true">
-                                    </span> Hello, @(context.User.Identity?.Name)!
+                                    </span> @localizer["Hello"], @(context.User.Identity?.Name)!
                                 </NavLink>
                             </span>
                         </span>
@@ -71,7 +77,7 @@
                                            value="@currentUrl" />
                                     <button type="submit" class="nav-link me-2">
                                         <span class="bi bi-arrow-bar-left-nav-menu"
-                                              aria-hidden="true"></span> Logout
+                                              aria-hidden="true"></span> @localizer["Logout"]"
                                     </button>
                                 </form>
                             </span>
@@ -82,7 +88,7 @@
                             <span class="nav-item">
                                 <NavLink class="nav-link text-nowrap me-2" href="Account/Register">
                                     <span class="bi bi-person-nav-menu"
-                                          aria-hidden="true"></span> Register
+                                          aria-hidden="true"></span> @localizer["Register"]
                                 </NavLink>
                             </span>
                         </span>
@@ -90,7 +96,7 @@
                             <span class="nav-item">
                                 <NavLink class="nav-link text-nowrap me-2" href="Account/Login">
                                     <span class="bi bi-person-badge-nav-menu"
-                                          aria-hidden="true"></span> Login
+                                          aria-hidden="true"></span> @localizer["Login"]
                                 </NavLink>
                             </span>
                         </span>

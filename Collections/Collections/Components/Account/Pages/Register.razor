@@ -15,41 +15,42 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject RoleManager<IdentityRole> _RoleManager
+@inject IStringLocalizer<Resource> localizer
 
-<PageTitle>Register</PageTitle>
+<PageTitle>@localizer["Register"]</PageTitle>
 
 <div class="row justify-content-center">
     <div class="col-md-4">
         <StatusMessage Message="@Message" />
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
             <DataAnnotationsValidator />
-            <h2>Create a new account.</h2>
+            <h2>@localizer["Create a new account."]</h2>
             <hr />
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
                 <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label for="email">Email</label>
+                <label for="email">@localizer["Email"]</label>
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
                 <InputText @bind-Value="Input.Name" class="form-control" autocomplete="username" aria-required="true" placeholder="Jon Doe" />
-                <label for="name">User name</label>
+                <label for="name">@localizer["User name"]</label>
                 <ValidationMessage For="() => Input.Name" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
                 <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="password">Password</label>
+                <label for="password">@localizer["Password"]</label>
                 <ValidationMessage For="() => Input.Password" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
                 <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="confirm-password">Confirm Password</label>
+                <label for="confirm-password">@localizer["Confirm Password"]</label>
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-outline-secondary">Register</button>
+            <button type="submit" class="w-100 btn btn-lg btn-outline-secondary">@localizer["Register"]</button>
             <div class="pt-3">
                 <p>
-                    <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Login", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Already hav an account? Sign in</a>
+                    <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Login", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">@localizer["Already hav an account? Sign in"]</a>
                 </p>
 
             </div>

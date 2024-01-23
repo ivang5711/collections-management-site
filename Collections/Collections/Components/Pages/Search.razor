@@ -5,12 +5,13 @@
 @inject IDbContextFactory<ApplicationDbContext> _contextFactory
 @inject NavigationManager _navigationManager
 @inject IJSRuntime JSRuntime
+@inject IStringLocalizer<Resource> localizer
 
 @rendermode InteractiveServer
 
 <div class="container-xxl py-3 ">
 
-    <h3 class="text-center pb-3">Search results: @totalCountUnique</h3>
+    <h3 class="text-center pb-3">@localizer["Search results"]: @totalCountUnique</h3>
     @if (Collections is not null)
     {
         <div class="d-flex justify-content-center">
@@ -18,10 +19,10 @@
                               rounded-2 overflow-hidden" style="box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
                 <thead class="table-secondary">
                     <tr>
-                        <th class="text-end px-2">#</th>
-                        <th class="px-2">Name</th>
-                        <th class="px-2">Type</th>
-                        <th class="px-2">Link</th>
+                        <th class="text-end px-2">@localizer["#"]</th>
+                        <th class="px-2">@localizer["Name"]</th>
+                        <th class="px-2">@localizer["Type"]</th>
+                        <th class="px-2">@localizer["Link"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,10 +33,10 @@
                             <tr>
                                 <th class="text-end px-2">@(j++)</th>
                                 <td class="px-2">@collection.Name</td>
-                                <td class="px-2">Collection</td>
+                                <td class="px-2">@localizer["Collection"]</td>
                                 <td class="px-2">
                                     <a class="btn-sm btn-outline-secondary"
-                                       href="/collection-details/@collection.Id">Details</a>
+                                       href="/collection-details/@collection.Id">@localizer["Details"]</a>
                                 </td>
                             </tr>
                         }
@@ -45,10 +46,10 @@
                             <tr>
                                 <th class="text-end px-2">@(j++)</th>
                                 <td class="px-2">@item.Name</td>
-                                <td class="px-2">Item</td>
+                                <td class="px-2">@localizer["Item"]</td>
                                 <td class="px-2">
                                     <a class="btn-sm btn-outline-secondary"
-                                       href="/item-details/@item.CollectionId/@item.Id">Details</a>
+                                       href="/item-details/@item.CollectionId/@item.Id">@localizer["Details"]</a>
                                 </td>
                             </tr>
                         }

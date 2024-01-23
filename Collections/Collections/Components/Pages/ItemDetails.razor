@@ -13,12 +13,13 @@
 @inject IBlobService _blobService
 @inject IConfiguration _configuration
 @inject IFileTransferManager _fileTransferManager
+@inject IStringLocalizer<Resource> localizer
 
 @rendermode InteractiveServer
 
 @if (CurrentItem is null || ItemModel is null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>@localizer["Loading..."]</em></p>
 }
 else
 {
@@ -41,7 +42,9 @@ else
                                     {
                                         <div class="row row-cols-1 row-cols-md-2 my-2 d-flex justify-content-md-end">
                                             <div class="pe-md-0 mx-0">
-                                                <InputText @bind-Value="NewTag" requred list="datalistOptions" id="exampleDataList" class="input-group-text input-group-lg w-100" placeholder="Tags..." />
+                                                <InputText @bind-Value="NewTag" requred list="datalistOptions" 
+                                                id="exampleDataList" class="input-group-text input-group-lg w-100" 
+                                                placeholder="Tags..." />
                                                 <datalist id="datalistOptions">
                                                     @foreach (var t in Tags)
                                                     {
@@ -72,7 +75,7 @@ else
                                 @if (Tags.Count == 0)
                                 {
                                     <span class="badge text-bg-success">
-                                        No tags so far...
+                                        @localizer["No tags so far"]...
                                     </span>
                                 }
                                 else
@@ -81,7 +84,8 @@ else
                                     {
                                         <AuthorizeView>
                                             <Authorized>
-                                                <button class="badge text-bg-success ms-1" style="border: none;" type="button" disabled @onclick="() => SubmitRemoveTag(t.Id)">
+                                                <button class="badge text-bg-success ms-1" style="border: none;" 
+                                                type="button" disabled @onclick="() => SubmitRemoveTag(t.Id)">
                                                     @t.Name
                                                 </button>
                                             </Authorized>
@@ -115,7 +119,7 @@ else
                                             class="btn btn-dark btn-sm text-nowrap"
                                             asp-formaction="Block" name="Block"
                                             type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                        <i class="bi bi-chat-left-text"></i> Leave Comment
+                                        <i class="bi bi-chat-left-text"></i> @localizer["Leave Comment"]
                                     </button>
                                 </div>
                             </AuthorizeView>
@@ -133,7 +137,11 @@ else
                             }
                             else
                             {
-                                <div class="w-100 h-100 rounded-3 text-center align-items-center d-flex justify-content-center" style="min-width: 12rem; min-height: 24rem; user-select: none; background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">There is no image<br />for this item yet...</div>
+                                <div class="w-100 h-100 rounded-3 text-center align-items-center d-flex justify-content-center" 
+                                style="min-width: 12rem; min-height: 24rem; user-select: none; 
+background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
+                                @localizer["There is no image"]<br />@localizer["for this item yet"]...
+                            </div>
 
                             }
                         </div>
@@ -150,20 +158,24 @@ else
                                         @if (string.IsNullOrWhiteSpace(ItemModel!.ImageLink))
                                         {
                                             <div class="col-md-4">
-                                                <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray; object-fit:cover;" />
+                                                <canvas class="img-fluid h-100 rounded-start" 
+                                                style="background-color: lightgray; object-fit:cover;" />
                                             </div>
                                         }
                                         else
                                         {
                                             <div class="col-md-4">
-                                                <img src="@TempImg" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
+                                                <img src="@TempImg" class="img-fluid h-100 rounded-start" 
+                                                style="background-color: lightgray;  object-fit:cover;" alt="...">
                                             </div>
                                         }
                                         <div class="col-md-8">
                                             <h5 class="card-header">Edit Item: @ItemModel!.Name</h5>
-                                            <EditForm Context="formContext2" Model="@ItemModel" OnSubmit="@SubmitEditItem" FormName="EditCollectionForm">
+                                            <EditForm Context="formContext2" Model="@ItemModel" OnSubmit="@SubmitEditItem" 
+                                                FormName="EditCollectionForm">
                                                 <div class="card-body">
-                                                    <p class="card-text"><small class="text-muted">Created @ItemModel!.CreationDateTime.ToLocalTime()</small></p>
+                                                    <p class="card-text"><small class="text-muted">Created 
+                                                        @ItemModel!.CreationDateTime.ToLocalTime()</small></p>
                                                     <div class="px-5 py-2">
 
                                                         @if (ItemModel is not null)
@@ -171,7 +183,9 @@ else
 
                                                             <DataAnnotationsValidator />
                                                             <ValidationSummary />
-                                                            <InputText @bind-Value="ItemModel!.Name" type="text" class="input-group-text input-group-lg my-2 w-100" placeholder="Item New Name..." />
+                                                            <InputText @bind-Value="ItemModel!.Name" type="text" 
+                                                            class="input-group-text input-group-lg my-2 w-100" 
+                                                            placeholder="Item New Name..." />
                                                             @if (ItemModel.NumericalFields.Count > 0)
                                                             {
                                                                 <ul class="list-group custom-field">
@@ -179,8 +193,14 @@ else
                                                                     {
                                                                         <li class="list-group-item">
                                                                             <div class="d-flex row row-cols-md-auto">
-                                                                                <div class="p-2"><input type="text" class="form-control" @bind="@item.Name" placeholder="Numerical field name..." /></div>
-                                                                                <div class="p-2 flex-fill"><input type="text" class="form-control" placeholder="Numerical field value..." @bind="@item.Value" /></div>
+                                                                                <div class="p-2"><input type="text" 
+                                                                                    class="form-control" @bind="@item.Name" 
+                                                                                    placeholder="@localizer["Numerical field name..."]" />
+                                                                                </div>
+                                                                                <div class="p-2 flex-fill"><input type="text" 
+                                                                                    class="form-control" 
+                                                                                    placeholder="@localizer["Numerical field value..."]" 
+                                                                                    @bind="@item.Value" /></div>
                                                                             </div>
 
                                                                         </li>
@@ -194,8 +214,14 @@ else
                                                                     {
                                                                         <li class="list-group-item">
                                                                             <div class="d-flex row row-cols-md-auto">
-                                                                                <div class="p-2"><input type="text" class="form-control" @bind="@item.Name" placeholder="String field name..." /></div>
-                                                                                <div class="p-2 flex-fill"><input type="text" class="form-control" placeholder="String field value..." @bind="@item.Value" /></div>
+                                                                                <div class="p-2"><input type="text" 
+                                                                                    class="form-control" @bind="@item.Name" 
+                                                                                    placeholder="@localizer["String field name..."]" />
+                                                                                </div>
+                                                                                <div class="p-2 flex-fill"><input type="text" 
+                                                                                    class="form-control" 
+                                                                                    placeholder="@localizer["String field value..."]" 
+                                                                                    @bind="@item.Value" /></div>
                                                                             </div>
 
                                                                         </li>
@@ -208,8 +234,11 @@ else
                                                                     @foreach (var item in ItemModel.TextFields)
                                                                     {
                                                                         <li class="list-group-item">
-                                                                            <input type="text" for="exampleFormControlTextarea1" class="form-control mb-1" @bind="@item.Name">
-                                                                            <textarea class="form-control" id="exampleFormControlTextarea1" @bind="@item.Value" rows="3"></textarea>
+                                                                            <input type="text" for="exampleFormControlTextarea1" 
+                                                                                class="form-control mb-1" @bind="@item.Name">
+                                                                            <textarea class="form-control" 
+                                                                            id="exampleFormControlTextarea1" 
+                                                                            @bind="@item.Value" rows="3"></textarea>
                                                                         </li>
                                                                     }
                                                                 </ul>
@@ -221,9 +250,12 @@ else
                                                                     {
                                                                         <li class="list-group-item row-cols-2 d-flex align-items-center">
                                                                             <span class="form-check col-auto form-switch">
-                                                                                <input class="form-check-input" @bind="item.Value" type="checkbox" id="flexSwitchCheckDefault" />
+                                                                                <input class="form-check-input" @bind="item.Value" 
+                                                                                type="checkbox" id="flexSwitchCheckDefault" />
                                                                             </span>
-                                                                            <input type="text" class="flex-fill form-control" @bind="@item.Name" placeholder="Logical field name..." />
+                                                                            <input type="text" class="flex-fill form-control" 
+                                                                            @bind="@item.Name" 
+                                                                            placeholder="@localizer["Logical field name..."]" />
                                                                         </li>
                                                                     }
                                                                 </ul>
@@ -235,8 +267,12 @@ else
                                                                     {
                                                                         <li class="list-group-item">
                                                                             <div class="d-flex row row-cols-md-auto">
-                                                                                <div class="p-2 flex-fill "><input type="text" class="form-control" @bind="@item.Name" placeholder="Logical field name..." /></div>
-                                                                                <div class="p-2 "><input type="date" class="form-control w-md-auto" @bind="@item.Value" /></div>
+                                                                                <div class="p-2 flex-fill "><input type="text" 
+                                                                                    class="form-control" @bind="@item.Name" 
+                                                                                    placeholder="@localizer["Logical field name..."]" /></div>
+                                                                                <div class="p-2 "><input type="date" 
+                                                                                    class="form-control w-md-auto" 
+                                                                                    @bind="@item.Value" /></div>
                                                                             </div>
 
                                                                         </li>
@@ -252,13 +288,13 @@ else
                                                             class="btn btn-outline-secondary text-nowrap"
                                                             asp-formaction="Block" name="Block"
                                                             type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                        <i class="bi bi-plus-square"></i> Cancel
+                                                        <i class="bi bi-plus-square"></i> @localizer["Cancel"]
                                                     </button>
                                                     @if (ItemModel!.Name == CurrentItem.Name)
                                                     {
                                                         <button class="btn btn-outline-success text-nowrap"
                                                                 type="submit" disabled value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                            <i class="bi bi-plus-square"></i> Update
+                                                            <i class="bi bi-plus-square"></i> @localizer["Update"]
                                                         </button>
                                                     }
                                                     else
@@ -266,7 +302,7 @@ else
 
                                                         <button class="btn btn-outline-success text-nowrap"
                                                                 type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                            <i class="bi bi-plus-square"></i> Update
+                                                            <i class="bi bi-plus-square"></i> @localizer["Update"]
                                                         </button>
                                                     }
                                                 </div>
@@ -284,24 +320,30 @@ else
                                         @if (string.IsNullOrWhiteSpace(TempImg))
                                         {
                                             <div class="col-md-4">
-                                                <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray; object-fit:cover;" />
+                                                <canvas class="img-fluid h-100 rounded-start" 
+                                                style="background-color: lightgray; object-fit:cover;" />
                                             </div>
                                         }
                                         else
                                         {
                                             <div class="col-md-4">
-                                                <img src="@TempImg" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
+                                                <img src="@TempImg" class="img-fluid h-100 rounded-start" 
+                                                style="background-color: lightgray;  object-fit:cover;" alt="...">
                                             </div>
                                         }
                                         <div class="col-md-8">
-                                            <h5 class="card-header">Edit Photo</h5>
-                                            <EditForm Context="formContextImage" Model="@ItemModel" OnSubmit="@SubmitEditPhoto" FormName="EditImageForm">
+                                            <h5 class="card-header">@localizer["Edit Photo"]</h5>
+                                            <EditForm Context="formContextImage" Model="@ItemModel" 
+                                                OnSubmit="@SubmitEditPhoto" FormName="EditImageForm">
                                                 <div class="card-body">
                                                     <div class="px-5 py-2">
                                                         @if (!string.IsNullOrWhiteSpace(FileError))
                                                         {
-                                                            <div class="alert alert-warning d-flex align-items-center" role="alert">
-                                                                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+                                                            <div class="alert alert-warning d-flex align-items-center" 
+                                                            role="alert">
+                                                                <svg class="bi flex-shrink-0 me-2" width="24" 
+                                                                height="24" role="img" aria-label="Warning:">
+                                                                <use xlink:href="#exclamation-triangle-fill" /></svg>
                                                                 <div>
                                                                     @FileError.
                                                                 </div>
@@ -309,7 +351,8 @@ else
                                                         }
                                                         @if (ItemModel is not null)
                                                         {
-                                                            <InputFile OnChange="UploadFile" class="form-control my-2" type="file" id="formFile" accept=".png,.jpg,.jpeg,.tiff" />
+                                                            <InputFile OnChange="UploadFile" class="form-control my-2" 
+                                                            type="file" id="formFile" accept=".png,.jpg,.jpeg,.tiff" />
                                                         }
                                                     </div>
                                                 </div>
@@ -319,13 +362,13 @@ else
                                                             class="btn btn-outline-secondary text-nowrap"
                                                             asp-formaction="Block" name="Block"
                                                             type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                        <i class="bi bi-plus-square"></i> Cancel
+                                                        <i class="bi bi-plus-square"></i> @localizer["Cancel"]
                                                     </button>
                                                     @if (UploadedFileName is null || !string.IsNullOrWhiteSpace(FileError))
                                                     {
                                                         <button class="btn btn-outline-success text-nowrap"
                                                                 type="submit" disabled value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                            <i class="bi bi-plus-square"></i> Update
+                                                            <i class="bi bi-plus-square"></i> @localizer["Update"]
                                                         </button>
                                                     }
                                                     else
@@ -333,7 +376,7 @@ else
 
                                                         <button class="btn btn-outline-success text-nowrap"
                                                                 type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                            <i class="bi bi-plus-square"></i> Update
+                                                            <i class="bi bi-plus-square"></i> @localizer["Update"]"
                                                         </button>
                                                     }
                                                 </div>
@@ -351,23 +394,26 @@ else
                                         @if (string.IsNullOrWhiteSpace(ItemModel!.ImageLink))
                                         {
                                             <div class="col-md-4">
-                                                <canvas class="img-fluid h-100 rounded-start" style="background-color: lightgray; object-fit:cover;" />
+                                                <canvas class="img-fluid h-100 rounded-start" 
+                                                style="background-color: lightgray; object-fit:cover;" />
                                             </div>
                                         }
                                         else
                                         {
                                             <div class="col-md-4">
-                                                <img src="@ItemModel.ImageLink" class="img-fluid h-100 rounded-start" style="background-color: lightgray;  object-fit:cover;" alt="...">
+                                                <img src="@ItemModel.ImageLink" class="img-fluid h-100 rounded-start" 
+                                                style="background-color: lightgray;  object-fit:cover;" alt="...">
                                             </div>
                                         }
                                         <div class="col-md-8">
-                                            <h5 class="card-header">Delete Item</h5>
+                                            <h5 class="card-header">@localizer["Delete Item"]</h5>
                                             <div class="card-body">
                                                 <p class="card-text">@ItemModel.Name</p>
-                                                <p class="card-text"><small class="text-muted">Created @ItemModel.CreationDateTime.ToLocalTime()</small></p>
+                                                <p class="card-text"><small class="text-muted">
+                                                    @localizer["Created"] @ItemModel.CreationDateTime.ToLocalTime()</small></p>
                                                 <div class="px-5 py-2">
-                                                    <p>This action can not be undone</p>
-                                                    <p>Are you sure you want to delete the item?</p>
+                                                    <p>@localizer["This action can not be undone"]</p>
+                                                    <p>@localizer["Are you sure you want to delete the item?"]</p>
                                                 </div>
                                             </div>
                                             <div class="pb-2 pe-3 mx-0 d-flex justify-content-end row col-md
@@ -376,12 +422,12 @@ else
                                                         class="btn btn-outline-secondary text-nowrap"
                                                         asp-formaction="Block" name="Block"
                                                         type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                    <i class="bi bi-plus-square"></i> Cancel
+                                                    <i class="bi bi-plus-square"></i> @localizer["Cancel"]"
                                                 </button>
                                                 <button @onclick="SubmitDeleteItem"
                                                         class="btn btn-outline-danger text-nowrap"
                                                         type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                    <i class="bi bi-plus-square"></i> Delete
+                                                    <i class="bi bi-plus-square"></i> @localizer["Delete"]"
                                                 </button>
                                             </div>
                                         </div>
@@ -402,7 +448,7 @@ else
             {
                 <div class="overview d-flex flex-column">
                     <h3 class="text-dark">@CurrentItem.Name</h3>
-                    <h5 class="text-secondary">Author: @GetAuthor()</h5>
+                    <h5 class="text-secondary">@localizer["Author"]: @GetAuthor()</h5>
 
                     <AuthorizeView>
                         @if (!(editItemRequested || deleteItemRequested || editPhotoRequested))
@@ -413,19 +459,19 @@ else
                                         class="btn btn-outline-secondary btn-sm text-nowrap"
                                         asp-formaction="Block" name="Block"
                                         type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                    <i class="bi bi-pencil"></i> Edit Item
+                                    <i class="bi bi-pencil"></i> @localizer["Edit Item"]
                                 </button>
                                 <button @onclick="ToggleEditPhotoRequestStatus"
                                         class="btn btn-outline-dark btn-sm text-nowrap"
                                         asp-formaction="Block" name="Block"
                                         type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                    <i class="bi bi-pencil"></i> Edit Image
+                                    <i class="bi bi-pencil"></i> @localizer["Edit Image"]
                                 </button>
                                 <button @onclick="ToggleDeleteItemRequestStatus"
                                         class="btn btn-outline-danger btn-sm text-nowrap"
                                         asp-formaction="Block" name="Block"
                                         type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                    <i class="bi bi-trash3-fill"></i> Delete Item
+                                    <i class="bi bi-trash3-fill"></i> @localizer["Delete Item"]
                                 </button>
                             </div>
                         }
@@ -472,8 +518,10 @@ else
                                             {
                                                 <li class="list-group-item">
 
-                                                    <label for="exampleFormControlTextarea1" class="form-label">@(item.Name):</label>
-                                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">@item.Value</textarea>
+                                                    <label for="exampleFormControlTextarea1" 
+                                                        class="form-label">@(item.Name):</label>
+                                                    <textarea class="form-control" 
+                                                    id="exampleFormControlTextarea1" rows="3">@item.Value</textarea>
                                                 </li>
                                             }
                                         </ul>
@@ -483,7 +531,9 @@ else
                                         <ul class="list-group custom-field">
                                             @foreach (var item in CurrentItem.LogicalFields)
                                             {
-                                                <li class="list-group-item">@(item.Name): @item.Value.ToString()</li>
+                                                <li class="list-group-item">
+                                                    @(item.Name): @item.Value.ToString()
+                                                    </li>
                                             }
                                         </ul>
                                     }
@@ -492,7 +542,9 @@ else
                                         <ul class="list-group custom-field">
                                             @foreach (var item in CurrentItem.DateFields)
                                             {
-                                                <li class="list-group-item">@(item.Name): @item.Value.ToString()</li>
+                                                <li class="list-group-item">
+                                                    @(item.Name): @item.Value.ToString()
+                                                    </li>
                                             }
                                         </ul>
                                     }
@@ -519,12 +571,12 @@ else
                                         </ItemContent>
                                         <Placeholder>
                                             <p>
-                                                Loading&hellip;
+                                                @localizer["Loading"]&hellip;
                                             </p>
                                         </Placeholder>
                                         <EmptyContent>
                                             <p>
-                                                There are no records to display.
+                                                @localizer["There are no records to display."]"
                                             </p>
                                         </EmptyContent>
                                     </Virtualize>
@@ -539,9 +591,9 @@ else
                                         <textarea @ref="inputToFocus" class="form-control"
                                                   @bind="CommentText"
                                                   required
-                                                  placeholder="Enter your comment..."
+                                                  placeholder="@localizer["Enter your comment"]"..."
                                                   aria-label="With textarea">
-                                                                                                                        </textarea>
+                                       </textarea>
                                     </div>
                                     <div class="text-end pb-3 pe-2">
                                         @if (CommentText is null)
@@ -551,7 +603,7 @@ else
                                                     class="btn btn-outline-secondary btn-sm text-nowrap"
                                                     asp-formaction="Block" name="Block"
                                                     type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                <i class="bi bi-chat-left-text"></i> Leave Comment
+                                                <i class="bi bi-chat-left-text"></i> @localizer["Leave Comment"]"
                                             </button>
                                         }
                                         else
@@ -560,7 +612,7 @@ else
                                                     class="btn btn-outline-secondary btn-sm text-nowrap"
                                                     asp-formaction="Block" name="Block"
                                                     type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                <i class="bi bi-chat-left-text"></i> Leave Comment
+                                                <i class="bi bi-chat-left-text"></i> @localizer["Leave Comment"]"
                                             </button>
                                         }
                                     </div>
@@ -587,12 +639,12 @@ else
                                         </ItemContent>
                                         <Placeholder>
                                             <p>
-                                                Loading&hellip;
+                                                @localizer["Loading"]&hellip;
                                             </p>
                                         </Placeholder>
                                         <EmptyContent>
                                             <p>
-                                                There are no records to display.
+                                                @localizer["There are no records to display."]"
                                             </p>
                                         </EmptyContent>
                                     </Virtualize>
@@ -605,8 +657,8 @@ else
                                      style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
                                                                                                                                                                                     ">
                                     <div class="card-body text-center">
-                                        <p>Register now to leave comments, likes and more!</p>
-                                        <p>Or <span class="text-success">Log in</span> if you're already have an account</p>
+                                        <p>@localizer["Register now to leave comments, likes and more!"]</p>
+                                        <p>@localizer["Or"] <span class="text-success">@localizer["Log in"]</span> @localizer["if you're already have an account"]</p>
                                     </div>
                                     <div class="text-center pb-3 pe-2">
 
@@ -614,14 +666,14 @@ else
                                                 class="btn btn-outline-dark btn-sm text-nowrap mx-1"
                                                 asp-formaction="Block" name="Block"
                                                 type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                            <i class="bi bi-person-fill-add"></i> Register
+                                            <i class="bi bi-person-fill-add"></i> @localizer["Register"]
                                         </button>
 
                                         <button @onclick="OnLoginSubmit"
                                                 class="btn btn-outline-success btn-sm text-nowrap mx-1"
                                                 asp-formaction="Block" name="Block"
                                                 type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                            <span class="bi bi-person-fill" aria-hidden="true" /> Log in
+                                            <span class="bi bi-person-fill" aria-hidden="true" /> @localizer["Log in"]
                                         </button>
 
 

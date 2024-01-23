@@ -1,4 +1,6 @@
-﻿@if (Comment is not null)
+﻿@inject IStringLocalizer<Resource> localizer
+
+@if (Comment is not null)
 {
     <div class="card h-100 fade-in" style="width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
         <div class="card-body">
@@ -23,7 +25,7 @@ else
         </div>
         <div class="card-footer text-end">
             <button class="btn btn-primary disabled placeholder col-6">
-                Details
+                @localizer["Details"]
             </button>
         </div>
     </div>

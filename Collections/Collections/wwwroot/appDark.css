@@ -30,7 +30,6 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 /*footer style*/
 
 .footerStyle {
-    /*background-image: linear-gradient(0deg, #d1d1d1, #ffffff);*/
     background-image: linear-gradient(0deg, var(--footer-gradient-dark), var(--footer-gradient-light));
 }
 
@@ -72,9 +71,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 /*nav menu style*/
 
 .navStyle {
-    /*background-image: linear-gradient(180deg, #d1d1d1, #ffffff);*/
     background-image: linear-gradient(180deg, #1a1a1a, #474747);
-    /*background-image: linear-gradient(0deg, #000000, #37363b);*/
 }
 
 .bi-house-door-fill-nav-menu {
@@ -283,7 +280,6 @@ select option {
 
 table {
     box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgb(28, 28, 28) 0px 6px 6px;
-    /*table-bg: red;*/
 }
 
 th {
@@ -296,8 +292,6 @@ th {
     background-color: var(--background-2);
     color: var(--text);
     text-shadow: 1px 1px 1px black;
-    /*border-bottom-width: 1px;*/
-    /*box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg)*/
 }
 
 .main-card {
@@ -321,6 +315,5 @@ th {
     box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
     border-radius: .5rem;
     margin: 0rem 2rem 2rem 2rem;
-    /*background-image: linear-gradient(10deg, #d1d1d1, #ffffff);*/
     background-image: linear-gradient(10deg, var(--dark-purple), var(--background-2));
 }

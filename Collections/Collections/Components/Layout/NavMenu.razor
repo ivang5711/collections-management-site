@@ -9,10 +9,10 @@
 
 <nav class="navbar navbar-expand-lg navStyle align-items-center" data-bs-theme="light">
     <div class="container-xxl">
-        <a href="/" class="me-3 navbar-text nav-link text-nowrap"
+        <a href="/" class="d-flex row-cols-2 align-items-center me-1 navbar-text nav-link text-nowrap"
            style="text-decoration:none">
-            <img src="/stack.svg" height="50" />
-            <span class="text-nowrap" style="font-size: 1rem">COLLECTIONS</span>
+            <div class="col-1"><i class="bi bi-stack main-pic" style="font-size: 3rem !important;"></i></div>
+            <div class="col-1 text-nowrap ps-1 ms-5" style="font-size: 1rem">COLLECTIONS</div>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarBM" aria-expanded="false"
@@ -24,22 +24,22 @@
                 <ul class="navbar-nav align-items-lg-center">
                     <AuthorizeView>
                         <li class="nav-item">
-                            <NavLink class="nav-link text-nowrap me-2"
+                            <NavLink class="nav-link text-nowrap me-2" onclick="this.blur();"
                                      href="/collections" Match="NavLinkMatch.All">
                                 <i class="bi bi-box2-heart-fill-nav-menu"></i> @localizer["My Collections"]
                             </NavLink>
                         </li>
                     </AuthorizeView>
                     <li class="nav-item">
-                        <NavLink class="nav-link text-nowrap me-2"
+                        <NavLink class="nav-link text-nowrap me-2" onclick="this.blur();"
                                  href="/all">
                             <i class="bi bi-globe2-nav-menu"></i> @localizer["See All"]
                         </NavLink>
                     </li>
                     <li class="ps-3">
                         <form class="d-flex text-nowrap" role="search" @onsubmit="SubmitSearch">
-                            <input class="form-control" style="min-width: 100px" @bind="SearchInput" type="search" placeholder="@localizer["Search"]" aria-label="Search">
-                            <button class="btn btn-outline-secondary mx-lg-1" type="submit"><i class="bi bi-search d-flex mx-auto align-items-center h-100 w-100 justify-content-center"></i></button>
+                            <input class="form-control search-input" style="min-width: 100px" @bind="SearchInput" type="search" placeholder="@localizer["Search"]" aria-label="Search">
+                            <button class="btn mx-lg-1 search-button" type="submit"><i class="bi bi-search d-flex mx-auto align-items-center h-100 w-100 justify-content-center search-icon"></i></button>
                         </form>
                     </li>                  
                 </ul>
@@ -47,7 +47,7 @@
             <ul class="navbar-nav align-items-lg-center">
                 <AuthorizeView Roles="Admin">
                     <li class="nav-item">
-                        <NavLink class="nav-link text-nowrap" href="admin">
+                        <NavLink class="nav-link text-nowrap" onclick="this.blur();" href="admin">
                             <span class="bi bi-gear-nav-menu"
                                   aria-hidden="true"></span>
                         </NavLink>
@@ -63,7 +63,7 @@
                     <Authorized>
                         <span class="navbar-nav">
                             <span class="nav-item">
-                                <NavLink class="nav-link text-nowrap me-2" href="Account/Manage">
+                                <NavLink class="nav-link text-nowrap me-2" onclick="this.blur();" href="Account/Manage">
                                     <span class="bi bi-person-fill-nav-menu"
                                           aria-hidden="true">
                                     </span> @localizer["Hello"], @(context.User.Identity?.Name)!
@@ -76,7 +76,7 @@
                                     <AntiforgeryToken />
                                     <input type="hidden" name="ReturnUrl"
                                            value="@currentUrl" />
-                                    <button type="submit" class="nav-link me-2">
+                                    <button type="submit" onclick="this.blur();" class="nav-link me-2">
                                         <span class="bi bi-arrow-bar-left-nav-menu"
                                               aria-hidden="true"></span> @localizer["Logout"]
                                     </button>
@@ -87,7 +87,7 @@
                     <NotAuthorized>
                         <span class="navbar-nav">
                             <span class="nav-item">
-                                <NavLink class="nav-link text-nowrap me-2" href="Account/Register">
+                                <NavLink class="nav-link text-nowrap me-2" onclick="this.blur();" href="Account/Register">
                                     <span class="bi bi-person-nav-menu"
                                           aria-hidden="true"></span> @localizer["Register"]
                                 </NavLink>
@@ -95,7 +95,7 @@
                         </span>
                         <span class="navbar-nav">
                             <span class="nav-item">
-                                <NavLink class="nav-link text-nowrap me-2" href="Account/Login">
+                                <NavLink class="nav-link text-nowrap me-2" onclick="this.blur();" href="Account/Login">
                                     <span class="bi bi-person-badge-nav-menu"
                                           aria-hidden="true"></span> @localizer["Login"]
                                 </NavLink>

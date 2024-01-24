@@ -1,0 +1,4 @@
+input:checked {
+    border-color: #110332 !important;
+    background-color: #2f126f !important;
+}

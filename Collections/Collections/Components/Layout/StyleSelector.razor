@@ -1,0 +1,31 @@
+﻿@inject NavigationManager Navigation
+@inject IStringLocalizer<Resource> localizer
+@inject IHttpContextAccessor ht
+
+<div class="d-flex row-cols-3 text-nowrap align-items-center">
+
+    <span><i class="bi bi-brightness-high-fill"></i></span>
+    <span class="form-check form-switch align-items-center m-0">
+        <input @bind="Style" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+    </span>
+    <span><i class="bi bi-moon-stars-fill"></i></span>
+</div>
+
+@code {
+    private bool style;
+
+    protected override void OnInitialized()
+    {
+        style = bool.Parse(ht.HttpContext?.Request.Cookies["style"] ?? "true");
+    }
+
+    public bool Style
+    {
+        get { return style; }
+        set
+        {
+            style = value;
+            Navigation.NavigateTo($"/style?style={style.ToString()}", true);
+        }
+    }
+}

@@ -44,7 +44,7 @@ else
                                             <div class="pe-md-0 mx-0">
                                                 <InputText @bind-Value="NewTag" requred list="datalistOptions" 
                                                 id="exampleDataList" class="input-group-text input-group-lg w-100" 
-                                                placeholder="Tags..." />
+                                                placeholder="@localizer["Tags..."]" />
                                                 <datalist id="datalistOptions">
                                                     @foreach (var t in Tags)
                                                     {
@@ -68,7 +68,7 @@ else
                             </div>
                             <div class="pt-3">
                                 <a href="/collection-details/@CurrentItem.Collection.Id">
-                                    <span class="badge text-bg-dark">collection: @CurrentItem.Collection.Name</span>
+                                    <span class="badge text-bg-dark">@localizer["Collection"]: @CurrentItem.Collection.Name</span>
                                 </a>
                             </div>
                             <div class="pt-3">
@@ -85,12 +85,12 @@ else
                                         <AuthorizeView>
                                             <Authorized>
                                                 <button class="badge text-bg-success ms-1" style="border: none;" 
-                                                type="button" disabled @onclick="() => SubmitRemoveTag(t.Id)">
+                                                type="button" @onclick="() => SubmitRemoveTag(t.Id)">
                                                     @t.Name
                                                 </button>
                                             </Authorized>
                                             <NotAuthorized>
-                                                <button class="badge text-bg-success ms-1" style="border: none;" type="button">
+                                                <button class="badge text-bg-success ms-1" disabled style="border: none;" type="button">
                                                     @t.Name
                                                 </button>
                                             </NotAuthorized>
@@ -174,7 +174,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                             <EditForm Context="formContext2" Model="@ItemModel" OnSubmit="@SubmitEditItem" 
                                                 FormName="EditCollectionForm">
                                                 <div class="card-body">
-                                                    <p class="card-text"><small class="text-muted">Created 
+                                                    <p class="card-text"><small class="text-muted">@localizer["Created"] 
                                                         @ItemModel!.CreationDateTime.ToLocalTime()</small></p>
                                                     <div class="px-5 py-2">
 
@@ -185,7 +185,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                             <ValidationSummary />
                                                             <InputText @bind-Value="ItemModel!.Name" type="text" 
                                                             class="input-group-text input-group-lg my-2 w-100" 
-                                                            placeholder="Item New Name..." />
+                                                            placeholder="@localizer["Item New Name..."]" />
                                                             @if (ItemModel.NumericalFields.Count > 0)
                                                             {
                                                                 <ul class="list-group custom-field">
@@ -235,9 +235,11 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                                     {
                                                                         <li class="list-group-item">
                                                                             <input type="text" for="exampleFormControlTextarea1" 
-                                                                                class="form-control mb-1" @bind="@item.Name">
+                                                                                class="form-control mb-1" @bind="@item.Name"
+                                                                                   placeholder="@localizer["Text field name..."]">
                                                                             <textarea class="form-control" 
-                                                                            id="exampleFormControlTextarea1" 
+                                                                            id="exampleFormControlTextarea1"
+                                                                                      placeholder="@localizer["Text field content..."]"
                                                                             @bind="@item.Value" rows="3"></textarea>
                                                                         </li>
                                                                     }
@@ -376,7 +378,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
 
                                                         <button class="btn btn-outline-success text-nowrap"
                                                                 type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                            <i class="bi bi-plus-square"></i> @localizer["Update"]"
+                                                            <i class="bi bi-plus-square"></i> @localizer["Update"]
                                                         </button>
                                                     }
                                                 </div>
@@ -422,12 +424,12 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                         class="btn btn-outline-secondary text-nowrap"
                                                         asp-formaction="Block" name="Block"
                                                         type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                    <i class="bi bi-plus-square"></i> @localizer["Cancel"]"
+                                                    <i class="bi bi-plus-square"></i> @localizer["Cancel"]
                                                 </button>
                                                 <button @onclick="SubmitDeleteItem"
                                                         class="btn btn-outline-danger text-nowrap"
                                                         type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                    <i class="bi bi-plus-square"></i> @localizer["Delete"]"
+                                                    <i class="bi bi-plus-square"></i> @localizer["Delete"]
                                                 </button>
                                             </div>
                                         </div>
@@ -520,7 +522,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
 
                                                     <label for="exampleFormControlTextarea1" 
                                                         class="form-label">@(item.Name):</label>
-                                                    <textarea class="form-control" 
+                                                    <textarea class="form-control bg-light" disabled
                                                     id="exampleFormControlTextarea1" rows="3">@item.Value</textarea>
                                                 </li>
                                             }
@@ -557,6 +559,42 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                     <hr />
                                 </div>
                             </div>
+                            <div class="row row-cols-8 row-cols-lg-8
+                                        row-cols-x1-5 g-3
+                                        justify-content-center my-1 py-2">
+                                <div class="card h-100 fade-in"
+                                     style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
+                                    <div class="card-body ">
+                                        <textarea @ref="inputToFocus" class="form-control"
+                                                  @bind="CommentText"
+                                                  required
+                                                  placeholder="@localizer["Enter your comment"]"
+                                                  aria-label="With textarea">
+                                               </textarea>
+                                    </div>
+                                    <div class="text-end pb-3 pe-2">
+                                        @if (CommentText is null)
+                                        {
+
+                                            <button @onclick="Focus"
+                                                    class="btn btn-outline-secondary btn-sm text-nowrap"
+                                                    asp-formaction="Block" name="Block"
+                                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                <i class="bi bi-chat-left-text"></i> @localizer["Leave Comment"]
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button @onclick="SubmitComment"
+                                                    class="btn btn-outline-secondary btn-sm text-nowrap"
+                                                    asp-formaction="Block" name="Block"
+                                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                <i class="bi bi-chat-left-text"></i> @localizer["Leave Comment"]
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
                             @if (CurrentItem.Comments.Count != 0)
                             {
                                 <div class="row justify-content-center example pb-3"
@@ -564,8 +602,8 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                     <Virtualize Items="@Comments" Context="comment">
                                         <ItemContent>
                                             <div class="row row-cols-8 row-cols-lg-8
-                                            row-cols-x1-5 g-3
-                                justify-content-center my-1">
+                                                        row-cols-x1-5 g-3
+                                                        justify-content-center my-1">
                                                 <CommentCard Comment="comment" />
                                             </div>
                                         </ItemContent>
@@ -582,42 +620,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                     </Virtualize>
                                 </div>
                             }
-                            <div class="row row-cols-8 row-cols-lg-8
-                                        row-cols-x1-5 g-3
-                                        justify-content-center my-1 py-2">
-                                <div class="card h-100 fade-in"
-                                     style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
-                                    <div class="card-body ">
-                                        <textarea @ref="inputToFocus" class="form-control"
-                                                  @bind="CommentText"
-                                                  required
-                                                  placeholder="@localizer["Enter your comment"]"..."
-                                                  aria-label="With textarea">
-                                       </textarea>
-                                    </div>
-                                    <div class="text-end pb-3 pe-2">
-                                        @if (CommentText is null)
-                                        {
-
-                                            <button @onclick="Focus"
-                                                    class="btn btn-outline-secondary btn-sm text-nowrap"
-                                                    asp-formaction="Block" name="Block"
-                                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                <i class="bi bi-chat-left-text"></i> @localizer["Leave Comment"]"
-                                            </button>
-                                        }
-                                        else
-                                        {
-                                            <button @onclick="SubmitComment"
-                                                    class="btn btn-outline-secondary btn-sm text-nowrap"
-                                                    asp-formaction="Block" name="Block"
-                                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                <i class="bi bi-chat-left-text"></i> @localizer["Leave Comment"]"
-                                            </button>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </Authorized>

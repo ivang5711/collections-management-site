@@ -198,6 +198,9 @@
   <data name="Collection Name" xml:space="preserve">
     <value>Name der Sammlung</value>
   </data>
+  <data name="Collection Name..." xml:space="preserve">
+    <value>Name der Sammlung</value>
+  </data>
   <data name="Collection New Description" xml:space="preserve">
     <value>Sammlung Neue Beschreibung</value>
   </data>
@@ -231,7 +234,7 @@
   <data name="Date" xml:space="preserve">
     <value>Datum</value>
   </data>
-  <data name="Date Field name..." xml:space="preserve">
+  <data name="Date field name..." xml:space="preserve">
     <value>Datum Feldname...</value>
   </data>
   <data name="Delete" xml:space="preserve">
@@ -276,8 +279,14 @@
   <data name="Email" xml:space="preserve">
     <value>E-Mail</value>
   </data>
+  <data name="English" xml:space="preserve">
+    <value>Englisch</value>
+  </data>
   <data name="Enter new collection category" xml:space="preserve">
     <value>Neue Sammlungskategorie eingeben</value>
+  </data>
+  <data name="Enter new collection category..." xml:space="preserve">
+    <value>Neue Sammlungskategorie eingeben...</value>
   </data>
   <data name="Enter your comment" xml:space="preserve">
     <value>Geben Sie Ihren Kommentar ein</value>
@@ -293,6 +302,9 @@
   </data>
   <data name="Full name" xml:space="preserve">
     <value>Vollständiger Name</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>Deutsch</value>
   </data>
   <data name="Hello" xml:space="preserve">
     <value>Hallo</value>
@@ -318,6 +330,9 @@
   <data name="Item New Name" xml:space="preserve">
     <value>Neuer Name des Elements</value>
   </data>
+  <data name="Item New Name..." xml:space="preserve">
+    <value>Neuer Name des Elements...</value>
+  </data>
   <data name="Last login time (UTC)" xml:space="preserve">
     <value>Letzte Anmeldezeit (UTC)</value>
   </data>
@@ -339,7 +354,7 @@
   <data name="Logical" xml:space="preserve">
     <value>Logisch</value>
   </data>
-  <data name="Logical Field Name..." xml:space="preserve">
+  <data name="Logical field name..." xml:space="preserve">
     <value>Name des logischen Feldes...</value>
   </data>
   <data name="Login" xml:space="preserve">
@@ -372,10 +387,10 @@
   <data name="Numeric" xml:space="preserve">
     <value>Numerisch</value>
   </data>
-  <data name="Numerical Field Name..." xml:space="preserve">
+  <data name="Numerical field name..." xml:space="preserve">
     <value>Numerischer Feldname...</value>
   </data>
-  <data name="Numerical Field Value..." xml:space="preserve">
+  <data name="Numerical field value..." xml:space="preserve">
     <value>Numerischer Feldwert...</value>
   </data>
   <data name="Old password" xml:space="preserve">
@@ -483,10 +498,10 @@
   <data name="String" xml:space="preserve">
     <value>Schnur</value>
   </data>
-  <data name="String Field Name..." xml:space="preserve">
+  <data name="String field name..." xml:space="preserve">
     <value>Name des Zeichenfolgenfelds...</value>
   </data>
-  <data name="String Field Value..." xml:space="preserve">
+  <data name="String field value..." xml:space="preserve">
     <value>Zeichenfolgen-Feldwert...</value>
   </data>
   <data name="String1" xml:space="preserve">
@@ -498,13 +513,16 @@
   <data name="Tags" xml:space="preserve">
     <value>Schilder</value>
   </data>
+  <data name="Tags..." xml:space="preserve">
+    <value>Schilder...</value>
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Text</value>
   </data>
-  <data name="Text Field Content..." xml:space="preserve">
+  <data name="Text field content..." xml:space="preserve">
     <value>Inhalt des Textfeldes...</value>
   </data>
-  <data name="Text Field Name..." xml:space="preserve">
+  <data name="Text field name..." xml:space="preserve">
     <value>Name des Textfeldes...</value>
   </data>
   <data name="Thank you for confirming your email change." xml:space="preserve">
@@ -515,6 +533,9 @@
   </data>
   <data name="Theme" xml:space="preserve">
     <value>Thema</value>
+  </data>
+  <data name="Theme..." xml:space="preserve">
+    <value>Thema...</value>
   </data>
   <data name="There are no changes pending to apply" xml:space="preserve">
     <value>Es stehen keine Änderungen aus, die angewendet werden müssen</value>
@@ -554,6 +575,9 @@
   </data>
   <data name="User name" xml:space="preserve">
     <value>Benutzername</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Nutzername</value>
   </data>
   <data name="Warning" xml:space="preserve">
     <value>Warnung</value>

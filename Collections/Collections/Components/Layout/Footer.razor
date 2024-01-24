@@ -1,4 +1,5 @@
 ﻿@inject IStringLocalizer<Resource> localizer
+@inject IConfiguration _configuration
 
 <div class="p-3 footerStyle" data-bs-theme="dark">
     <div class="container-xxl">
@@ -26,20 +27,37 @@
             <div class="col text-md-end">
                 <div class="row">
                     <div class="col-12">
-                        <a href="#"><i class="bg bi-youtube"></i></a>
-                        <a href="#"><i class="bg bi-telegram"></i></a>
-                        <a href="#"><i class="bg bi-github"></i></a>
-                        <a href="#"><i class="bg bi-linkedin"></i></a>
+                        <a href="@youtubeLink"><i class="bg bi-youtube"></i></a>
+                        <a href="@telegramLink"><i class="bg bi-telegram"></i></a>
+                        <a href="@githubLink"><i class="bg bi-github"></i></a>
+                        <a href="@linkedinLink"><i class="bg bi-linkedin"></i></a>
                     </div>
                     <div class="col-12">
-                        <a href="#">@localizer["Blog"]</a>
                         &bull;
-                        <a href="#">@localizer["Portfolio"]</a>
+                        <a href="@portfolioLink">@localizer["Portfolio"]</a>
                         &bull;
-                        <a href="#">@localizer["Bug Tracker"]</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@code{
+
+    private string githubLink = string.Empty;
+    private string youtubeLink = string.Empty;
+    private string telegramLink = string.Empty;
+    private string linkedinLink = string.Empty;
+    private string portfolioLink = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        githubLink = _configuration.GetValue<string>("GithubLink") ?? string.Empty;
+        youtubeLink = _configuration.GetValue<string>("YoutubeLink") ?? string.Empty;
+        telegramLink = _configuration.GetValue<string>("TelegramLink") ?? string.Empty;
+        linkedinLink = _configuration.GetValue<string>("LinkedinLink") ?? string.Empty;
+        portfolioLink = _configuration.GetValue<string>("PortfolioLink") ?? string.Empty;
+    }
+
+}

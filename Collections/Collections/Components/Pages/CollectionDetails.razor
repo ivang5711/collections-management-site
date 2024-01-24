@@ -186,29 +186,29 @@ else
                                                     <div class="card-body">
                                                         @if (FieldToAdd == typeof(NumericalField).FullName)
                                                         {
-                                                            <input type="text" class="form-control my-2" placeholder="@localizer["Numerical Field Name..."]" @bind="NewNumericField.Name" />
-                                                            <input type="text" class="form-control my-2" placeholder="@localizer["Numerical Field Value..."]" @bind="NewNumericField.Value" />
+                                                            <input type="text" class="form-control my-2" placeholder="@localizer["Numerical field name..."]" @bind="NewNumericField.Name" />
+                                                            <input type="text" class="form-control my-2" placeholder="@localizer["Numerical field value..."]" @bind="NewNumericField.Value" />
                                                         }
                                                         else if (FieldToAdd == typeof(StringField).FullName)
                                                         {
-                                                            <input type="text" class="form-control my-2" placeholder="@localizer["String Field Name..."]" @bind="NewStringField.Name" />
-                                                            <input type="text" class="form-control my-2" placeholder="@localizer["String Field Value..."]" @bind="NewStringField.Value" />
+                                                            <input type="text" class="form-control my-2" placeholder="@localizer["String field name..."]" @bind="NewStringField.Name" />
+                                                            <input type="text" class="form-control my-2" placeholder="@localizer["String field value..."]" @bind="NewStringField.Value" />
                                                         }
                                                         else if (FieldToAdd == typeof(TextField).FullName)
                                                         {
-                                                            <input type="text" class="form-control my-2" placeholder="@localizer["Text Field Name..."]" @bind="NewTextField.Name" />
-                                                            <input type="text" class="form-control my-2" placeholder="@localizer["Text Field Content..."]" @bind="NewTextField.Value" />
+                                                            <input type="text" class="form-control my-2" placeholder="@localizer["Text field name..."]" @bind="NewTextField.Name" />
+                                                            <input type="text" class="form-control my-2" placeholder="@localizer["Text field content..."]" @bind="NewTextField.Value" />
                                                         }
                                                         else if (FieldToAdd == typeof(LogicalField).FullName)
                                                         {
                                                             <div class="form-check form-switch d-flex align-items-center gap-2 my-2">
                                                                 <input class="form-check-input" @bind="NewLogicalField.Value" type="checkbox" id="flexSwitchCheckDefault">
-                                                                <input type="text" class="form-control" placeholder="@localizer["Logical Field Name..."]" @bind="NewLogicalField.Name" />
+                                                                <input type="text" class="form-control" placeholder="@localizer["Logical field name..."]" @bind="NewLogicalField.Name" />
                                                             </div>
                                                         }
                                                         else if (FieldToAdd == typeof(DateField).FullName)
                                                         {
-                                                            <input type="text" class="form-control my-2" placeholder="@localizer["Date Field name..."]" @bind="NewDateField.Name" />
+                                                            <input type="text" class="form-control my-2" placeholder="@localizer["Date field name..."]" @bind="NewDateField.Name" />
                                                             <input type="date" class="form-control my-2" placeholder="@DateTime.UtcNow.Date" @bind="NewDateField.Value" />
                                                         }
                                                         <div class="d-flex pt-3 mx-0 px-0 justify-content-end row col-md row-cols-md-auto gap-1">
@@ -308,10 +308,10 @@ else
                                                 @* Identifier: *@
                                                 <InputText @bind-Value="CollectionModel!.Name" type="text"
                                                 class="input-group-text input-group-lg w-100 my-2"
-                                                placeholder="Collection New Name..." />
+                                                placeholder="@localizer["Collection New Name"]" />
                                                 <InputTextArea @bind-Value="CollectionModel.Description"
                                                 type="text" class="text-start input-group-text input-group-lg w-100 my-2"
-                                                placeholder="@localizer["Collection New Description"]" />
+                                                               placeholder="@localizer["Collection New Description"]" />
 
                                                 @* <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection new photo (optional)..." /> *@
                                                 @if (!string.IsNullOrWhiteSpace(FileError2))
@@ -327,9 +327,9 @@ else
                                                 {
                                                     <InputFile OnChange="UploadFile2" class="form-control my-2" type="file" id="formFile" accept=".png,.jpg,.jpeg,.tiff" />
                                                 }
-                                                <div class="row row-cols-1 row-cols-md-3">
+                                                <div class="row row-cols-1 row-cols-md-2">
                                                     <div class="flex-fill pe-md-0 mx-0">
-                                                        <input @bind="ThemeNameChoosen" class="form-control" list="datalistOptions" id="exampleDataList" placeholder="@localizer["Theme"]"...">
+                                                        <input @bind="ThemeNameChoosen" class="form-control" list="datalistOptions" id="exampleDataList" placeholder="@localizer["Theme"]">
                                                         <datalist id="datalistOptions">
                                                             @foreach (var t in Themes)
                                                             {
@@ -342,7 +342,7 @@ else
                                                                 class="btn w-100 btn-outline-secondary text-nowrap"
                                                                 asp-formaction="Block" name="Block"
                                                                 type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                            <i class="bi bi-plus-square"></i> @localizer["Add Theme"]"
+                                                            <i class="bi bi-plus-square"></i> @localizer["Add Theme"]
                                                         </button>
                                                     </div>
                                                 </div>
@@ -351,7 +351,7 @@ else
                                             {
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        @localizer["New category"]"
+                                                        @localizer["New category"]
                                                     </div>
                                                     <div class="card-body">
                                                         @if (!newThemeAddFinishedSuccessfully)
@@ -366,7 +366,7 @@ else
                                                                 </div>
                                                             </div>
                                                         }
-                                                        <input type="text" @bind="NewTheme" class="form-control mt-3" placeholder="@localizer["Enter new collection category"]"...">
+                                                        <input type="text" @bind="NewTheme" class="form-control mt-3" placeholder="@localizer["Enter new collection category"]">
                                                         <div class="d-flex justify-content-end me-0 ms-0 mt-3 mb-0 row col-md
                                                             row-cols-md-auto gap-1">
                                                             <button @onclick="RequestNewTheme"

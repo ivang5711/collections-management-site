@@ -199,6 +199,9 @@
   <data name="Collection Name" xml:space="preserve">
     <value>Collection Name</value>
   </data>
+  <data name="Collection Name..." xml:space="preserve">
+    <value>Collection Name...</value>
+  </data>
   <data name="Collection New Description" xml:space="preserve">
     <value>Collection New Description</value>
   </data>
@@ -232,7 +235,7 @@
   <data name="Date" xml:space="preserve">
     <value>Date</value>
   </data>
-  <data name="Date Field name..." xml:space="preserve">
+  <data name="Date field name..." xml:space="preserve">
     <value>Date Field name...</value>
   </data>
   <data name="Delete" xml:space="preserve">
@@ -277,8 +280,14 @@
   <data name="Email" xml:space="preserve">
     <value>Email</value>
   </data>
+  <data name="English" xml:space="preserve">
+    <value>English</value>
+  </data>
   <data name="Enter new collection category" xml:space="preserve">
     <value>Enter new collection category</value>
+  </data>
+  <data name="Enter new collection category..." xml:space="preserve">
+    <value>Enter new collection category...</value>
   </data>
   <data name="Enter your comment" xml:space="preserve">
     <value>Enter your comment</value>
@@ -294,6 +303,9 @@
   </data>
   <data name="Full name" xml:space="preserve">
     <value>Full name</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>German</value>
   </data>
   <data name="Hello" xml:space="preserve">
     <value>Hello</value>
@@ -319,6 +331,9 @@
   <data name="Item New Name" xml:space="preserve">
     <value>Item New Name</value>
   </data>
+  <data name="Item New Name..." xml:space="preserve">
+    <value>Item New Name...</value>
+  </data>
   <data name="Last login time (UTC)" xml:space="preserve">
     <value>Last login time (UTC)</value>
   </data>
@@ -340,7 +355,7 @@
   <data name="Logical" xml:space="preserve">
     <value>Logical</value>
   </data>
-  <data name="Logical Field Name..." xml:space="preserve">
+  <data name="Logical field name..." xml:space="preserve">
     <value>Logical Field Name...</value>
   </data>
   <data name="Login" xml:space="preserve">
@@ -373,10 +388,10 @@
   <data name="Numeric" xml:space="preserve">
     <value>Numeric</value>
   </data>
-  <data name="Numerical Field Name..." xml:space="preserve">
+  <data name="Numerical field name..." xml:space="preserve">
     <value>Numerical Field Name...</value>
   </data>
-  <data name="Numerical Field Value..." xml:space="preserve">
+  <data name="Numerical field value..." xml:space="preserve">
     <value>Numerical Field Value...</value>
   </data>
   <data name="Old password" xml:space="preserve">
@@ -485,10 +500,10 @@
   <data name="String" xml:space="preserve">
     <value>String</value>
   </data>
-  <data name="String Field Name..." xml:space="preserve">
+  <data name="String field name..." xml:space="preserve">
     <value>String Field Name...</value>
   </data>
-  <data name="String Field Value..." xml:space="preserve">
+  <data name="String field value..." xml:space="preserve">
     <value>String Field Value...</value>
   </data>
   <data name="Submit" xml:space="preserve">
@@ -497,13 +512,16 @@
   <data name="Tags" xml:space="preserve">
     <value>Tags</value>
   </data>
+  <data name="Tags..." xml:space="preserve">
+    <value>Tags...</value>
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Text</value>
   </data>
-  <data name="Text Field Content..." xml:space="preserve">
+  <data name="Text field content..." xml:space="preserve">
     <value>Text Field Content...</value>
   </data>
-  <data name="Text Field Name..." xml:space="preserve">
+  <data name="Text field name..." xml:space="preserve">
     <value>Text Field Name...</value>
   </data>
   <data name="Thank you for confirming your email change." xml:space="preserve">
@@ -514,6 +532,9 @@
   </data>
   <data name="Theme" xml:space="preserve">
     <value>Theme</value>
+  </data>
+  <data name="Theme..." xml:space="preserve">
+    <value>Theme...</value>
   </data>
   <data name="There are no changes pending to apply" xml:space="preserve">
     <value>There are no changes pending to apply</value>
@@ -553,6 +574,9 @@
   </data>
   <data name="User name" xml:space="preserve">
     <value>User name</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
   </data>
   <data name="Warning" xml:space="preserve">
     <value>Warning</value>

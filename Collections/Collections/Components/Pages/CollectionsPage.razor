@@ -74,7 +74,7 @@
                                             <DataAnnotationsValidator />
                                             <ValidationSummary />
                                             <InputText @bind-Value="Model!.Name" type="text" required
-            class= "input-group-text input-group-lg w-100 my-2" placeholder = "@localizer["Collection Name"]"..." />
+            class= "input-group-text input-group-lg w-100 my-2" placeholder = "@localizer["Collection Name..."]" />
                                             <InputTextArea @bind-Value="Model.Description" required type="text"
             class= "text-start input-group-text input-group-lg w-100 my-2" placeholder = "@localizer["Collection New Description"]" />
                                             @* <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection photo (optional)..." /> *@
@@ -96,7 +96,7 @@
                                                 <div class="flex-fill pe-md-0 mx-0">
 
                                                     <InputText @bind-Value="ThemeNameChoosen" required class="form-control" 
-                                                    list="datalistOptions" id="exampleDataList" placeholder="@localizer["Theme"]"..." />
+                                                    list="datalistOptions" id="exampleDataList" placeholder="@localizer["Theme..."]" />
                                                     <datalist id="datalistOptions">
                                                         @foreach (var t in Themes)
                                                         {
@@ -119,7 +119,7 @@
                                         {
                                             <div class="card">
                                                 <div class="card-header">
-                                                    New category
+                                                    @localizer["New category"]
                                                 </div>
                                                 <div class="card-body">
                                                     @if (!newThemeAddFinishedSuccessfully)
@@ -136,7 +136,7 @@
                                                         </div>
                                                     }
                                                     <input type="text" @bind="NewTheme" class="form-control mt-3" 
-                                                    placeholder="@localizer["Enter new collection category"]"...">
+                                                    placeholder="@localizer["Enter new collection category..."]">
                                                     <div class="d-flex justify-content-end me-0 ms-0 mt-3 mb-0 row col-md
                                  row-cols-md-auto gap-1">
                                                         <button @onclick="RequestNewTheme"

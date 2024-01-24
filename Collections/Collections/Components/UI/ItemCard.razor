@@ -13,7 +13,7 @@
 @if (Item is not null)
 {
     <a href="/item-details/@Collection!.Id/@Item.Id">
-        <div class="card bg-text h-100 card-container" style="min-width: 12rem; min-height: 18rem">
+        <div class="card main-card bg-text h-100 card-container item-card-container" style="min-width: 12rem; min-height: 18rem">
             @if (!string.IsNullOrWhiteSpace(@Item.ImageLink))
             {
                 <img class="card-img-top" alt="Collection Item"
@@ -46,7 +46,7 @@
 }
 else
 {
-    <div class="card h-100">
+    <div class="card main-card h-100">
         <img class="card-img-top" alt="Collection Item"
              src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" />
         <div class="card-body border-top bg-light">

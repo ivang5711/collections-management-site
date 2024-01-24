@@ -6,6 +6,7 @@
     --text-accent: #a2a2a2;
     --text-accent-2: #dedede;
     --purple: #6b49b6;
+    --dark-purple: #0a0712;
 }
 
 
@@ -171,8 +172,13 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     mask-repeat:no-repeat;
 }
 
+canvas {
+    background-image: linear-gradient(10deg, var(--dark-purple), var(--background-2));
+    object-fit: cover;
+}
+
 .search-input {
-    background-color: rgba(255,255,255,0.38);
+    background-color: #999797ff;
 }
 
     .search-input:focus {
@@ -312,6 +318,12 @@ th {
 .main-card {
     background-color: var(--background-2);
     color: var(--text);
+}
+
+.item-card-container {
+    box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
+    border-radius: .5rem;
+    background-image: linear-gradient(10deg, var(--dark-purple), var(--background-2));
 }
 
 

@@ -43,7 +43,7 @@ else
                                         <div class="row row-cols-1 row-cols-md-2 my-2 d-flex justify-content-md-end">
                                             <div class="pe-md-0 mx-0">
                                                 <InputText @bind-Value="NewTag" requred list="datalistOptions" 
-                                                id="exampleDataList" class="input-group-text input-group-lg w-100" 
+                                                id="exampleDataList" class="search-input input-group-text input-group-lg w-100" 
                                                 placeholder="@localizer["Tags..."]" />
                                                 <datalist id="datalistOptions">
                                                     @foreach (var t in Tags)
@@ -153,7 +153,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                         @if (editItemRequested && !deleteItemRequested && !editPhotoRequested)
                         {
                             <div class="poster-container2 py-2 ">
-                                <div class="card w-100 mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
+                                <div class="card main-card w-100 mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
                                     <div class="row g-0">
                                         @if (string.IsNullOrWhiteSpace(ItemModel!.ImageLink))
                                         {
@@ -184,7 +184,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                             <DataAnnotationsValidator />
                                                             <ValidationSummary />
                                                             <InputText @bind-Value="ItemModel!.Name" type="text" 
-                                                            class="input-group-text input-group-lg my-2 w-100" 
+                                                            class="search-input input-group-text input-group-lg my-2 w-100" 
                                                             placeholder="@localizer["Item New Name..."]" />
                                                             @if (ItemModel.NumericalFields.Count > 0)
                                                             {
@@ -194,11 +194,11 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                                         <li class="list-group-item">
                                                                             <div class="d-flex row row-cols-md-auto">
                                                                                 <div class="p-2"><input type="text" 
-                                                                                    class="form-control" @bind="@item.Name" 
+                                                                                    class="search-input form-control" @bind="@item.Name" 
                                                                                     placeholder="@localizer["Numerical field name..."]" />
                                                                                 </div>
                                                                                 <div class="p-2 flex-fill"><input type="text" 
-                                                                                    class="form-control" 
+                                                                                    class="search-input form-control" 
                                                                                     placeholder="@localizer["Numerical field value..."]" 
                                                                                     @bind="@item.Value" /></div>
                                                                             </div>
@@ -215,11 +215,11 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                                         <li class="list-group-item">
                                                                             <div class="d-flex row row-cols-md-auto">
                                                                                 <div class="p-2"><input type="text" 
-                                                                                    class="form-control" @bind="@item.Name" 
+                                                                                    class="search-input form-control" @bind="@item.Name" 
                                                                                     placeholder="@localizer["String field name..."]" />
                                                                                 </div>
                                                                                 <div class="p-2 flex-fill"><input type="text" 
-                                                                                    class="form-control" 
+                                                                                    class="search-input form-control" 
                                                                                     placeholder="@localizer["String field value..."]" 
                                                                                     @bind="@item.Value" /></div>
                                                                             </div>
@@ -235,9 +235,9 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                                     {
                                                                         <li class="list-group-item">
                                                                             <input type="text" for="exampleFormControlTextarea1" 
-                                                                                class="form-control mb-1" @bind="@item.Name"
+                                                                                class="search-input form-control mb-1" @bind="@item.Name"
                                                                                    placeholder="@localizer["Text field name..."]">
-                                                                            <textarea class="form-control" 
+                                                                            <textarea class="search-input form-control" 
                                                                             id="exampleFormControlTextarea1"
                                                                                       placeholder="@localizer["Text field content..."]"
                                                                             @bind="@item.Value" rows="3"></textarea>
@@ -252,10 +252,10 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                                     {
                                                                         <li class="list-group-item row-cols-2 d-flex align-items-center">
                                                                             <span class="form-check col-auto form-switch">
-                                                                                <input class="form-check-input" @bind="item.Value" 
+                                                                                <input class="search-input form-check-input" @bind="item.Value" 
                                                                                 type="checkbox" id="flexSwitchCheckDefault" />
                                                                             </span>
-                                                                            <input type="text" class="flex-fill form-control" 
+                                                                            <input type="text" class="search-input flex-fill form-control" 
                                                                             @bind="@item.Name" 
                                                                             placeholder="@localizer["Logical field name..."]" />
                                                                         </li>
@@ -270,10 +270,10 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                                         <li class="list-group-item">
                                                                             <div class="d-flex row row-cols-md-auto">
                                                                                 <div class="p-2 flex-fill "><input type="text" 
-                                                                                    class="form-control" @bind="@item.Name" 
+                                                                                    class="search-input form-control" @bind="@item.Name" 
                                                                                     placeholder="@localizer["Logical field name..."]" /></div>
                                                                                 <div class="p-2 "><input type="date" 
-                                                                                    class="form-control w-md-auto" 
+                                                                                    class="search-input form-control w-md-auto" 
                                                                                     @bind="@item.Value" /></div>
                                                                             </div>
 
@@ -287,14 +287,14 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                 <div class="pb-2 pe-3 mx-0 d-flex justify-content-end row col-md
                                                         row-cols-md-auto gap-1 card-footer">
                                                     <button @onclick="CancelEditItem"
-                                                            class="btn btn-outline-secondary text-nowrap"
+                                                            class="btn btn-secondary text-nowrap"
                                                             asp-formaction="Block" name="Block"
                                                             type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                        <i class="bi bi-plus-square"></i> @localizer["Cancel"]
+                                                        <i class="bi bi-x-square-fill"></i> @localizer["Cancel"]
                                                     </button>
                                                     @if (ItemModel!.Name == CurrentItem.Name)
                                                     {
-                                                        <button class="btn btn-outline-success text-nowrap"
+                                                        <button class="btn btn-success text-nowrap"
                                                                 type="submit" disabled value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                             <i class="bi bi-plus-square"></i> @localizer["Update"]
                                                         </button>
@@ -302,7 +302,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                     else
                                                     {
 
-                                                        <button class="btn btn-outline-success text-nowrap"
+                                                        <button class="btn btn-success text-nowrap"
                                                                 type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                             <i class="bi bi-plus-square"></i> @localizer["Update"]
                                                         </button>
@@ -317,7 +317,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                         @if (editPhotoRequested && !editItemRequested && !deleteItemRequested)
                         {
                             <div class="poster-container2 py-2 ">
-                                <div class="card w-100 mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
+                                <div class="card main-card w-100 mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
                                     <div class="row g-0">
                                         @if (string.IsNullOrWhiteSpace(TempImg))
                                         {
@@ -353,7 +353,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                         }
                                                         @if (ItemModel is not null)
                                                         {
-                                                            <InputFile OnChange="UploadFile" class="form-control my-2" 
+                                                            <InputFile OnChange="UploadFile" class="search-input form-control my-2" 
                                                             type="file" id="formFile" accept=".png,.jpg,.jpeg,.tiff" />
                                                         }
                                                     </div>
@@ -361,14 +361,14 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                 <div class="pb-2 pe-3 mx-0 d-flex justify-content-end row col-md
                                  row-cols-md-auto gap-1 card-footer">
                                                     <button @onclick="ToggleEditPhotoRequestStatus"
-                                                            class="btn btn-outline-secondary text-nowrap"
+                                                            class="btn btn-secondary text-nowrap"
                                                             asp-formaction="Block" name="Block"
                                                             type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                        <i class="bi bi-plus-square"></i> @localizer["Cancel"]
+                                                        <i class="bi bi-x-square-fill"></i> @localizer["Cancel"]
                                                     </button>
                                                     @if (UploadedFileName is null || !string.IsNullOrWhiteSpace(FileError))
                                                     {
-                                                        <button class="btn btn-outline-success text-nowrap"
+                                                        <button class="btn btn-success text-nowrap"
                                                                 type="submit" disabled value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                             <i class="bi bi-plus-square"></i> @localizer["Update"]
                                                         </button>
@@ -376,7 +376,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                     else
                                                     {
 
-                                                        <button class="btn btn-outline-success text-nowrap"
+                                                        <button class="btn btn-success text-nowrap"
                                                                 type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                             <i class="bi bi-plus-square"></i> @localizer["Update"]
                                                         </button>
@@ -391,7 +391,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                         @if (deleteItemRequested && !editItemRequested && !editPhotoRequested)
                         {
                             <div class="poster-container2 py-2 ">
-                                <div class="card w-100 mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
+                                <div class="card main-card w-100 mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
                                     <div class="row g-0">
                                         @if (string.IsNullOrWhiteSpace(ItemModel!.ImageLink))
                                         {
@@ -421,15 +421,15 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                             <div class="pb-2 pe-3 mx-0 d-flex justify-content-end row col-md
                                  row-cols-md-auto gap-1 card-footer">
                                                 <button @onclick="ToggleDeleteItemRequestStatus"
-                                                        class="btn btn-outline-secondary text-nowrap"
+                                                        class="btn btn-secondary text-nowrap"
                                                         asp-formaction="Block" name="Block"
                                                         type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                    <i class="bi bi-plus-square"></i> @localizer["Cancel"]
+                                                    <i class="bi bi-x-square-fill"></i> @localizer["Cancel"]
                                                 </button>
                                                 <button @onclick="SubmitDeleteItem"
-                                                        class="btn btn-outline-danger text-nowrap"
+                                                        class="btn btn-danger text-nowrap"
                                                         type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                    <i class="bi bi-plus-square"></i> @localizer["Delete"]
+                                                    <i class="bi bi-trash3-fill"></i> @localizer["Delete"]
                                                 </button>
                                             </div>
                                         </div>
@@ -458,22 +458,22 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                             <div class="pb-2 d-flex justify-content-start m-0 row col-md
                         row-cols-md-auto gap-1">
                                 <button @onclick="ToggleEditItemRequestStatus"
-                                        class="btn btn-outline-secondary btn-sm text-nowrap"
+                                        class="btn btn-secondary btn-sm text-nowrap"
                                         asp-formaction="Block" name="Block"
                                         type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                     <i class="bi bi-pencil"></i> @localizer["Edit Item"]
                                 </button>
                                 <button @onclick="ToggleEditPhotoRequestStatus"
-                                        class="btn btn-outline-dark btn-sm text-nowrap"
+                                        class="btn btn-dark btn-sm text-nowrap"
                                         asp-formaction="Block" name="Block"
                                         type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                     <i class="bi bi-pencil"></i> @localizer["Edit Image"]
                                 </button>
                                 <button @onclick="ToggleDeleteItemRequestStatus"
-                                        class="btn btn-outline-danger btn-sm text-nowrap"
+                                        class="btn btn-danger btn-sm text-nowrap"
                                         asp-formaction="Block" name="Block"
                                         type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                    <i class="bi bi-trash3-fill"></i> @localizer["Delete Item"]
+                                    <i class="bi bi-trash3-fill"></i>
                                 </button>
                             </div>
                         }
@@ -562,10 +562,10 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                             <div class="row row-cols-8 row-cols-lg-8
                                         row-cols-x1-5 g-3
                                         justify-content-center my-1 py-2">
-                                <div class="card h-100 fade-in"
+                                <div class="card main-card h-100 fade-in"
                                      style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
                                     <div class="card-body ">
-                                        <textarea @ref="inputToFocus" class="form-control"
+                                        <textarea @ref="inputToFocus" class="search-input form-control"
                                                   @bind="CommentText"
                                                   required
                                                   placeholder="@localizer["Enter your comment"]"
@@ -577,7 +577,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                         {
 
                                             <button @onclick="Focus"
-                                                    class="btn btn-outline-secondary btn-sm text-nowrap"
+                                                    class="btn btn-secondary btn-sm text-nowrap"
                                                     asp-formaction="Block" name="Block"
                                                     type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                 <i class="bi bi-chat-left-text"></i> @localizer["Leave Comment"]
@@ -586,7 +586,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                         else
                                         {
                                             <button @onclick="SubmitComment"
-                                                    class="btn btn-outline-secondary btn-sm text-nowrap"
+                                                    class="btn btn-secondary btn-sm text-nowrap"
                                                     asp-formaction="Block" name="Block"
                                                     type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                 <i class="bi bi-chat-left-text"></i> @localizer["Leave Comment"]
@@ -656,7 +656,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                             <div class="row row-cols-8 row-cols-lg-8
                                         row-cols-x1-5 g-3
                                         justify-content-center my-1 py-2">
-                                <div class="card h-100 fade-in"
+                                <div class="card main-card h-100 fade-in"
                                      style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
                                                                                                                                                                                     ">
                                     <div class="card-body text-center">
@@ -666,14 +666,14 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                     <div class="text-center pb-3 pe-2">
 
                                         <button @onclick="OnRegisterSubmit"
-                                                class="btn btn-outline-dark btn-sm text-nowrap mx-1"
+                                                class="btn btn-dark btn-sm text-nowrap mx-1"
                                                 asp-formaction="Block" name="Block"
                                                 type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                             <i class="bi bi-person-fill-add"></i> @localizer["Register"]
                                         </button>
 
                                         <button @onclick="OnLoginSubmit"
-                                                class="btn btn-outline-success btn-sm text-nowrap mx-1"
+                                                class="btn btn-success btn-sm text-nowrap mx-1"
                                                 asp-formaction="Block" name="Block"
                                                 type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                             <span class="bi bi-person-fill" aria-hidden="true" /> @localizer["Log in"]

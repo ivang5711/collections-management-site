@@ -2,7 +2,7 @@
 
 @if (Comment is not null)
 {
-    <div class="card h-100 fade-in" style="width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
+    <div class="card main-card h-100 fade-in" style="width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
         <div class="card-body">
             <h5 class="card-title">@Comment.ApplicationUser.FullName</h5>
             <p class="card-text"><small>@Comment.CreationDateTime.ToLocalTime()</small></p>
@@ -12,7 +12,7 @@
 }
 else
 {
-    <div class="card h-100 w-75">
+    <div class="card main-card h-100 w-75">
         <img class="card-img-top" alt="Collection Item"
              src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" />
         <div class="card-body">

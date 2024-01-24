@@ -126,20 +126,19 @@ else
                         </div>
                     </div>
                     <div class="order-last order-md-first d-flex
-                    justify-content-center">
+                    justify-content-center p-3 m-2">
                         <div class="poster-container">
                             @if (!string.IsNullOrEmpty(CurrentItem.ImageLink))
                             {
                                 <a href="@ItemModel!.ImageLink">
-                                    <img src="@CurrentItem.ImageLink"
+                                    <img class="item-card-container" src="@CurrentItem.ImageLink"
                                          alt="item poster" />
                                 </a>
                             }
                             else
                             {
-                                <div class="w-100 h-100 rounded-3 text-center align-items-center d-flex justify-content-center" 
-                                style="min-width: 12rem; min-height: 24rem; user-select: none; 
-background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
+                                <div class="w-100 h-100 item-card-container rounded-3 text-center align-items-center d-flex justify-content-center"
+                                     style="min-width: 12rem; min-height: 24rem; user-select: none;">
                                 @localizer["There is no image"]<br />@localizer["for this item yet"]...
                             </div>
 
@@ -159,14 +158,14 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                         {
                                             <div class="col-md-4">
                                                 <canvas class="img-fluid h-100 rounded-start" 
-                                                style="background-color: lightgray; object-fit:cover;" />
+                                                />
                                             </div>
                                         }
                                         else
                                         {
                                             <div class="col-md-4">
-                                                <img src="@TempImg" class="img-fluid h-100 rounded-start" 
-                                                style="background-color: lightgray;  object-fit:cover;" alt="...">
+                                                <img src="@TempImg" class="item-card-container img-fluid h-100 rounded-start" 
+                                                style="object-fit:cover;" alt="...">
                                             </div>
                                         }
                                         <div class="col-md-8">
@@ -174,8 +173,6 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                             <EditForm Context="formContext2" Model="@ItemModel" OnSubmit="@SubmitEditItem" 
                                                 FormName="EditCollectionForm">
                                                 <div class="card-body">
-                                                    <p class="card-text"><small class="text-muted">@localizer["Created"] 
-                                                        @ItemModel!.CreationDateTime.ToLocalTime()</small></p>
                                                     <div class="px-5 py-2">
 
                                                         @if (ItemModel is not null)
@@ -191,7 +188,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                                 <ul class="list-group custom-field">
                                                                     @foreach (var item in ItemModel.NumericalFields)
                                                                     {
-                                                                        <li class="list-group-item">
+                                                                        <li class="list-group-item main-card">
                                                                             <div class="d-flex row row-cols-md-auto">
                                                                                 <div class="p-2"><input type="text" 
                                                                                     class="search-input form-control" @bind="@item.Name" 
@@ -212,7 +209,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                                 <ul class="list-group custom-field">
                                                                     @foreach (var item in ItemModel.StringFields)
                                                                     {
-                                                                        <li class="list-group-item">
+                                                                        <li class="list-group-item main-card">
                                                                             <div class="d-flex row row-cols-md-auto">
                                                                                 <div class="p-2"><input type="text" 
                                                                                     class="search-input form-control" @bind="@item.Name" 
@@ -233,7 +230,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                                 <ul class="list-group custom-field">
                                                                     @foreach (var item in ItemModel.TextFields)
                                                                     {
-                                                                        <li class="list-group-item">
+                                                                        <li class="list-group-item main-card">
                                                                             <input type="text" for="exampleFormControlTextarea1" 
                                                                                 class="search-input form-control mb-1" @bind="@item.Name"
                                                                                    placeholder="@localizer["Text field name..."]">
@@ -250,7 +247,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                                 <ul class="list-group custom-field">
                                                                     @foreach (var item in ItemModel.LogicalFields)
                                                                     {
-                                                                        <li class="list-group-item row-cols-2 d-flex align-items-center">
+                                                                        <li class="list-group-item main-card row-cols-2 d-flex align-items-center">
                                                                             <span class="form-check col-auto form-switch">
                                                                                 <input class="search-input form-check-input" @bind="item.Value" 
                                                                                 type="checkbox" id="flexSwitchCheckDefault" />
@@ -267,7 +264,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                                                 <ul class="list-group custom-field">
                                                                     @foreach (var item in ItemModel.DateFields)
                                                                     {
-                                                                        <li class="list-group-item">
+                                                                        <li class="list-group-item main-card">
                                                                             <div class="d-flex row row-cols-md-auto">
                                                                                 <div class="p-2 flex-fill "><input type="text" 
                                                                                     class="search-input form-control" @bind="@item.Name" 
@@ -323,14 +320,14 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                         {
                                             <div class="col-md-4">
                                                 <canvas class="img-fluid h-100 rounded-start" 
-                                                style="background-color: lightgray; object-fit:cover;" />
+                                                />
                                             </div>
                                         }
                                         else
                                         {
                                             <div class="col-md-4">
-                                                <img src="@TempImg" class="img-fluid h-100 rounded-start" 
-                                                style="background-color: lightgray;  object-fit:cover;" alt="...">
+                                                <img src="@TempImg" class="item-card-container img-fluid h-100 rounded-start" 
+                                                style="object-fit:cover;" alt="...">
                                             </div>
                                         }
                                         <div class="col-md-8">
@@ -397,22 +394,20 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                         {
                                             <div class="col-md-4">
                                                 <canvas class="img-fluid h-100 rounded-start" 
-                                                style="background-color: lightgray; object-fit:cover;" />
+                                                 />
                                             </div>
                                         }
                                         else
                                         {
                                             <div class="col-md-4">
-                                                <img src="@ItemModel.ImageLink" class="img-fluid h-100 rounded-start" 
-                                                style="background-color: lightgray;  object-fit:cover;" alt="...">
+                                                <img src="@ItemModel.ImageLink" class="item-card-container img-fluid h-100 rounded-start" 
+                                                style="object-fit:cover;" alt="...">
                                             </div>
                                         }
                                         <div class="col-md-8">
                                             <h5 class="card-header">@localizer["Delete Item"]</h5>
                                             <div class="card-body">
                                                 <p class="card-text">@ItemModel.Name</p>
-                                                <p class="card-text"><small class="text-muted">
-                                                    @localizer["Created"] @ItemModel.CreationDateTime.ToLocalTime()</small></p>
                                                 <div class="px-5 py-2">
                                                     <p>@localizer["This action can not be undone"]</p>
                                                     <p>@localizer["Are you sure you want to delete the item?"]</p>
@@ -500,30 +495,30 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                         <ul class="list-group custom-field">
                                             @foreach (var item in CurrentItem.NumericalFields)
                                             {
-                                                <li class="list-group-item">@(item.Name): @item.Value</li>
+                                                <li class="list-group-item main-card">@(item.Name): @item.Value</li>
                                             }
                                         </ul>
                                     }
                                     @if (CurrentItem.StringFields.Count > 0)
                                     {
-                                        <ul class="list-group custom-field">
+                                        <ul class="list-group custom-field main-card">
                                             @foreach (var item in CurrentItem.StringFields)
                                             {
-                                                <li class="list-group-item">@(item.Name): @item.Value</li>
+                                                <li class="list-group-item main-card">@(item.Name): @item.Value</li>
                                             }
                                         </ul>
                                     }
                                     @if (CurrentItem.TextFields.Count > 0)
                                     {
-                                        <ul class="list-group custom-field">
+                                        <ul class="list-group custom-field main-card">
                                             @foreach (var item in CurrentItem.TextFields)
                                             {
-                                                <li class="list-group-item">
+                                                <li class="list-group-item main-card">
 
                                                     <label for="exampleFormControlTextarea1" 
                                                         class="form-label">@(item.Name):</label>
-                                                    <textarea class="form-control bg-light" disabled
-                                                    id="exampleFormControlTextarea1" rows="3">@item.Value</textarea>
+                                                    <textarea class="search-input form-control"
+                                                    id="exampleFormControlTextarea1" rows="3" disabled>@item.Value</textarea>
                                                 </li>
                                             }
                                         </ul>
@@ -533,7 +528,7 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                         <ul class="list-group custom-field">
                                             @foreach (var item in CurrentItem.LogicalFields)
                                             {
-                                                <li class="list-group-item">
+                                                <li class="list-group-item main-card">
                                                     @(item.Name): @item.Value.ToString()
                                                     </li>
                                             }
@@ -541,10 +536,10 @@ background-image: linear-gradient(10deg, #d1d1d1, #ffffff); ">
                                     }
                                     @if (CurrentItem.DateFields.Count > 0)
                                     {
-                                        <ul class="list-group custom-field">
+                                        <ul class="list-group custom-field main-card">
                                             @foreach (var item in CurrentItem.DateFields)
                                             {
-                                                <li class="list-group-item">
+                                                <li class="list-group-item main-card">
                                                     @(item.Name): @item.Value.ToString()
                                                     </li>
                                             }

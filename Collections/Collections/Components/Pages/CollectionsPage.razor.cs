@@ -71,7 +71,8 @@ public partial class CollectionsPage
 
     private async Task InitializeData()
     {
-        Model ??= new();
+        Model = new();
+        ThemeNameChoosen = null;
         GetThemes();
         await GetCollectionsFromDataSource();
     }
@@ -201,6 +202,13 @@ public partial class CollectionsPage
     private void RequestNewCollection()
     {
         GetThemes();
+        newCollectionRequested = !newCollectionRequested;
+    }
+
+    private async Task CancelRequestNewCollection()
+    {
+        await InitializeData();
+        StateHasChanged();
         newCollectionRequested = !newCollectionRequested;
     }
 

@@ -41,15 +41,10 @@
                             <input class="form-control" style="min-width: 100px" @bind="SearchInput" type="search" placeholder="@localizer["Search"]" aria-label="Search">
                             <button class="btn btn-outline-secondary mx-lg-1" type="submit"><i class="bi bi-search d-flex mx-auto align-items-center h-100 w-100 justify-content-center"></i></button>
                         </form>
-                    </li>
-                    
-                    <li class="ps-3">
-                        <CultureSelector />
-                    </li>
-
+                    </li>                  
                 </ul>
             </div>
-            <span class="navbar-nav">
+            <ul class="navbar-nav align-items-lg-center">
                 <AuthorizeView Roles="Admin">
                     <li class="nav-item">
                         <NavLink class="nav-link text-nowrap" href="admin">
@@ -58,6 +53,9 @@
                         </NavLink>
                     </li>
                 </AuthorizeView>
+                <li class="px-3">
+                    <CultureSelector />
+                </li>
                 <AuthorizeView>
                     <Authorized>
                         <span class="navbar-nav">
@@ -102,7 +100,7 @@
                         </span>
                     </NotAuthorized>
                 </AuthorizeView>
-            </span>
+            </ul>
         </div>
     </div>
 </nav>

@@ -1,8 +1,18 @@
 ﻿@inject NavigationManager Navigation
 @inject IStringLocalizer<Resource> localizer
 
-<div>
-    <select @bind="Culture">
+<script src=" https://cdn.jsdelivr.net/npm/flag-icon-css@4.1.7/svgo.config.min.js "></script>
+
+<div class="d-flex text-nowrap gap-1 align-items-center">
+    @if (Culture.Name == "en-US")
+    {
+        <span class="col-1 flag-icon flag-icon-us flag-icon-squared"></span>
+    }
+    else if (Culture.Name == "de-CH")
+    {
+        <span class="col-1 flag-icon flag-icon-de flag-icon-squared"></span>
+    }
+    <select @bind="Culture" class="flex-fill col-md-auto form-select-sm w-md-auto" aria-label="Default select example">
         <option value="en-US">@localizer["English"]</option>
         <option value="de-CH">@localizer["German"]</option>
     </select>
@@ -22,7 +32,7 @@
         }
         set
         {
-            if(CultureInfo.CurrentCulture != value)
+            if (CultureInfo.CurrentCulture != value)
             {
                 var uri = new Uri(Navigation.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
                 var cultureEscaped = Uri.EscapeDataString(value.Name);

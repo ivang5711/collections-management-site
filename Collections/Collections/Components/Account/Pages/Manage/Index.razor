@@ -21,11 +21,11 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
-                <input type="text" value="@username" class="form-control" placeholder="@localizer["Please choose your username."]" disabled />
+                <input type="text" value="@username" class="form-control search-input" style="background-color: rgba(255,255,255,0.38);" placeholder="@localizer["Please choose your username."]" disabled />
                 <label for="username" class="form-label">@localizer["Username"]</label>
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.FullName" class="form-control" placeholder="@localizer["Please enter your full name."]" />
+                <InputText @bind-Value="Input.FullName" class="form-control search-input" placeholder="@localizer["Please enter your full name."]" />
                 <label for="Full name" class="form-label">@localizer["Full name"]</label>
                 <ValidationMessage For="() => Input.FullName" class="text-danger" />
             </div>

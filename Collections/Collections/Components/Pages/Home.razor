@@ -20,7 +20,7 @@
             <div class="col-md-9 order-md-first order-last">
                 <h5>@localizer["Recently added Items"]</h5>
                 <table class="table table-sm table-hover table-striped
-                              rounded-2 overflow-hidden" style="box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
+                              rounded-2 overflow-hidden">
                     <thead class="table-secondary">
                         <tr>
                             <th class="text-end px-2">@localizer["#"]</th>
@@ -37,7 +37,7 @@
                             foreach (Item item in items)
                             {
                                 <tr>
-                                    <th class="text-end px-2">@(i++)</th>
+                                    <td class="text-end px-2">@(i++)</td>
                                     <td class="px-2">@item.Name</td>
                                     <td class="px-2">@item.Collection.Name</td>
                                     <td class="px-2">@GetAuthor(item.Collection)</td>
@@ -52,10 +52,10 @@
                     </tbody>
                 </table>
             </div>
-            <div class="d-flex col-md-3 order-first order-md-first text-start align-items-center my-auto pb-3">
+            <div class="d-flex col-md-3 order-first order-md-first text-start align-items-center my-auto pb-3 pt-4" style="min-height: 100%">
                 <div class="justify-content-center align-items-center my-auto  ">
-                    <div class="card" style="width: auto; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
-                        <div class="card-body">
+                    <div class="card main-card" style="width: auto; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
+                        <div class="card-body ">
                             <h5 class="card-title">@localizer["Welcome to the Collections!"]</h5>
                             <p class="card-text">
                                 @localizer["Here you can enjoy your digital collection, leave comments, collect expressions and likes."]
@@ -71,7 +71,7 @@
             <div class="col-md-9 ">
                 <h5>@localizer["Top 5 collections"]</h5>
                 <table class="table table-sm table-hover table-striped
-                              rounded-2 overflow-hidden" style="box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
+                              rounded-2 overflow-hidden">
                     <thead class="table-secondary">
                         <tr>
                             <th class="text-end px-2">@localizer["#"]</th>
@@ -87,7 +87,7 @@
                             foreach (Collection collection in collections)
                             {
                                 <tr>
-                                    <th class="text-end px-2">@(j++)</th>
+                                    <td class="text-end px-2">@(j++)</td>
                                     <td class="px-2">@collection.Name</td>
                                     <td class="px-2">@collection.Theme!.Name</td>
                                     <td class="text-end px-2">@collection.TotalItems</td>

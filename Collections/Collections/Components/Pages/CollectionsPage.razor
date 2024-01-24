@@ -198,7 +198,7 @@
         {
             <div class="d-flex justify-content-center">
                 <table class="table table-sm table-hover table-striped
-                              rounded-2 overflow-hidden" style="box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
+                              rounded-2 overflow-hidden">
                     <thead class="table-secondary">
                         <tr>
                             <th class="text-end px-2">@localizer["#"]</th>
@@ -214,7 +214,7 @@
                             foreach (Collection collection in collections)
                             {
                                 <tr>
-                                    <th class="text-end px-2">@(j++)</th>
+                                    <td class="text-end px-2">@(j++)</td>
                                     <td class="px-2">@collection.Name</td>
                                     <td class="px-2">@collection.Theme!.Name</td>
                                     <td class="text-end px-2">@collection.Items.Count</td>

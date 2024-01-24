@@ -1,14 +1,15 @@
 :root {
-    --background: #474747;
-    --background-2: #616161;
-    --background-3: #3b3b3b;
-    --text: #c6c6c6;
-    --text-accent: #a2a2a2;
-    --text-accent-2: #dedede;
+    --background: #dbdbdb;
+    --background-2: #ededed;
+    --background-3: #858585;
+    --text: #282828;
+    --text-accent: #232323;
+    --text-accent-2: #969696;
     --purple: #6b49b6;
+    --purple-2: #676668ff;
     --dark-purple: #0a0712;
-    --footer-gradient-dark: #1a1a1a;
-    --footer-gradient-light: #474747;
+    --footer-gradient-dark: #848484;
+    --footer-gradient-light: #dbdbdb;
 }
 
 html, body {
@@ -16,7 +17,7 @@ html, body {
     height: 100%;
     background-color: var(--background);
     color: var(--text);
-    text-shadow: 1px 1px 2px #161616;
+    /*text-shadow: 1px 1px 2px #161616;*/
 }
 
 #app {
@@ -73,7 +74,8 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 .navStyle {
     /*background-image: linear-gradient(180deg, #d1d1d1, #ffffff);*/
-    background-image: linear-gradient(180deg, #1a1a1a, #474747);
+    /*background-image: linear-gradient(180deg, #1a1a1a, #474747);*/
+    background-image: linear-gradient(180deg, var(--footer-gradient-dark), var(--footer-gradient-light));
     /*background-image: linear-gradient(0deg, #000000, #37363b);*/
 }
 
@@ -166,21 +168,21 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 canvas {
-    background-image: linear-gradient(10deg, var(--dark-purple), var(--background-2));
+    background-image: linear-gradient(10deg, var(--purple-2), var(--background-2));
     object-fit: cover;
 }
 
 .search-input {
-    background-color: #999797ff;
+    background-color: #cececeff;
 }
 
     .search-input:disabled {
-        background-color: #999797ff;
+        background-color: #cececeff;
         border: none;
     }
 
     .search-input:focus {
-        background-color: #c4c4c4f2;
+        background-color: #e8e8e8ff;
     }
 
 .culture-select {
@@ -264,12 +266,12 @@ select option {
 .search-button {
     border: solid;
     border-radius: 6px;
-    border-color: var(--text);
+    border-color: var(--text-accent);
 }
 
     .search-button:hover {
-        border-color: white;
-        background-color: var(--text-accent);
+        border-color: var(--text-accent);
+        background-color: var(--background-3);
     }
 
 .search-icon {
@@ -293,9 +295,9 @@ th {
 
 .table > :not(caption) > * > * {
     padding: .5rem .5rem;
-    background-color: var(--background-2);
+    background-color: var(--background);
     color: var(--text);
-    text-shadow: 1px 1px 1px black;
+    /*text-shadow: 1px 1px 1px black;*/
     /*border-bottom-width: 1px;*/
     /*box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg)*/
 }
@@ -308,7 +310,7 @@ th {
 
 .item-card-container {
     box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
-    background-image: linear-gradient(10deg, var(--dark-purple), var(--background-2));
+    background-image: linear-gradient(10deg, var(--purple-2), var(--background-2));
 }
 
 .options-culture {
@@ -322,5 +324,5 @@ th {
     border-radius: .5rem;
     margin: 0rem 2rem 2rem 2rem;
     /*background-image: linear-gradient(10deg, #d1d1d1, #ffffff);*/
-    background-image: linear-gradient(10deg, var(--dark-purple), var(--background-2));
+    background-image: linear-gradient(10deg, var(--purple-2), var(--background-2));
 }

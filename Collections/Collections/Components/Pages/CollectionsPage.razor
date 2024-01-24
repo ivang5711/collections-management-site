@@ -40,6 +40,12 @@
                         style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                     <i class="bi bi-plus-square"></i> @localizer["New Collection"]
                 </button>
+                <button class="btn btn-secondary" @onclick="SortItemsAscending" type="button">
+                    <i class="bi bi-sort-up"></i>
+                </button>
+                <button class="btn btn-secondary" @onclick="SortItemsDescending" type="button">
+                    <i class="bi bi-sort-down"></i>
+                </button>
             </div>
         }
 

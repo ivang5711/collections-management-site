@@ -44,6 +44,24 @@ public partial class CollectionsPage
         public new string? Description { get; set; }
     }
 
+    private void SortItemsDescending()
+    {
+        List<Collection> SortedList = collections!.OrderByDescending(x => x.CreationDateTime).ToList();
+
+        collections!.Clear();
+        collections.AddRange(SortedList);
+        StateHasChanged();
+    }
+
+    private void SortItemsAscending()
+    {
+        List<Collection> SortedList = collections!.OrderBy(x => x.CreationDateTime).ToList();
+
+        collections!.Clear();
+        collections.AddRange(SortedList);
+        StateHasChanged();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         await CheckAuthorizationLevel();

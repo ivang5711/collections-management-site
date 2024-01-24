@@ -80,6 +80,24 @@ public partial class CollectionDetails
         public List<DateField> DateFields { get; set; } = [];
     }
 
+    private void SortItemsDescending()
+    {
+        List<Item> SortedList = itemsBunch!.OrderByDescending(x => x.CreationDateTime).ToList();
+
+        itemsBunch!.Clear();
+        itemsBunch.AddRange(SortedList);
+        StateHasChanged();
+    }
+
+    private void SortItemsAscending()
+    {
+        List<Item> SortedList = itemsBunch!.OrderBy(x => x.CreationDateTime).ToList();
+
+        itemsBunch!.Clear();
+        itemsBunch.AddRange(SortedList);
+        StateHasChanged();
+    }
+
     private void CancelEditItem()
     {
         InitializeData();

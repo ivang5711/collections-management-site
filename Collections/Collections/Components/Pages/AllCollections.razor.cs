@@ -13,6 +13,24 @@ public partial class AllCollections
     private ApplicationUser? ThisUser;
     public List<Theme> Themes { get; set; } = [];
 
+    private void SortItemsDescending()
+    {
+        List<Collection> SortedList = collections!.OrderByDescending(x => x.CreationDateTime).ToList();
+
+        collections!.Clear();
+        collections.AddRange(SortedList);
+        StateHasChanged();
+    }
+
+    private void SortItemsAscending()
+    {
+        List<Collection> SortedList = collections!.OrderBy(x => x.CreationDateTime).ToList();
+
+        collections!.Clear();
+        collections.AddRange(SortedList);
+        StateHasChanged();
+    }
+
     private List<Theme> GetThemes()
     {
         List<Theme> res;

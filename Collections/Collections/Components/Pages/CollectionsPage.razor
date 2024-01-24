@@ -34,7 +34,7 @@
             <div class="pb-2 d-flex justify-content-start m-0 row col-md
                         row-cols-md-auto gap-1">
                 <button @onclick="RequestNewCollection"
-                        class="btn btn-outline-success btn-sm text-nowrap"
+                        class="btn btn-success btn-sm text-nowrap"
                         asp-formaction="Block" name="Block"
                         type="submit" value="true" 
                         style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
@@ -46,8 +46,8 @@
         @if (newCollectionRequested)
         {
             <div class="d-flex justify-content-center py-5">
-                <div class="card mb-3" 
-                style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
+                <div class="card main-card mb-3"
+                     style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
                     <div class="row g-0">
                         @if (string.IsNullOrWhiteSpace(TempImg))
                         {
@@ -74,9 +74,9 @@
                                             <DataAnnotationsValidator />
                                             <ValidationSummary />
                                             <InputText @bind-Value="Model!.Name" type="text" required
-            class= "input-group-text input-group-lg w-100 my-2" placeholder = "@localizer["Collection Name..."]" />
+            class= "input-group-text search-input input-group-lg w-100 my-2" placeholder = "@localizer["Collection Name..."]" />
                                             <InputTextArea @bind-Value="Model.Description" required type="text"
-            class= "text-start input-group-text input-group-lg w-100 my-2" placeholder = "@localizer["Collection New Description"]" />
+            class= "text-start search-input input-group-text input-group-lg w-100 my-2" placeholder = "@localizer["Collection New Description"]" />
                                             @* <InputText @bind-Value="TempImg" class="input-group-text input-group-lg w-100 my-2" placeholder="Link to collection photo (optional)..." /> *@
                                             @if (!string.IsNullOrWhiteSpace(FileError))
                                             {
@@ -89,14 +89,14 @@
                                             }
                                             @if (Model is not null)
                                             {
-                                                <InputFile OnChange="UploadFile" class="form-control my-2" type="file" id="formFile" 
+                                                <InputFile OnChange="UploadFile" class="form-control search-input my-2" type="file" id="formFile" 
                                                 accept=".png,.jpg,.jpeg,.tiff" />
                                             }
                                             <div class="row row-cols-1 row-cols-md-auto">
                                                 <div class="flex-fill pe-md-0 mx-0">
 
-                                                    <InputText @bind-Value="ThemeNameChoosen" required class="form-control" 
-                                                    list="datalistOptions" id="exampleDataList" placeholder="@localizer["Theme..."]" />
+                                                    <InputText @bind-Value="ThemeNameChoosen" required class="form-control search-input"
+                                                               list="datalistOptions" id="exampleDataList" placeholder="@localizer["Theme..."]" />
                                                     <datalist id="datalistOptions">
                                                         @foreach (var t in Themes)
                                                         {
@@ -106,7 +106,7 @@
                                                 </div>
                                                 <div class="mx-0 my-2 ps-md-2 my-md-0">
                                                     <button @onclick="RequestNewTheme"
-                                                            class="btn btn-outline-secondary text-nowrap"
+                                                            class="btn btn-secondary text-nowrap"
                                                             asp-formaction="Block" name="Block"
                                                             type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                         <i class="bi bi-plus-square"></i> @localizer["Add Theme"]
@@ -117,7 +117,7 @@
                                         }
                                         else
                                         {
-                                            <div class="card">
+                                            <div class="card main-card" style="border: solid; border-color: #999999; border-radius: 5px;" >
                                                 <div class="card-header">
                                                     @localizer["New category"]
                                                 </div>
@@ -130,23 +130,23 @@
                                                             </div>
                                                             <div>
                                                                 <button @onclick="ResetNewTHemeAddFinishedSuccessfullyStatus" type="button" 
-                                                                class="btn-close " data-dismiss="alert" aria-label="Close">
+                                                                class="btn-close" data-dismiss="alert" aria-label="Close">
                                                                 </button>
                                                             </div>
                                                         </div>
                                                     }
-                                                    <input type="text" @bind="NewTheme" class="form-control mt-3" 
-                                                    placeholder="@localizer["Enter new collection category..."]">
+                                                    <input type="text" @bind="NewTheme" class="form-control search-input mt-3"
+                                                           placeholder="@localizer["Enter new collection category..."]">
                                                     <div class="d-flex justify-content-end me-0 ms-0 mt-3 mb-0 row col-md
                                  row-cols-md-auto gap-1">
                                                         <button @onclick="RequestNewTheme"
-                                                                class="btn btn-outline-secondary text-nowrap"
+                                                                class="btn btn-secondary text-nowrap"
                                                                 asp-formaction="Block" name="Block"
                                                                 type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                            <i class="bi bi-plus-square"></i> @localizer["Cancel"]
+                                                            <i class="bi bi-x-square-fill"></i> @localizer["Cancel"]
                                                         </button>
                                                         <button @onclick="SubmitNewTheme"
-                                                                class="btn btn-outline-success text-nowrap"
+                                                                class="btn btn-success text-nowrap"
                                                                 type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                             <i class="bi bi-plus-square"></i> @localizer["Add"]
                                                         </button>
@@ -161,22 +161,22 @@
                                     <div class="pb-2 pe-3 ps-3 d-flex justify-content-end m-3 row col-md
                                  row-cols-md-auto gap-1">
                                         <button @onclick="RequestNewCollection"
-                                                class="btn btn-outline-secondary text-nowrap"
+                                                class="btn btn-secondary text-nowrap"
                                                 asp-formaction="Block" name="Block"
                                                 type="button" value="true" 
                                                 style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                            <i class="bi bi-plus-square"></i> @localizer["Close"]
+                                            <i class="bi bi-x-square-fill"></i> @localizer["Close"]
                                         </button>
                                         @if (addNewThemeRequested || string.IsNullOrWhiteSpace(ThemeNameChoosen) || !Themes.Exists(x => x.Name == ThemeNameChoosen))
                                         {
-                                            <button class="btn btn-outline-success text-nowrap"
+                                            <button class="btn btn-success text-nowrap"
                                                     type="submit" value="true" disabled style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                 <i class="bi bi-plus-square"></i> @localizer["Create"]
                                             </button>
                                         }
                                         else
                                         {
-                                            <button class="btn btn-outline-success text-nowrap"
+                                            <button class="btn btn-success text-nowrap"
                                                     type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
                                                 <i class="bi bi-plus-square"></i> @localizer["Create"]
                                             </button>
@@ -219,7 +219,7 @@
                                     <td class="px-2">@collection.Theme!.Name</td>
                                     <td class="text-end px-2">@collection.Items.Count</td>
                                     <td class="px-2">
-                                        <a class="btn-sm btn-outline-secondary"
+                                        <a class="btn-sm btn-secondary"
                                            href="/collection-details/@collection.Id">Details</a>
                                     </td>
                                 </tr>

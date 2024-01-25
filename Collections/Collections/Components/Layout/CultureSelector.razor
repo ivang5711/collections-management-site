@@ -11,8 +11,11 @@
     {
         <span class="col-1 flag-icon flag-icon-de flag-icon-squared"></span>
     }
-    <select @bind="Culture" class="active-element flex-fill col-md-auto form-select
-            form-select-sm culture-select" style="width: auto;"
+    <select @bind="Culture"
+            class="active-element flex-fill
+                   col-md-auto form-select
+                   form-select-sm culture-select"
+            style="width: auto;"
             aria-label="Default select example">
         @foreach (Locale item in _locales.GetLocales())
         {

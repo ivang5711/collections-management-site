@@ -66,7 +66,6 @@ builder.Services.AddScoped<IFileTransferManager, FileTransferManager>();
 
 builder.Services.AddScoped<ILocalesOptions, LocalesOptions>();
 
-
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = true;
@@ -88,7 +87,6 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>,
     IdentityNoOpEmailSender>();
 
 var app = builder.Build();
-
 
 string[] supportedCultures = new LocalesOptions(builder.Configuration)
     .GetLocaleNames();

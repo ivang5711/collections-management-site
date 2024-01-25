@@ -36,7 +36,8 @@
         if (UserId is null || Email is null || Code is null)
         {
             RedirectManager.RedirectToWithStatus(
-                "Account/Login", "Error: Invalid email change confirmation link.", HttpContext);
+                "Account/Login", 
+                "Error: Invalid email change confirmation link.", HttpContext);
         }
 
         var user = await UserManager.FindByIdAsync(UserId);
@@ -54,7 +55,8 @@
             return;
         }
 
-        // In our UI email and user name are one and the same, so when we update the email
+        // In our UI email and user name are one and the same, 
+        // so when we update the email
         // we need to update the user name.
         var setUserNameResult = await UserManager.SetUserNameAsync(user, Email);
         if (!setUserNameResult.Succeeded)

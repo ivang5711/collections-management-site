@@ -12,7 +12,8 @@ public class CultureController : Controller
         {
             var requestCulture = new RequestCulture(culture, culture);
             var cookieName = CookieRequestCultureProvider.DefaultCookieName;
-            var cookieValue = CookieRequestCultureProvider.MakeCookieValue(requestCulture);
+            var cookieValue = CookieRequestCultureProvider
+                .MakeCookieValue(requestCulture);
 
             HttpContext.Response.Cookies.Append(cookieName, cookieValue);
         }

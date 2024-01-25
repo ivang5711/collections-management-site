@@ -14,44 +14,62 @@
 @inject IStringLocalizer<Resource> localizer
 
 <PageTitle>@localizer["Log in"]</PageTitle>
-<div class="row justify-content-center">
-    <div class="col-md-4">
-        <section>
-            <StatusMessage Message="@errorMessage" />
-            <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
-                <DataAnnotationsValidator />
-                <h2>@localizer["Use a local account to log in."]</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <section>
+                <StatusMessage Message="@errorMessage" />
+                <EditForm Model="Input" method="post"
+                          OnValidSubmit="LoginUser"
+                          FormName="login">
+                    <DataAnnotationsValidator />
+                    <h2>@localizer["Use a local account to log in."]</h2>
                 <hr />
                 <ValidationSummary class="text-danger" role="alert" />
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.Email" class="form-control search-input" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label for="email" class="form-label">@localizer["Email"]</label>
-                    <ValidationMessage For="() => Input.Email" class="text-danger" />
+                    <InputText @bind-Value="Input.Email"
+                               class="form-control search-input"
+                               autocomplete="username"
+                               aria-required="true"
+                               placeholder="name@example.com" />
+                    <label for="email" class="form-label">
+                        @localizer["Email"]
+                    </label>
+                    <ValidationMessage For="() => Input.Email"
+                                       class="text-danger" />
                 </div>
                 <div class="form-floating mb-3">
-                    <InputText type="password" @bind-Value="Input.Password" class="form-control search-input" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label for="password" class="form-label">@localizer["Password"]</label>
-                    <ValidationMessage For="() => Input.Password" class="text-danger" />
+                    <InputText type="password"
+                               @bind-Value="Input.Password"
+                               class="form-control search-input"
+                               autocomplete="current-password"
+                               aria-required="true"
+                               placeholder="password" />
+                    <label for="password" class="form-label">
+                        @localizer["Password"]
+                    </label>
+                    <ValidationMessage For="() =>
+Input.Password" class="text-danger" />
                 </div>
                 <div class="checkbox mb-3">
                     <label class="form-label">
-                        <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
+                        <InputCheckbox @bind-Value="Input.RememberMe"
+                                       class="darker-border-checkbox
+                                              form-check-input" />
                         @localizer["Remember me"]
                     </label>
                 </div>
                 <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-outline-secondary">@localizer["Log in"]</button>
+                    <button type="submit"
+                            class="w-100 btn btn-lg btn-outline-secondary">
+                        @localizer["Log in"]
+                    </button>
                 </div>
                 <div class="pt-3">
-                    @*
                     <p>
-                    <a href="Account/ForgotPassword">Forgot your password?</a>
+                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">
+                            @localizer["Register as a new user"]
+                        </a>
                     </p>
-                    *@
-                    <p>
-                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">@localizer["Register as a new user"]</a>
-                    </p>
-
                 </div>
             </EditForm>
         </section>
@@ -80,10 +98,13 @@
 
         if (HttpMethods.IsGet(HttpContext.Request.Method))
         {
-            // Clear the existing external cookie to ensure a clean login process
+            // Clear the existing external cookie to
+            // ensure a clean login process
             var us = Task.Run(() =>
-            _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-            var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;
+            _AuthenticationStateProvider
+            .GetAuthenticationStateAsync()).Result;
+            var tryy = Task.Run(() =>
+            _UserManager.GetUserAsync(us.User)).Result;
             if (tryy is not null)
             {
                 _ = Task.Run(() => SignInManager.SignOutAsync());
@@ -96,14 +117,19 @@
     public async Task LoginUser()
     {
         // This doesn't count login failures towards account lockout
-        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+        // To enable password failures to trigger account lockout,
+        // set lockoutOnFailure: true
+        var result = await SignInManager.PasswordSignInAsync(
+            Input.Email,
+            Input.Password,
+            Input.RememberMe,
+            lockoutOnFailure: false);
         if (result.Succeeded)
         {
-            var k = await SignInManager.UserManager.FindByNameAsync(Input.Email);
+            var k = await SignInManager.UserManager
+            .FindByNameAsync(Input.Email);
             k!.LastLoginDate = DateTime.Now;
             var re = await _UserManager.UpdateAsync(k);
-
 
             Logger.LogInformation("User logged in.");
 

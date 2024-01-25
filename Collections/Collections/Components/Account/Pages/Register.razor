@@ -19,40 +19,72 @@
 
 <PageTitle>@localizer["Register"]</PageTitle>
 
-<div class="row justify-content-center">
-    <div class="col-md-4">
-        <StatusMessage Message="@Message" />
-        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
-            <DataAnnotationsValidator />
-            <h2>@localizer["Create a new account."]</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <StatusMessage Message="@Message" />
+            <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl"
+                      method="post"
+                      OnValidSubmit="RegisterUser" FormName="register">
+                <DataAnnotationsValidator />
+                <h2>@localizer["Create a new account."]</h2>
             <hr />
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control search-input" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <InputText @bind-Value="Input.Email"
+                           class="form-control search-input"
+                           autocomplete="username"
+                           aria-required="true"
+                           placeholder="name@example.com" />
                 <label for="email">@localizer["Email"]</label>
-                <ValidationMessage For="() => Input.Email" class="text-danger" />
+                <ValidationMessage For="() => Input.Email"
+                                   class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Name" class="form-control search-input" autocomplete="username" aria-required="true" placeholder="Jon Doe" />
-                <label for="name">@localizer["User name"]</label>
+                <InputText @bind-Value="Input.Name"
+                           class="form-control search-input"
+                           autocomplete="username"
+                           aria-required="true" placeholder="Jon Doe" />
+                <label for="name">
+                    @localizer["User name"]
+                </label>
                 <ValidationMessage For="() => Input.Name" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.Password" class="form-control search-input" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <InputText type="password" @bind-Value="Input.Password"
+                           class="form-control search-input"
+                           autocomplete="new-password" aria-required="true"
+                           placeholder="password" />
                 <label for="password">@localizer["Password"]</label>
-                <ValidationMessage For="() => Input.Password" class="text-danger" />
+                <ValidationMessage For="() => Input.Password"
+                                   class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control search-input" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="confirm-password">@localizer["Confirm Password"]</label>
-                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                <InputText type="password"
+                           @bind-Value="Input.ConfirmPassword"
+                           class="form-control search-input"
+                           autocomplete="new-password" aria-required="true"
+                           placeholder="password" />
+                <label for="confirm-password">
+                    @localizer["Confirm Password"]
+                </label>
+                <ValidationMessage For="() => Input.ConfirmPassword"
+                                   class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-outline-secondary">@localizer["Register"]</button>
+            <button type="submit"
+                    class="w-100 btn btn-lg btn-outline-secondary">
+                @localizer["Register"]
+            </button>
             <div class="pt-3">
                 <p>
-                    <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Login", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">@localizer["Already hav an account? Sign in"]</a>
+                    <a href="@(
+                            NavigationManager.GetUriWithQueryParameters(
+                                "Account/Login",
+                                new Dictionary<string, object?> {
+                                    ["ReturnUrl"] = ReturnUrl
+                                }))">
+                        @localizer["Already have an account? Sign in"]
+                    </a>
                 </p>
-
             </div>
         </EditForm>
     </div>
@@ -67,19 +99,23 @@
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
-    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+    private string? Message => identityErrors is null ? null :
+    $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
 
-        await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+        await UserStore
+            .SetUserNameAsync(user, Input.Email, CancellationToken.None);
         var emailStore = GetEmailStore();
-        await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        await emailStore
+            .SetEmailAsync(user, Input.Email, CancellationToken.None);
         user.RegistrationDate = DateTime.Now;
         user.LastLoginDate = user.RegistrationDate;
         user.FullName = Input.Name;
-        var result = await UserManager.CreateAsync(user, Input.Password);
+        var result = await UserManager
+            .CreateAsync(user, Input.Password);
 
         string roleAdmin = "Admin";
         string roleMember = "Member";
@@ -91,12 +127,15 @@
             var roleExist = await _RoleManager.RoleExistsAsync(item);
             if (!roleExist)
             {
-                var roleResult = await _RoleManager.CreateAsync(new IdentityRole(item));
+                var roleResult = await _RoleManager
+                    .CreateAsync(new IdentityRole(item));
             }
         }
 
-        var resultMember = Task.Run(() => UserManager.AddToRoleAsync(user, roleMember)).Result;
-        var resultAdmin = Task.Run(() => UserManager.AddToRoleAsync(user, roleAdmin)).Result;
+        var resultMember = Task.Run(() =>
+            UserManager.AddToRoleAsync(user, roleMember)).Result;
+        var resultAdmin = Task.Run(() =>
+            UserManager.AddToRoleAsync(user, roleAdmin)).Result;
 
         if (!result.Succeeded)
         {
@@ -111,10 +150,18 @@
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-            NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
-            new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
+            NavigationManager.ToAbsoluteUri("Account/ConfirmEmail")
+            .AbsoluteUri, new Dictionary<string, object?>
+                {
+                    ["userId"] = userId,
+                    ["code"] = code,
+                    ["returnUrl"] = ReturnUrl
+                });
 
-        await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
+        await EmailSender.SendConfirmationLinkAsync(
+            user,
+            Input.Email,
+            HtmlEncoder.Default.Encode(callbackUrl));
 
         if (UserManager.Options.SignIn.RequireConfirmedAccount)
         {
@@ -135,8 +182,10 @@
         }
         catch
         {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
+            throw new InvalidOperationException(
+                $"Can't create an instance of '{nameof(ApplicationUser)}'. " +
+                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract " +
+                "class and has a parameterless constructor.");
         }
     }
 
@@ -144,7 +193,8 @@
     {
         if (!UserManager.SupportsUserEmail)
         {
-            throw new NotSupportedException("The default UI requires a user store with email support.");
+            throw new NotSupportedException("The default UI requires a " +
+            "user store with email support.");
         }
         return (IUserEmailStore<ApplicationUser>)UserStore;
     }

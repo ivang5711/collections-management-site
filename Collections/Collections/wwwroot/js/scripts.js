@@ -34,7 +34,10 @@ function runMe() {
             .attr("width", layout.size()[0])
             .attr("height", layout.size()[1])
             .append("g")
-            .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+            .attr(
+                "transform",
+                "translate(" + layout.size()[0] / 2 +
+                "," + layout.size()[1] / 2 + ")")
             .selectAll("text")
             .data(words)
             .enter().append("text")

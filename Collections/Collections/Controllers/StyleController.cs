@@ -7,9 +7,9 @@ namespace Collections.Controllers;
 [ApiController]
 public class StyleController : ControllerBase
 {
-    public async Task<ActionResult> ChangeStyle([FromQuery] string style)
+    public Task<ActionResult> ChangeStyle([FromQuery] string style)
     {
         Response.Cookies.Append("style", style);
-        return Redirect("/");
+        return Task.FromResult<ActionResult>(Redirect("/"));
     }
 }

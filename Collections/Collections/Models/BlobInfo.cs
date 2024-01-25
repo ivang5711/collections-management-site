@@ -16,7 +16,7 @@ public class BlobInfo
         ContentType = contentType;
     }
 
-    public String Content { get; set; }
+    public string Content { get; set; }
 
     public string ContentType { get; set; }
 }

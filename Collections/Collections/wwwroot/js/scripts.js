@@ -1,25 +1,16 @@
-﻿let words2 = [
-    "man",
-    "woman",
-    "dog",
-    "cat",
-    "bird",
-    "snake",
-    "rain",
-    "earth"
-];
+﻿let tags = [];
 
-function setWords(words) {
-    words2 = words;
+function setTags(words) {
+    tags = words;
 }
 
-function runMe() {
+function runTagCloud() {
     let fill = d3.scale.category20();
 
     let layout = d3.layout.cloud()
         .size([300, 200])
-        .words(words2.map(function (d) {
-            return { text: d, size: 10 + Math.random() * 90, test: "haha" };
+        .words(tags.map(function (d) {
+            return { text: d, size: 10 + Math.random() * 90, test: "test" };
         }))
         .padding(5)
         .rotate(function () { return ~~(Math.random() * 2) * 90; })
@@ -70,14 +61,6 @@ function removeLocalStoreData(key) {
     localStorage.removeItem(key);
 }
 
-function createAlert() {
-    alert("Hey this is an alert!");
-}
-
-function createPrompt(question) {
-    return prompt(question);
-}
-
 function setElementTextById(id, text) {
     document.getElementById(id).innerText = text;
 }
@@ -95,15 +78,15 @@ function toggleIt(element) {
     }
 }
 
-function unfade(element) {
-    let op = 0.1;  // initial opacity
+function fadeIn(element) {
+    let opacity = 0.1;
     element.style.display = 'block';
     let timer = setInterval(function () {
-        if (op >= 1) {
+        if (opacity >= 1) {
             clearInterval(timer);
         }
-        element.style.opacity = op;
-        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
-        op += op * 0.1;
+        element.style.opacity = opacity;
+        element.style.filter = 'alpha(opacity=' + opacity * 100 + ")";
+        opacity += opacity * 0.1;
     }, 10);
 }

@@ -10,18 +10,18 @@ public partial class WordCloud
 
     private ElementReference InputToFade;
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _ = JsRuntime.InvokeVoidAsync("setWords", WordsImport);
-            _ = JsRuntime.InvokeVoidAsync("runMe");
-            _ = Fade();
+            await JsRuntime.InvokeVoidAsync("setTags", WordsImport);
+            await JsRuntime.InvokeVoidAsync("runTagCloud");
+            await Fade();
         }
     }
 
     private async Task Fade()
     {
-        await JsRuntime.InvokeVoidAsync("unfade", InputToFade);
+        await JsRuntime.InvokeVoidAsync("fadeIn", InputToFade);
     }
 }

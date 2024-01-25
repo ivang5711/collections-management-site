@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace Collections.Services
+namespace Collections.Services;
+
+public class CommentsHub : Hub
 {
-    public class CommentsHub : Hub
-    {
-        public Task UpdateComments() => Clients.All.SendAsync("ReceiveUpdateComments");
-    }
+    public Task UpdateComments() => Clients.All.SendAsync("ReceiveUpdateComments");
 }

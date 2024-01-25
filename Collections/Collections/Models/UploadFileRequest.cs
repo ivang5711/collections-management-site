@@ -1,9 +1,8 @@
-﻿namespace Collections.Models
-{
-    public class UploadFileRequest
-    {
-        public string FilePath { get; set; }
+﻿namespace Collections.Models;
 
-        public string FileName { get; set; }
-    }
+public class UploadFileRequest
+{
+    public string FilePath { get; set; }
+
+    public string FileName { get; set; }
 }

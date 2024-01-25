@@ -1,11 +1,10 @@
 ﻿using Collections.Models;
 
-namespace Collections.Services
-{
-    public interface ILocalesOptions
-    {
-        public string[] GetLocaleNames();
+namespace Collections.Services;
 
-        public List<Locale> GetLocales();
-    }
+public interface ILocalesOptions
+{
+    public string[] GetLocaleNames();
+
+    public List<Locale> GetLocales();
 }

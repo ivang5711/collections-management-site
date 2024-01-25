@@ -2,78 +2,77 @@ using Collections.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Collections.Data
+namespace Collections.Data;
+
+public class ApplicationDbContext(
+    DbContextOptions<ApplicationDbContext> options)
+    : IdentityDbContext<ApplicationUser>(options)
 {
-    public class ApplicationDbContext(
-        DbContextOptions<ApplicationDbContext> options)
-        : IdentityDbContext<ApplicationUser>(options)
+    public DbSet<Comment> Comments { get; set; }
+    public DbSet<Tag> Tags { get; set; }
+
+    public DbSet<Collection> Collections { get; set; }
+
+    public DbSet<Item> Items { get; set; }
+
+    public DbSet<Theme> Themes { get; set; }
+
+    public DbSet<Like> Likes { get; set; }
+
+    public DbSet<NumericalField> NumericalFields { get; set; }
+
+    public DbSet<StringField> StringFields { get; set; }
+
+    public DbSet<TextField> TextFields { get; set; }
+
+    public DbSet<LogicalField> LogicalFields { get; set; }
+
+    public DbSet<DateField> DateFields { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<Tag> Tags { get; set; }
+        base.OnModelCreating(builder);
 
-        public DbSet<Collection> Collections { get; set; }
+        builder.Entity<Collection>().ToTable("Collections");
+        builder.Entity<Item>().ToTable("Items");
+        builder.Entity<Comment>().ToTable("Comments");
+        builder.Entity<Tag>().ToTable("Tags");
+        builder.Entity<Like>().ToTable("Likes");
+        builder.Entity<Theme>().ToTable("Themes");
+        builder.Entity<NumericalField>().ToTable("NumericalFields");
+        builder.Entity<StringField>().ToTable("StringFields");
+        builder.Entity<TextField>().ToTable("TextFields");
+        builder.Entity<LogicalField>().ToTable("LogicalFields");
+        builder.Entity<DateField>().ToTable("DateFields");
 
-        public DbSet<Item> Items { get; set; }
+        builder.Entity<Like>()
+            .HasIndex(p => new { p.ApplicationUserId, p.ItemId })
+            .IsUnique(true);
 
-        public DbSet<Theme> Themes { get; set; }
+        //builder.Entity<ApplicationUser>().HasMany(e => e.Likes)
+        //    .WithOne(e => e.User)
+        //    .HasForeignKey(e => e.UserId)
+        //    .HasPrincipalKey(e => e.Id);
 
-        public DbSet<Like> Likes { get; set; }
+        //builder.Entity<Collection>()
+        //                    .HasMany(e => e.Items)
+        //                    .WithOne(e => e.Collection)
+        //                    .HasForeignKey(e => e.Id)
+        //                    .HasPrincipalKey(e => e.Id);
 
-        public DbSet<NumericalField> NumericalFields { get; set; }
+        //builder.Entity<Item>().HasMany(e => e.Tags)
+        //                      .WithOne(e => e.Item)
+        //                      .HasForeignKey(e => e.Id)
+        //                      .HasPrincipalKey(e => e.Id);
 
-        public DbSet<StringField> StringFields { get; set; }
+        //builder.Entity<Item>().HasMany(e => e.Comments)
+        //                      .WithOne(e => e.Item)
+        //                      .HasForeignKey(e => e.Id)
+        //                      .HasPrincipalKey(e => e.Id);
 
-        public DbSet<TextField> TextFields { get; set; }
-
-        public DbSet<LogicalField> LogicalFields { get; set; }
-
-        public DbSet<DateField> DateFields { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-
-            builder.Entity<Collection>().ToTable("Collections");
-            builder.Entity<Item>().ToTable("Items");
-            builder.Entity<Comment>().ToTable("Comments");
-            builder.Entity<Tag>().ToTable("Tags");
-            builder.Entity<Like>().ToTable("Likes");
-            builder.Entity<Theme>().ToTable("Themes");
-            builder.Entity<NumericalField>().ToTable("NumericalFields");
-            builder.Entity<StringField>().ToTable("StringFields");
-            builder.Entity<TextField>().ToTable("TextFields");
-            builder.Entity<LogicalField>().ToTable("LogicalFields");
-            builder.Entity<DateField>().ToTable("DateFields");
-
-            builder.Entity<Like>()
-                .HasIndex(p => new { p.ApplicationUserId, p.ItemId })
-                .IsUnique(true);
-
-            //builder.Entity<ApplicationUser>().HasMany(e => e.Likes)
-            //    .WithOne(e => e.User)
-            //    .HasForeignKey(e => e.UserId)
-            //    .HasPrincipalKey(e => e.Id);
-
-            //builder.Entity<Collection>()
-            //                    .HasMany(e => e.Items)
-            //                    .WithOne(e => e.Collection)
-            //                    .HasForeignKey(e => e.Id)
-            //                    .HasPrincipalKey(e => e.Id);
-
-            //builder.Entity<Item>().HasMany(e => e.Tags)
-            //                      .WithOne(e => e.Item)
-            //                      .HasForeignKey(e => e.Id)
-            //                      .HasPrincipalKey(e => e.Id);
-
-            //builder.Entity<Item>().HasMany(e => e.Comments)
-            //                      .WithOne(e => e.Item)
-            //                      .HasForeignKey(e => e.Id)
-            //                      .HasPrincipalKey(e => e.Id);
-
-            //builder.Entity<Item>().HasMany(e => e.Likes)
-            //                      .WithOne(e => e.Item)
-            //                      .HasForeignKey(e => e.Id)
-            //                      .HasPrincipalKey(e => e.Id);
-        }
+        //builder.Entity<Item>().HasMany(e => e.Likes)
+        //                      .WithOne(e => e.Item)
+        //                      .HasForeignKey(e => e.Id)
+        //                      .HasPrincipalKey(e => e.Id);
     }
 }

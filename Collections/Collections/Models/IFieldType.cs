@@ -1,6 +1,5 @@
-﻿namespace Collections.Models
+﻿namespace Collections.Models;
+
+public interface IFieldType
 {
-    public interface IFieldType
-    {
-    }
 }

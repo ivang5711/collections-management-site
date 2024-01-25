@@ -4,6 +4,10 @@
 @inject ProtectedLocalStorage ProtectedLocalStore
 @inject IJSRuntime JSRuntime
 @inject IStringLocalizer<Resource> localizer
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject IDbContextFactory<ApplicationDbContext> _contextFactory
+@inject IHttpContextAccessor _HttpContextAccessor
+@inject UserManager<ApplicationUser> _UserManager
 
 @rendermode InteractiveServer
 
@@ -94,7 +98,7 @@
                                     <span class="bi bi-person-fill-nav-menu"
                                           aria-hidden="true">
                                     </span> @localizer["Hello"],
-                                    @(context.User.Identity?.Name)!
+                                    @UserName
                                 </NavLink>
                             </span>
                         </span>
@@ -149,11 +153,26 @@
 
     public string SearchInput { get; set; } = string.Empty;
 
-    protected override void OnInitialized()
+    public string UserName { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
     {
+        await GetCurrentUserFullName();
         currentUrl = NavigationManager
             .ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private async Task GetCurrentUserFullName()
+    {
+        var authenticationStatus = await _AuthenticationStateProvider
+            .GetAuthenticationStateAsync();
+        if (authenticationStatus.User.Identity!.IsAuthenticated)
+        {
+            var user = authenticationStatus.User;
+            var currentUser = await _UserManager.GetUserAsync(user);
+            UserName = currentUser!.FullName ?? string.Empty;
+        }
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)

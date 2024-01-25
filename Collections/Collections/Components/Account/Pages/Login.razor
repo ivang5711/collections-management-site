@@ -12,6 +12,7 @@
 @inject UserManager<ApplicationUser> _UserManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject IStringLocalizer<Resource> localizer
+@inject IDbContextFactory<ApplicationDbContext> _contextFactory
 
 <PageTitle>@localizer["Log in"]</PageTitle>
     <div class="row justify-content-center">
@@ -93,7 +94,10 @@ Input.Password" class="text-danger" />
         var usersBucket = await _UserManager.GetUsersInRoleAsync("ToRemove");
         foreach (var item in usersBucket)
         {
-            await _UserManager.DeleteAsync(item);
+            using var adc = _contextFactory.CreateDbContext();
+            adc.Collections.Where(x => x.ApplicationUserId == item.Id).ExecuteDelete();
+            // await _UserManager.DeleteAsync(item);
+            adc.Users.Where(x => x.Id == item.Id).ExecuteDelete();
         }
 
         if (HttpMethods.IsGet(HttpContext.Request.Method))

@@ -2,11 +2,15 @@
 
 @if (Comment is not null)
 {
-    <div class="card main-card h-100 fade-in" style="width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
+    <div class="card main-card h-100 fade-in collection-card-shadow"
+         style="width: 90%;">
         <div class="card-body">
             <h5 class="card-title">@Comment.ApplicationUser.FullName</h5>
-            <p class="card-text"><small>@Comment.CreationDateTime.ToLocalTime()
-            </small></p>
+            <p class="card-text">
+                <small>
+                    @Comment.CreationDateTime.ToLocalTime()
+                </small>
+            </p>
             <p class="card-text">@Comment.Text</p>
         </div>
     </div>

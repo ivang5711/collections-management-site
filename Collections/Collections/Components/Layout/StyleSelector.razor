@@ -29,7 +29,11 @@
         set
         {
             style = value;
-            Navigation.NavigateTo($"/style?style={style.ToString()}", true);
+            var uriEscaped = new Uri(Navigation.Uri).GetComponents(
+                    UriComponents.PathAndQuery, UriFormat.Unescaped);
+            Navigation.NavigateTo(
+                $"/style?style={style.ToString()}&redirectUri={uriEscaped}",
+                true);
         }
     }
 }

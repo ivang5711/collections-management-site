@@ -2,7 +2,7 @@
     --background: #dbdbdb;
     --background-2: #ededed;
     --background-3: #858585;
-    --text: #282828;
+    --text: #404040;
     --text-accent: #232323;
     --text-accent-2: #969696;
     --purple: #6b49b6;
@@ -297,11 +297,16 @@ th {
     background-color: var(--background-2);
     color: var(--text);
     border: none;
+    
 }
 
 .item-card-container {
     box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
     background-image: linear-gradient(10deg, var(--purple-2), var(--background-2));
+    min-width: 12rem;
+    min-height: 18rem;
+    /*text-shadow: 2px 2px 2px var(--text-accent-2);*/
+    
 }
 
 .options-culture {
@@ -316,3 +321,18 @@ th {
     margin: 0rem 2rem 2rem 2rem;
     background-image: linear-gradient(10deg, var(--purple-2), var(--background-2));
 }
+
+.title-shadowed {
+    text-shadow: 2px 2px 2px var(--text-accent-2);
+
+}
+
+.active-element {
+    opacity: 0.85;
+    transition: opacity 0.05s, box-shadow 0.05s;
+}
+
+    .active-element:hover {
+        opacity: 1;
+        box-shadow: 0px 1px 2px var(--purple) inset;
+    }

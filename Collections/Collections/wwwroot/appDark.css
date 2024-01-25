@@ -305,6 +305,7 @@ th {
     background-image: linear-gradient(10deg, var(--dark-purple), var(--background-2));
     min-width: 12rem;
     min-height: 18rem;
+    object-fit: cover;
 }
 
 .options-culture {

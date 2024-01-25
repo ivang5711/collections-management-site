@@ -36,15 +36,21 @@ else
                         <div class="title-container text-center text-md-end">
                             <h1 class="title-shadowed">@CurrentItem.Name</h1>
                             <h2 class="title-shadowed">@GetAuthor()</h2>
-                            <div class="pt-3 d-flex justify-content-md-end justify-content-center">
+                            <div class="pt-3 d-flex justify-content-md-end
+                                        justify-content-center">
                                 <AuthorizeView>
                                     @if (ItemModel is not null)
                                     {
-                                        <div class="row row-cols-1 row-cols-md-2 my-2 d-flex justify-content-md-end">
+                                        <div class="row row-cols-1 row-cols-md-2 my-2 d-flex
+                                                    justify-content-md-end">
                                             <div class="pe-md-0 mx-0">
-                                                <InputText @bind-Value="NewTag" requred list="datalistOptions" 
-                                                id="exampleDataList" class="search-input input-group-text input-group-lg w-100" 
-                                                placeholder="@localizer["Tags..."]" />
+                                                <InputText @bind-Value="NewTag"
+                                                           requred
+                                                           list="datalistOptions"
+                                                           id="exampleDataList"
+                                                           class="search-input input-group-text
+                                                                  input-group-lg w-100"
+                                                           placeholder="@localizer["Tags..."]" />
                                                 <datalist id="datalistOptions">
                                                     @foreach (var t in Tags)
                                                     {
@@ -54,11 +60,15 @@ else
                                                     }
                                                 </datalist>
                                             </div>
-                                            <div class="mx-0 my-1 ps-md-2 my-md-0 d-flex row col-md-auto">
+                                            <div class="mx-0 my-1 ps-md-2 my-md-0
+                                                        d-flex row col-md-auto">
                                                 <button @onclick="SubmitAddTag"
-                                                        class="btn btn-dark text-nowrap"
-                                                        asp-formaction="Block" name="Block"
-                                                        type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                                        class="btn btn-dark text-nowrap
+                                                               button-box-shadow"
+                                                        asp-formaction="Block"
+                                                        name="Block"
+                                                        type="button"
+                                                        value="true">
                                                     <i class="bi bi-plus-square"></i>
                                                 </button>
                                             </div>
@@ -68,13 +78,16 @@ else
                             </div>
                             <div class="pt-3">
                                 <a href="/collection-details/@CurrentItem.Collection.Id">
-                                    <span class="badge active-element text-bg-dark">@localizer["Collection"]: @CurrentItem.Collection.Name</span>
+                                    <span class="badge active-element text-bg-dark">
+                                        @localizer["Collection"]: @CurrentItem.Collection.Name
+                                    </span>
                                 </a>
                             </div>
                             <div class="pt-3">
                                 @if (Tags.Count == 0)
                                 {
-                                    <span class="badge active-element text-bg-success">
+                                    <span class="badge active-element
+                                                 text-bg-success">
                                         @localizer["No tags so far"]...
                                     </span>
                                 }
@@ -84,13 +97,20 @@ else
                                     {
                                         <AuthorizeView>
                                             <Authorized>
-                                                <button class="badge active-element text-bg-success ms-1" style="border: none;"
-                                                        type="button" @onclick="() => SubmitRemoveTag(t.Id)">
+                                                <button class="badge active-element
+                                                               text-bg-success ms-1"
+                                                        style="border: none;"
+                                                        type="button"
+                                                        @onclick="() => SubmitRemoveTag(t.Id)">
                                                     @t.Name
                                                 </button>
                                             </Authorized>
                                             <NotAuthorized>
-                                                <button class="badge active-element text-bg-success ms-1" disabled style="border: none;" type="button">
+                                                <button class="badge active-element
+                                                               text-bg-success ms-1"
+                                                        disabled
+                                                        style="border: none;"
+                                                        type="button">
                                                     @t.Name
                                                 </button>
                                             </NotAuthorized>
@@ -102,13 +122,19 @@ else
                                 <AuthorizeView>
                                     <Authorized>
 
-                                        <button @onclick="ProcessLikeRequest" class="active-element badge btn text-bg-danger">
-                                            <i class="bi bi-hand-thumbs-up"></i> @LikeCount
+                                        <button @onclick="ProcessLikeRequest"
+                                                class="active-element badge btn
+                                                       text-bg-danger">
+                                            <i class="bi bi-hand-thumbs-up">
+                                            </i> @LikeCount
                                         </button>
                                     </Authorized>
                                     <NotAuthorized>
-                                        <button style="pointer-events: none;" class="active-element badge btn text-bg-danger">
-                                            <i class="bi bi-hand-thumbs-up"></i> @LikeCount
+                                        <button style="pointer-events: none;"
+                                                class="active-element badge btn
+                                                       text-bg-danger">
+                                            <i class="bi bi-hand-thumbs-up">
+                                            </i> @LikeCount
                                         </button>
                                     </NotAuthorized>
                                 </AuthorizeView>
@@ -116,10 +142,15 @@ else
                             <AuthorizeView>
                                 <div class="pt-3">
                                     <button @onclick="Focus"
-                                            class="btn btn-dark btn-sm text-nowrap"
-                                            asp-formaction="Block" name="Block"
-                                            type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                        <i class="bi bi-chat-left-text"></i> @localizer["Leave Comment"]
+                                            class="btn btn-dark btn-sm
+                                                   text-nowrap
+                                                   button-box-shadow"
+                                            asp-formaction="Block"
+                                            name="Block"
+                                            type="submit"
+                                            value="true">
+                                        <i class="bi bi-chat-left-text">
+                                        </i> @localizer["Leave Comment"]
                                     </button>
                                 </div>
                             </AuthorizeView>
@@ -131,16 +162,26 @@ else
                             @if (!string.IsNullOrEmpty(CurrentItem.ImageLink))
                             {
                                 <a href="@ItemModel!.ImageLink">
-                                    <img class="item-card-container active-element" src="@CurrentItem.ImageLink"
+                                    <img class="item-card-container
+                                                active-element"
+                                         src="@CurrentItem.ImageLink"
                                          alt="item poster" />
                                 </a>
                             }
                             else
                             {
-                                <div class="active-element w-100 h-100 item-card-container rounded-3 text-center align-items-center d-flex justify-content-center"
-                                     style="min-width: 12rem; min-height: 24rem; user-select: none;">
-                                @localizer["There is no image"]<br />@localizer["for this item yet"]...
-                            </div>
+                                <div class="active-element w-100 h-100
+                                            item-card-container
+                                            rounded-3 text-center
+                                            align-items-center
+                                            d-flex justify-content-center"
+                                     style="min-width: 12rem;
+                                            min-height: 24rem;
+                                            user-select: none;">
+                                    @localizer["There is no image"]
+                                    <br />
+                                    @localizer["for this item yet"]...
+                                </div>
 
                             }
                         </div>
@@ -152,37 +193,45 @@ else
                         @if (editItemRequested && !deleteItemRequested && !editPhotoRequested)
                         {
                             <div class="poster-container2 py-2 ">
-                                <div class="card main-card w-100 mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
+                                <div class="card main-card w-100 mb-3 collection-card-shadow">
                                     <div class="row g-0">
                                         @if (string.IsNullOrWhiteSpace(ItemModel!.ImageLink))
                                         {
                                             <div class="col-md-4">
-                                                <canvas class="img-fluid h-100 rounded-start" 
-                                                />
+                                                <canvas class="img-fluid h-100 rounded-start" />
                                             </div>
                                         }
                                         else
                                         {
                                             <div class="col-md-4">
-                                                <img src="@TempImg" class="item-card-container img-fluid h-100 rounded-start" 
-                                                style="object-fit:cover;" alt="...">
+                                                <img src="@TempImg"
+                                                     class="item-card-container
+                                                            img-fluid
+                                                            h-100
+                                                            rounded-start"
+                                                     alt="...">
                                             </div>
                                         }
                                         <div class="col-md-8">
-                                            <h5 class="card-header">Edit Item: @ItemModel!.Name</h5>
-                                            <EditForm Context="formContext2" Model="@ItemModel" OnSubmit="@SubmitEditItem" 
-                                                FormName="EditCollectionForm">
+                                            <h5 class="card-header">
+                                                Edit Item: @ItemModel!.Name
+                                            </h5>
+                                            <EditForm Context="formContext2"
+                                                      Model="@ItemModel"
+                                                      OnSubmit="@SubmitEditItem"
+                                                      FormName="EditCollectionForm">
                                                 <div class="card-body">
                                                     <div class="px-5 py-2">
-
                                                         @if (ItemModel is not null)
                                                         {
-
                                                             <DataAnnotationsValidator />
                                                             <ValidationSummary />
-                                                            <InputText @bind-Value="ItemModel!.Name" type="text" 
-                                                            class="search-input input-group-text input-group-lg my-2 w-100" 
-                                                            placeholder="@localizer["Item New Name..."]" />
+                                                            <InputText @bind-Value="ItemModel!.Name"
+                                                                       type="text"
+                                                                       class="search-input input-group-text
+                                                                              input-group-lg
+                                                                              my-2 w-100"
+                                                                       placeholder="@localizer["Item New Name..."]" />
                                                             @if (ItemModel.NumericalFields.Count > 0)
                                                             {
                                                                 <ul class="list-group custom-field">
@@ -190,16 +239,19 @@ else
                                                                     {
                                                                         <li class="list-group-item main-card">
                                                                             <div class="d-flex row row-cols-md-auto">
-                                                                                <div class="p-2"><input type="text" 
-                                                                                    class="search-input form-control" @bind="@item.Name" 
-                                                                                    placeholder="@localizer["Numerical field name..."]" />
+                                                                                <div class="p-2">
+                                                                                    <input type="text"
+                                                                                           class="search-input form-control"
+                                                                                           @bind="@item.Name"
+                                                                                           placeholder="@localizer["Numerical field name..."]" />
                                                                                 </div>
-                                                                                <div class="p-2 flex-fill"><input type="text" 
-                                                                                    class="search-input form-control" 
-                                                                                    placeholder="@localizer["Numerical field value..."]" 
-                                                                                    @bind="@item.Value" /></div>
+                                                                                <div class="p-2 flex-fill">
+                                                                                    <input type="text"
+                                                                                           class="search-input form-control"
+                                                                                           placeholder="@localizer["Numerical field value..."]"
+                                                                                           @bind="@item.Value" />
+                                                                                </div>
                                                                             </div>
-
                                                                         </li>
                                                                     }
                                                                 </ul>
@@ -211,16 +263,19 @@ else
                                                                     {
                                                                         <li class="list-group-item main-card">
                                                                             <div class="d-flex row row-cols-md-auto">
-                                                                                <div class="p-2"><input type="text" 
-                                                                                    class="search-input form-control" @bind="@item.Name" 
-                                                                                    placeholder="@localizer["String field name..."]" />
+                                                                                <div class="p-2">
+                                                                                    <input type="text"
+                                                                                           class="search-input form-control"
+                                                                                           @bind="@item.Name"
+                                                                                           placeholder="@localizer["String field name..."]" />
                                                                                 </div>
-                                                                                <div class="p-2 flex-fill"><input type="text" 
-                                                                                    class="search-input form-control" 
-                                                                                    placeholder="@localizer["String field value..."]" 
-                                                                                    @bind="@item.Value" /></div>
+                                                                                <div class="p-2 flex-fill">
+                                                                                    <input type="text"
+                                                                                           class="search-input form-control"
+                                                                                           placeholder="@localizer["String field value..."]"
+                                                                                           @bind="@item.Value" />
+                                                                                </div>
                                                                             </div>
-
                                                                         </li>
                                                                     }
                                                                 </ul>
@@ -231,13 +286,15 @@ else
                                                                     @foreach (var item in ItemModel.TextFields)
                                                                     {
                                                                         <li class="list-group-item main-card">
-                                                                            <input type="text" for="exampleFormControlTextarea1" 
-                                                                                class="search-input form-control mb-1" @bind="@item.Name"
+                                                                            <input type="text" for="exampleFormControlTextarea1"
+                                                                                   class="search-input form-control mb-1"
+                                                                                   @bind="@item.Name"
                                                                                    placeholder="@localizer["Text field name..."]">
-                                                                            <textarea class="search-input form-control" 
-                                                                            id="exampleFormControlTextarea1"
+                                                                            <textarea class="search-input form-control"
+                                                                                      id="exampleFormControlTextarea1"
                                                                                       placeholder="@localizer["Text field content..."]"
-                                                                            @bind="@item.Value" rows="3"></textarea>
+                                                                                      @bind="@item.Value" rows="3">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </textarea>
                                                                         </li>
                                                                     }
                                                                 </ul>
@@ -247,14 +304,18 @@ else
                                                                 <ul class="list-group custom-field">
                                                                     @foreach (var item in ItemModel.LogicalFields)
                                                                     {
-                                                                        <li class="list-group-item main-card row-cols-2 d-flex align-items-center">
+                                                                        <li class="list-group-item main-card
+                                                                                   row-cols-2 d-flex align-items-center">
                                                                             <span class="form-check col-auto form-switch">
-                                                                                <input class="search-input form-check-input" @bind="item.Value" 
-                                                                                type="checkbox" id="flexSwitchCheckDefault" />
+                                                                                <input class="search-input form-check-input"
+                                                                                       @bind="item.Value"
+                                                                                       type="checkbox"
+                                                                                       id="flexSwitchCheckDefault" />
                                                                             </span>
-                                                                            <input type="text" class="search-input flex-fill form-control" 
-                                                                            @bind="@item.Name" 
-                                                                            placeholder="@localizer["Logical field name..."]" />
+                                                                            <input type="text"
+                                                                                   class="search-input flex-fill form-control"
+                                                                                   @bind="@item.Name"
+                                                                                   placeholder="@localizer["Logical field name..."]" />
                                                                         </li>
                                                                     }
                                                                 </ul>
@@ -266,14 +327,18 @@ else
                                                                     {
                                                                         <li class="list-group-item main-card">
                                                                             <div class="d-flex row row-cols-md-auto">
-                                                                                <div class="p-2 flex-fill "><input type="text" 
-                                                                                    class="search-input form-control" @bind="@item.Name" 
-                                                                                    placeholder="@localizer["Logical field name..."]" /></div>
-                                                                                <div class="p-2 "><input type="date" 
-                                                                                    class="search-input form-control w-md-auto" 
-                                                                                    @bind="@item.Value" /></div>
+                                                                                <div class="p-2 flex-fill ">
+                                                                                    <input type="text"
+                                                                                           class="search-input form-control"
+                                                                                           @bind="@item.Name"
+                                                                                           placeholder="@localizer["Logical field name..."]" />
+                                                                                </div>
+                                                                                <div class="p-2 ">
+                                                                                    <input type="date"
+                                                                                           class="search-input form-control w-md-auto"
+                                                                                           @bind="@item.Value" />
+                                                                                </div>
                                                                             </div>
-
                                                                         </li>
                                                                     }
                                                                 </ul>
@@ -281,27 +346,38 @@ else
                                                         }
                                                     </div>
                                                 </div>
-                                                <div class="pb-2 pe-3 mx-0 d-flex justify-content-end row col-md
-                                                        row-cols-md-auto gap-1 card-footer">
+                                                <div class="pb-2 pe-3 mx-0 d-flex
+                                                            justify-content-end row col-md
+                                                            row-cols-md-auto gap-1 card-footer">
                                                     <button @onclick="CancelEditItem"
-                                                            class="btn btn-secondary text-nowrap"
-                                                            asp-formaction="Block" name="Block"
-                                                            type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                        <i class="bi bi-x-square-fill"></i> @localizer["Cancel"]
+                                                            class="btn btn-secondary text-nowrap
+                                                                   button-box-shadow"
+                                                            asp-formaction="Block"
+                                                            name="Block"
+                                                            type="button"
+                                                            value="true">
+                                                        <i class="bi bi-x-square-fill">
+                                                        </i> @localizer["Cancel"]
                                                     </button>
                                                     @if (ItemModel!.Name == CurrentItem.Name)
                                                     {
-                                                        <button class="btn btn-success text-nowrap"
-                                                                type="submit" disabled value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                            <i class="bi bi-plus-square"></i> @localizer["Update"]
+                                                        <button class="btn btn-success text-nowrap
+                                                                       button-box-shadow"
+                                                                type="submit"
+                                                                disabled
+                                                                value="true">
+                                                            <i class="bi bi-plus-square">
+                                                            </i> @localizer["Update"]
                                                         </button>
                                                     }
                                                     else
                                                     {
-
-                                                        <button class="btn btn-success text-nowrap"
-                                                                type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                            <i class="bi bi-plus-square"></i> @localizer["Update"]
+                                                        <button class="btn btn-success text-nowrap
+                                                                       button-box-shadow"
+                                                                type="submit"
+                                                                value="true">
+                                                            <i class="bi bi-plus-square">
+                                                            </i> @localizer["Update"]
                                                         </button>
                                                     }
                                                 </div>
@@ -314,35 +390,45 @@ else
                         @if (editPhotoRequested && !editItemRequested && !deleteItemRequested)
                         {
                             <div class="poster-container2 py-2 ">
-                                <div class="card main-card w-100 mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
+                                <div class="card main-card w-100 mb-3 collection-card-shadow">
                                     <div class="row g-0">
                                         @if (string.IsNullOrWhiteSpace(TempImg))
                                         {
                                             <div class="col-md-4">
-                                                <canvas class="img-fluid h-100 rounded-start" 
-                                                />
+                                                <canvas class="img-fluid h-100 rounded-start" />
                                             </div>
                                         }
                                         else
                                         {
                                             <div class="col-md-4">
-                                                <img src="@TempImg" class="item-card-container img-fluid h-100 rounded-start" 
-                                                style="object-fit:cover;" alt="...">
+                                                <img src="@TempImg"
+                                                     class="item-card-container
+                                                            img-fluid h-100 rounded-start"
+                                                     alt="...">
                                             </div>
                                         }
                                         <div class="col-md-8">
-                                            <h5 class="card-header">@localizer["Edit Photo"]</h5>
-                                            <EditForm Context="formContextImage" Model="@ItemModel" 
-                                                OnSubmit="@SubmitEditPhoto" FormName="EditImageForm">
+                                            <h5 class="card-header">
+                                                @localizer["Edit Photo"]
+                                            </h5>
+                                            <EditForm Context="formContextImage"
+                                                      Model="@ItemModel"
+                                                      OnSubmit="@SubmitEditPhoto"
+                                                      FormName="EditImageForm">
                                                 <div class="card-body">
                                                     <div class="px-5 py-2">
                                                         @if (!string.IsNullOrWhiteSpace(FileError))
                                                         {
-                                                            <div class="alert alert-warning d-flex align-items-center" 
-                                                            role="alert">
-                                                                <svg class="bi flex-shrink-0 me-2" width="24" 
-                                                                height="24" role="img" aria-label="Warning:">
-                                                                <use xlink:href="#exclamation-triangle-fill" /></svg>
+                                                            <div class="alert alert-warning
+                                                                        d-flex align-items-center"
+                                                                 role="alert">
+                                                                <svg class="bi flex-shrink-0 me-2"
+                                                                     width="24"
+                                                                     height="24"
+                                                                     role="img"
+                                                                     aria-label="Warning:">
+                                                                    <use xlink:href="#exclamation-triangle-fill" />
+                                                                </svg>
                                                                 <div>
                                                                     @FileError.
                                                                 </div>
@@ -350,32 +436,43 @@ else
                                                         }
                                                         @if (ItemModel is not null)
                                                         {
-                                                            <InputFile OnChange="UploadFile" class="search-input form-control my-2" 
-                                                            type="file" id="formFile" accept=".png,.jpg,.jpeg,.tiff" />
+                                                            <InputFile OnChange="UploadFile"
+                                                                       class="search-input form-control my-2"
+                                                                       type="file"
+                                                                       id="formFile"
+                                                                       accept=".png,.jpg,.jpeg,.tiff" />
                                                         }
                                                     </div>
                                                 </div>
-                                                <div class="pb-2 pe-3 mx-0 d-flex justify-content-end row col-md
-                                 row-cols-md-auto gap-1 card-footer">
+                                                <div class="pb-2 pe-3 mx-0 d-flex
+                                                            justify-content-end row col-md
+                                                            row-cols-md-auto gap-1 card-footer">
                                                     <button @onclick="ToggleEditPhotoRequestStatus"
-                                                            class="btn btn-secondary text-nowrap"
-                                                            asp-formaction="Block" name="Block"
-                                                            type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                        <i class="bi bi-x-square-fill"></i> @localizer["Cancel"]
+                                                            class="btn btn-secondary text-nowrap
+                                                                   button-box-shadow"
+                                                            asp-formaction="Block"
+                                                            name="Block"
+                                                            type="button"
+                                                            value="true">
+                                                        <i class="bi bi-x-square-fill">
+                                                        </i> @localizer["Cancel"]
                                                     </button>
                                                     @if (UploadedFileName is null || !string.IsNullOrWhiteSpace(FileError))
                                                     {
-                                                        <button class="btn btn-success text-nowrap"
-                                                                type="submit" disabled value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                            <i class="bi bi-plus-square"></i> @localizer["Update"]
+                                                        <button class="btn btn-success text-nowrap
+                                                                       button-box-shadow"
+                                                                type="submit" disabled value="true">
+                                                            <i class="bi bi-plus-square">
+                                                            </i> @localizer["Update"]
                                                         </button>
                                                     }
                                                     else
                                                     {
-
-                                                        <button class="btn btn-success text-nowrap"
-                                                                type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                            <i class="bi bi-plus-square"></i> @localizer["Update"]
+                                                        <button class="btn btn-success text-nowrap
+                                                                       button-box-shadow"
+                                                                type="submit" value="true">
+                                                            <i class="bi bi-plus-square">
+                                                            </i> @localizer["Update"]
                                                         </button>
                                                     }
                                                 </div>
@@ -388,20 +485,21 @@ else
                         @if (deleteItemRequested && !editItemRequested && !editPhotoRequested)
                         {
                             <div class="poster-container2 py-2 ">
-                                <div class="card main-card w-100 mb-3" style=" box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;">
+                                <div class="card main-card w-100 mb-3 collection-card-shadow">
                                     <div class="row g-0">
                                         @if (string.IsNullOrWhiteSpace(ItemModel!.ImageLink))
                                         {
                                             <div class="col-md-4">
-                                                <canvas class="img-fluid h-100 rounded-start" 
-                                                 />
+                                                <canvas class="img-fluid h-100 rounded-start" />
                                             </div>
                                         }
                                         else
                                         {
                                             <div class="col-md-4">
-                                                <img src="@ItemModel.ImageLink" class="item-card-container img-fluid h-100 rounded-start" 
-                                                style="object-fit:cover;" alt="...">
+                                                <img src="@ItemModel.ImageLink"
+                                                     class="item-card-container
+                                                            img-fluid h-100 rounded-start"
+                                                     alt="...">
                                             </div>
                                         }
                                         <div class="col-md-8">
@@ -413,18 +511,26 @@ else
                                                     <p>@localizer["Are you sure you want to delete the item?"]</p>
                                                 </div>
                                             </div>
-                                            <div class="pb-2 pe-3 mx-0 d-flex justify-content-end row col-md
-                                 row-cols-md-auto gap-1 card-footer">
+                                            <div class="pb-2 pe-3 mx-0 d-flex
+                                                        justify-content-end row col-md
+                                                        row-cols-md-auto gap-1 card-footer">
                                                 <button @onclick="ToggleDeleteItemRequestStatus"
-                                                        class="btn btn-secondary text-nowrap"
-                                                        asp-formaction="Block" name="Block"
-                                                        type="button" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                    <i class="bi bi-x-square-fill"></i> @localizer["Cancel"]
+                                                        class="btn btn-secondary text-nowrap
+                                                               button-box-shadow"
+                                                        asp-formaction="Block"
+                                                        name="Block"
+                                                        type="button"
+                                                        value="true">
+                                                    <i class="bi bi-x-square-fill">
+                                                    </i> @localizer["Cancel"]
                                                 </button>
                                                 <button @onclick="SubmitDeleteItem"
-                                                        class="btn btn-danger text-nowrap"
-                                                        type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                    <i class="bi bi-trash3-fill"></i> @localizer["Delete"]
+                                                        class="btn btn-danger text-nowrap
+                                                               button-box-shadow"
+                                                        type="submit"
+                                                        value="true">
+                                                    <i class="bi bi-trash3-fill">
+                                                    </i> @localizer["Delete"]
                                                 </button>
                                             </div>
                                         </div>
@@ -445,29 +551,36 @@ else
             {
                 <div class="overview d-flex flex-column">
                     <h3 class="title-shadowed">@CurrentItem.Name</h3>
-                    <h5 class="title-shadowed">@localizer["Author"]: @GetAuthor()</h5>
+                    <h5 class="title-shadowed">
+                        @localizer["Author"]: @GetAuthor()
+                    </h5>
 
                     <AuthorizeView>
                         @if (!(editItemRequested || deleteItemRequested || editPhotoRequested))
                         {
                             <div class="pb-2 d-flex justify-content-start m-0 row col-md
-                        row-cols-md-auto gap-1">
+                                        row-cols-md-auto gap-1">
                                 <button @onclick="ToggleEditItemRequestStatus"
-                                        class="btn btn-secondary btn-sm text-nowrap"
+                                        class="btn btn-secondary btn-sm text-nowrap
+                                               button-box-shadow"
                                         asp-formaction="Block" name="Block"
-                                        type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                    <i class="bi bi-pencil"></i> @localizer["Edit Item"]
+                                        type="submit" value="true">
+                                    <i class="bi bi-pencil">
+                                    </i> @localizer["Edit Item"]
                                 </button>
                                 <button @onclick="ToggleEditPhotoRequestStatus"
-                                        class="btn btn-dark btn-sm text-nowrap"
+                                        class="btn btn-dark btn-sm text-nowrap
+                                               button-box-shadow"
                                         asp-formaction="Block" name="Block"
-                                        type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                    <i class="bi bi-pencil"></i> @localizer["Edit Image"]
+                                        type="submit" value="true">
+                                    <i class="bi bi-pencil">
+                                    </i> @localizer["Edit Image"]
                                 </button>
                                 <button @onclick="ToggleDeleteItemRequestStatus"
-                                        class="btn btn-danger btn-sm text-nowrap"
+                                        class="btn btn-danger btn-sm text-nowrap
+                                               button-box-shadow"
                                         asp-formaction="Block" name="Block"
-                                        type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                                        type="submit" value="true">
                                     <i class="bi bi-trash3-fill"></i>
                                 </button>
                             </div>
@@ -488,14 +601,16 @@ else
                             <div class="row justify-content-center example pb-3">
                                 <div class="row row-cols-8 row-cols-lg-8
                                             row-cols-x1-5 g-3
-                                justify-content-center my-1" style="width: 90%;">
-
+                                            justify-content-center my-1"
+                                     style="width: 90%;">
                                     @if (CurrentItem.NumericalFields.Count > 0)
                                     {
                                         <ul class="list-group custom-field">
                                             @foreach (var item in CurrentItem.NumericalFields)
                                             {
-                                                <li class="list-group-item main-card">@(item.Name): @item.Value</li>
+                                                <li class="list-group-item main-card">
+                                                    @(item.Name): @item.Value
+                                                </li>
                                             }
                                         </ul>
                                     }
@@ -504,7 +619,9 @@ else
                                         <ul class="list-group custom-field main-card">
                                             @foreach (var item in CurrentItem.StringFields)
                                             {
-                                                <li class="list-group-item main-card">@(item.Name): @item.Value</li>
+                                                <li class="list-group-item main-card">
+                                                    @(item.Name): @item.Value
+                                                </li>
                                             }
                                         </ul>
                                     }
@@ -515,10 +632,16 @@ else
                                             {
                                                 <li class="list-group-item main-card">
 
-                                                    <label for="exampleFormControlTextarea1" 
-                                                        class="form-label">@(item.Name):</label>
+                                                    <label for="exampleFormControlTextarea1"
+                                                           class="form-label">
+                                                        @(item.Name):
+                                                    </label>
                                                     <textarea class="search-input form-control"
-                                                    id="exampleFormControlTextarea1" rows="3" disabled>@item.Value</textarea>
+                                                              id="exampleFormControlTextarea1"
+                                                              rows="3"
+                                                              disabled>
+                                                        @item.Value
+                                                                                                                                                                                                                    </textarea>
                                                 </li>
                                             }
                                         </ul>
@@ -530,7 +653,7 @@ else
                                             {
                                                 <li class="list-group-item main-card">
                                                     @(item.Name): @item.Value.ToString()
-                                                    </li>
+                                                </li>
                                             }
                                         </ul>
                                     }
@@ -541,7 +664,7 @@ else
                                             {
                                                 <li class="list-group-item main-card">
                                                     @(item.Name): @item.Value.ToString()
-                                                    </li>
+                                                </li>
                                             }
                                         </ul>
                                     }
@@ -550,41 +673,51 @@ else
                             <div class="row justify-content-center example py-2">
                                 <div class="row row-cols-8 row-cols-lg-8
                                             row-cols-x1-5 g-3
-                                justify-content-center my-1" style="width: 75%;">
+                                            justify-content-center my-1"
+                                     style="width: 75%;">
                                     <hr />
                                 </div>
                             </div>
                             <div class="row row-cols-8 row-cols-lg-8
                                         row-cols-x1-5 g-3
                                         justify-content-center my-1 py-2">
-                                <div class="card main-card h-100 fade-in"
-                                     style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;">
+                                <div class="card main-card h-100 fade-in
+                                            collection-card-shadow"
+                                     style="max-height: 100%;
+                                            max-width: 90%;">
                                     <div class="card-body ">
-                                        <textarea @ref="inputToFocus" class="search-input form-control"
+                                        <textarea @ref="inputToFocus"
+                                                  class="search-input form-control"
                                                   @bind="CommentText"
                                                   required
                                                   placeholder="@localizer["Enter your comment"]"
-                                                  aria-label="With textarea">
-                                               </textarea>
+                                                  aria-label="With textarea">                                                                                                                                                                                                                                                                               </textarea>
                                     </div>
                                     <div class="text-end pb-3 pe-2">
                                         @if (CommentText is null)
                                         {
-
                                             <button @onclick="Focus"
-                                                    class="btn btn-secondary btn-sm text-nowrap"
-                                                    asp-formaction="Block" name="Block"
-                                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                <i class="bi bi-chat-left-text"></i> @localizer["Leave Comment"]
+                                                    class="btn btn-secondary btn-sm
+                                                           text-nowrap button-box-shadow"
+                                                    asp-formaction="Block"
+                                                    name="Block"
+                                                    type="submit"
+                                                    value="true">
+                                                <i class="bi bi-chat-left-text">
+                                                </i> @localizer["Leave Comment"]
                                             </button>
                                         }
                                         else
                                         {
                                             <button @onclick="SubmitComment"
-                                                    class="btn btn-secondary btn-sm text-nowrap"
-                                                    asp-formaction="Block" name="Block"
-                                                    type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                                <i class="bi bi-chat-left-text"></i> @localizer["Leave Comment"]
+                                                    class="btn btn-secondary btn-sm
+                                                           text-nowrap button-box-shadow"
+                                                    asp-formaction="Block"
+                                                    name="Block"
+                                                    type="submit"
+                                                    value="true">
+                                                <i class="bi bi-chat-left-text">
+                                                </i> @localizer["Leave Comment"]
                                             </button>
                                         }
                                     </div>
@@ -615,7 +748,7 @@ else
                                     </Virtualize>
                                 </div>
                             }
-                            
+
                         </div>
                     </div>
                 </Authorized>
@@ -625,13 +758,16 @@ else
                         <div class="comment-container pb-3 ">
                             @if (CurrentItem.Comments.Count != 0)
                             {
-                                <div class="row justify-content-center example pb-3"
-                                     style="overflow-y:scroll; max-height: 50vh;">
-                                    <Virtualize Items="@Comments" Context="comment">
+                                <div class="row justify-content-center
+                                            example pb-3"
+                                     style="overflow-y:scroll;
+                                            max-height: 50vh;">
+                                    <Virtualize Items="@Comments"
+                                                Context="comment">
                                         <ItemContent>
                                             <div class="row row-cols-8 row-cols-lg-8
-                                            row-cols-x1-5 g-3
-                                justify-content-center my-1">
+                                                        row-cols-x1-5 g-3
+                                                        justify-content-center my-1">
                                                 <CommentCard Comment="comment" />
                                             </div>
                                         </ItemContent>
@@ -651,30 +787,42 @@ else
                             <div class="row row-cols-8 row-cols-lg-8
                                         row-cols-x1-5 g-3
                                         justify-content-center my-1 py-2">
-                                <div class="card main-card h-100 fade-in"
-                                     style="max-height: 100%; max-width: 90%; box-shadow: rgba(0,0,0,0.19) 0px 10px 20px, rgba(0,0,0,0.23) 0px 6px 6px;
-                                                                                                                                                                                    ">
+                                <div class="card main-card h-100 fade-in
+                                            collection-card-shadow"
+                                     style="max-height: 100%; max-width: 90%;">
                                     <div class="card-body text-center">
-                                        <p>@localizer["Register now to leave comments, likes and more!"]</p>
-                                        <p>@localizer["Or"] <span class="text-success">@localizer["Log in"]</span> @localizer["if you're already have an account"]</p>
+                                        <p>
+                                            @localizer["Register now to leave comments, likes and more!"]
+                                        </p>
+                                        <p>
+                                            @localizer["Or"] <span class="text-success">
+                                                @localizer["Log in"]
+                                            </span> @localizer["if you're already have an account"]
+                                        </p>
                                     </div>
                                     <div class="text-center pb-3 pe-2">
 
                                         <button @onclick="OnRegisterSubmit"
-                                                class="btn btn-dark btn-sm text-nowrap mx-1"
-                                                asp-formaction="Block" name="Block"
-                                                type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                            <i class="bi bi-person-fill-add"></i> @localizer["Register"]
+                                                class="btn btn-dark btn-sm text-nowrap
+                                                       mx-1 button-box-shadow"
+                                                asp-formaction="Block"
+                                                name="Block"
+                                                type="submit"
+                                                value="true">
+                                            <i class="bi bi-person-fill-add">
+                                            </i> @localizer["Register"]
                                         </button>
 
                                         <button @onclick="OnLoginSubmit"
-                                                class="btn btn-success btn-sm text-nowrap mx-1"
-                                                asp-formaction="Block" name="Block"
-                                                type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                                            <span class="bi bi-person-fill" aria-hidden="true" /> @localizer["Log in"]
+                                                class="btn btn-success btn-sm text-nowrap
+                                                       mx-1 button-box-shadow"
+                                                asp-formaction="Block"
+                                                name="Block"
+                                                type="submit"
+                                                value="true">
+                                            <span class="bi bi-person-fill" aria-hidden="true" />
+                                            @localizer["Log in"]
                                         </button>
-
-
                                     </div>
                                 </div>
                             </div>

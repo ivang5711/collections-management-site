@@ -16,12 +16,6 @@ public partial class AdministratorDashboard
     private const string roleMemberMessage = "Active";
     private const string loginPageURL = "/Account/Login";
 
-    private const string dateTimeViewFormatString =
-        "HH':'mm':'ss, d MMM, yyyy";
-
-    private const string claimTypeRegistrationDateTime =
-        "RegistrationDateTime";
-
     ElementReference InputToToggle;
 
     private bool DeleteRequested { get; set; } = false;
@@ -33,7 +27,7 @@ public partial class AdministratorDashboard
 
     async Task ToggleMe()
     {
-        await JsRuntime.InvokeVoidAsync("toggleIt", InputToToggle);
+        await JsRuntime.InvokeVoidAsync("toggleCheckbox", InputToToggle);
     }
 
     private async Task<bool> CheckAuthorizationLevel()

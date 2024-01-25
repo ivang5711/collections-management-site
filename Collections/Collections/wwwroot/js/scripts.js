@@ -68,7 +68,7 @@ function setElementTextById(id, text) {
 function focusOnElement(element) {
     element.focus();
 }
-function toggleIt(element) {
+function toggleCheckbox(element) {
     element.focus();
     if (element.checked) {
         element.checked = false;

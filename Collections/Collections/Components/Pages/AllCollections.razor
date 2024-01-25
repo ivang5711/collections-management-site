@@ -16,20 +16,23 @@
 
 <PageTitle>@localizer["All Collections"]</PageTitle>
 
-<div class="container-xxl py-3 ">
-    @if (collections is not null)
+    <div class="container-xxl py-3 ">
+        @if (collections is not null)
     {
         <h3 class="text-center pb-3">@localizer["All Collections"]</h3>
         <div class="pb-2 d-flex justify-content-start m-0 row col-md
                         row-cols-md-auto gap-1">
-            <button class="btn btn-secondary" @onclick="SortItemsAscending" type="button">
+            <button class="btn btn-secondary button-box-shadow"
+                    @onclick="SortItemsAscending" type="button">
                 <i class="bi bi-sort-up"></i>
             </button>
-            <button class="btn btn-secondary" @onclick="SortItemsDescending" type="button">
+            <button class="btn btn-secondary button-box-shadow"
+                    @onclick="SortItemsDescending" type="button">
                 <i class="bi bi-sort-down"></i>
             </button>
         </div>
-        <div class="d-flex justify-content-center" style="overflow-y:scroll; max-height: 75vh">
+        <div class="d-flex justify-content-center" style="overflow-y:scroll;
+                    max-height: 75vh">
             <table class="table table-sm table-hover table-striped
                               rounded-2 overflow-hidden">
                 <thead class="table-secondary">
@@ -37,7 +40,9 @@
                         <th class="text-end px-2">@localizer["#"]</th>
                         <th class="px-2">@localizer["Name"]</th>
                         <th class="px-2">@localizer["Theme"]</th>
-                        <th class="text-end px-2">@localizer["Total Items"]</th>
+                        <th class="text-end px-2">
+                            @localizer["Total Items"]
+                        </th>
                         <th class="px-2">@localizer["Link"]</th>
                     </tr>
                 </thead>
@@ -49,12 +54,17 @@
                                 <tr>
                                     <td class="text-end px-2">@(j++)</td>
                                     <td class="px-2">@collection.Name</td>
-                                    <td class="px-2">@collection.Theme!.Name</td>
-                                    <td class="text-end px-2">@collection.TotalItems</td>
+                                    <td class="px-2">
+                                        @collection.Theme!.Name
+                                    </td>
+                                    <td class="text-end px-2">
+                                        @collection.TotalItems
+                                    </td>
                                     <td class="px-2">
                                         <a class="btn-sm btn-outline-secondary"
-                                           href="/collection-details/@collection.Id">@localizer["Details"]</a>
-
+                                           href="/collection-details/@collection.Id">
+                                            @localizer["Details"]
+                                        </a>
                                     </td>
                                 </tr>
                             </ItemContent>

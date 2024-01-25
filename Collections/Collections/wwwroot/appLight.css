@@ -297,7 +297,6 @@ th {
     background-color: var(--background-2);
     color: var(--text);
     border: none;
-    
 }
 
 .item-card-container {
@@ -306,7 +305,6 @@ th {
     min-width: 12rem;
     min-height: 18rem;
     /*text-shadow: 2px 2px 2px var(--text-accent-2);*/
-    
 }
 
 .options-culture {
@@ -324,7 +322,6 @@ th {
 
 .title-shadowed {
     text-shadow: 2px 2px 2px var(--text-accent-2);
-
 }
 
 .active-element {
@@ -336,3 +333,12 @@ th {
         opacity: 1;
         box-shadow: 0px 1px 2px var(--purple) inset;
     }
+
+.button-box-shadow {
+    box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;
+}
+
+.collection-card-shadow {
+    box-shadow: rgba(0,0,0,0.25) 0px 20px 30px, rgba(0,0,0,0.32) 0px 12px 12px;
+
+}

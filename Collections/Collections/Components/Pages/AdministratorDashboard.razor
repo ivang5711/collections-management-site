@@ -16,19 +16,23 @@
 
 <AuthorizeView Roles="Admin">
     <PageTitle>@localizer["Administrator dashboard"]</PageTitle>
-    @if(ViewUsers.Count < 1)
+        @if (ViewUsers.Count < 1)
     {
         <div class="modal modal-backdrop" tabindex="-1"
              style="display:block" role="dialog">
             <div class="modal-dialog modal-sm modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="d-flex modal-body align-items-center justify-content-center">
+                    <div class="d-flex modal-body align-items-center
+                                justify-content-center">
                         <div class="d-flex align-items-center">
-                            <strong class="pe-2">@localizer["Loading..."]</strong>
-                            <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+                            <strong class="pe-2">
+                                @localizer["Loading..."]
+                            </strong>
+                            <div class="spinner-border ms-auto"
+                                 role="status" aria-hidden="true">
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -36,37 +40,46 @@
     else
     {
         <div class="container-xxl py-3">
-            <form method="post" @onsubmit="Submit" @formname="starship-plain-form">
+            <form method="post" @onsubmit="Submit"
+                  @formname="starship-plain-form">
                 <div class="d-flex justify-content-start m-0 row col-md
                         row-cols-md-auto gap-1">
                     <button @onclick="SubmitBlockUser"
-                            class="btn btn-secondary btn-sm text-nowrap"
+                            class="btn btn-secondary btn-sm text-nowrap 
+                                   button-box-shadow"
                             asp-formaction="Block" name="Block"
-                            type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                            type="submit" value="true">
                         <i class="bi bi-lock-fill"></i> @localizer["Block"]
                     </button>
                     <button @onclick="SubmitUnblockUser"
-                            class="btn btn-secondary btn-sm text-nowrap"
+                            class="btn btn-secondary btn-sm text-nowrap 
+                                   button-box-shadow"
                             asp-formaction="Unblock"
-                            name="Unblock" type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                            name="Unblock" type="submit" value="true">
                         <i class="bi bi-unlock-fill"></i> @localizer["Unblock"]
                     </button>
                     <button @onclick="SubmitAddToAdmins"
-                            class="btn btn-secondary btn-sm text-nowrap"
+                            class="btn btn-secondary btn-sm text-nowrap 
+                                   button-box-shadow"
                             asp-formaction="AddToAdmins"
-                            name="AddToAdmins" type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                        <i class="bi bi-person-fill-add"></i> @localizer["Add to admins"]
+                            name="AddToAdmins" type="submit" value="true">
+                        <i class="bi bi-person-fill-add">
+                        </i> @localizer["Add to admins"]
                     </button>
                     <button @onclick="SubmitRemoveFromAdmins"
-                            class="btn btn-secondary btn-sm text-nowrap"
+                            class="btn btn-secondary btn-sm text-nowrap 
+                                   button-box-shadow"
                             asp-formaction="RemoveFromAdmins"
-                            name="RemoveFromAdmins" type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
-                        <i class="bi bi-person-fill-dash"></i> @localizer["Remove from admins"]
+                            name="RemoveFromAdmins" type="submit" value="true">
+                        <i class="bi bi-person-fill-dash">
+
+                        </i> @localizer["Remove from admins"]
                     </button>
                     <button @onclick="SubmitDeleteUser"
-                            class="btn btn-danger btn-sm text-nowrap"
+                            class="btn btn-danger btn-sm text-nowrap 
+                                   button-box-shadow"
                             asp-formaction="Delete" name="Delete"
-                            type="submit" value="true" style="box-shadow: rgba(0,0,0,0.19) 0px 5px 10px, rgba(0,0,0,0.23) 0px 3px 3px;">
+                            type="submit" value="true">
                         <i class="bi bi-trash3-fill"></i>
                     </button>
                 </div>
@@ -77,82 +90,110 @@
                             <tr>
                                 <th scope="col">
                                     <div class="form-check px-2">
-                                        <input type="checkbox" onClick="toggle(this)"
+                                        <input type="checkbox"
+                                               onClick="toggle(this)"
                                                @ref="InputToToggle"
                                                @onchange="SelectAll"
-                                               value="" id="flexCheckDefault">
+                                               value=""
+                                               id="flexCheckDefault">
                                     </div>
                                 </th>
-                                <th scope="col" class="text-end px-2">@localizer["#"]</th>
-                                <th scope="col" class="px-2">@localizer["Name"]</th>
-                                <th scope="col" class="px-2">@localizer["E-mail"]</th>
+                                <th scope="col" class="text-end px-2">
+                                    @localizer["#"]
+                                </th>
+                                <th scope="col" class="px-2">
+                                    @localizer["Name"]
+                                </th>
+                                <th scope="col" class="px-2">
+                                    @localizer["E-mail"]
+                                </th>
                                 <th scope="col" class="text-end px-2">
                                     @localizer["Last login time (UTC)"]
                                 </th>
                                 <th scope="col" class="text-end px-2">
                                     @localizer["Registration time (UTC)"]
                                 </th>
-                                <th scope="col" class="px-2">@localizer["Role"]</th>
-                                <th scope="col" class="px-2">@localizer["Status"]</th>
+                                <th scope="col" class="px-2">
+                                    @localizer["Role"]
+                                </th>
+                                <th scope="col" class="px-2">
+                                    @localizer["Status"]
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in ViewUsers)
                             {
-                                @if(item.Role == "ToRemove")
+                                @if (item.Role == "ToRemove")
                                 {
-                                    
+
                                 }
                                 else
                                 {
                                     <tr>
                                         <td>
                                             <div class="form-check px-2">
-                                                <input type="checkbox" name="row"
+                                                <input type="checkbox"
+                                                       name="row"
                                                        @bind="@item.IsChecked" />
                                             </div>
                                         </td>
                                         @if (@item.Status == "Blocked")
                                         {
                                             <td scope="row"
-                                                class="text-secondary text-opacity-50 text-end px-2">
+                                                class="text-secondary
+                                                       text-opacity-50
+                                                       text-end px-2">
                                                 @(item.Id)
                                             </td>
-                                            <td class="text-secondary text-opacity-50 px-2">
+                                            <td class="text-secondary
+                                                       text-opacity-50 px-2">
                                                 @item.Name
                                             </td>
-                                            <td class="text-secondary text-opacity-50 px-2">
+                                            <td class="text-secondary
+                                                       text-opacity-50 px-2">
                                                 @item.Email
                                             </td>
-                                            <td class="text-secondary text-opacity-50 px-2
-                                               text-end">
+                                            <td class="text-secondary
+                                                       text-opacity-50 px-2
+                                                       text-end">
                                                 @item.LastLoginDate
                                             </td>
-                                            <td class="text-secondary text-opacity-50 px-2
-                                               text-end">
+                                            <td class="text-secondary
+                                                       text-opacity-50 px-2
+                                                       text-end">
                                                 @item.RegistrationDate
                                             </td>
 
                                             @if (item.Role == "Admin")
                                             {
                                                 <td class="text-secondary
-                                                   text-opacity-50 text-start px-2">
+                                                           text-opacity-50
+                                                           text-start px-2">
                                                     @localizer["Admin"]
                                                 </td>
                                             }
                                             else
                                             {
                                                 <td class="text-secondary
-                                                   text-opacity-50 text-start px-2">
+                                                           text-opacity-50
+                                                           text-start px-2">
                                                     @localizer["Regular User"]
                                                 </td>
                                             }
                                         }
                                         else
                                         {
-                                            <td scope="row" class="text-end px-2">@(item.Id)</td>
-                                            <td class="px-2">@item.Name</td>
-                                            <td class="px-2">@item.Email</td>
+                                            <td scope="row"
+                                                class="text-end px-2">
+                                                @(item.Id)
+                                            </td>
+                                            <td class="px-2">
+                                                @item.Name
+                                            </td>
+                                            <td class="px-2">
+                                                @item.Email
+                                            </td>
                                             <td class="text-end px-2">
                                                 @item.LastLoginDate
                                             </td>
@@ -175,13 +216,15 @@
 
                                         @if (@item.Status == "Blocked")
                                         {
-                                            <td class="text-danger text-start px-2">
+                                            <td class="text-danger
+                                                       text-start px-2">
                                                 @localizer["Blocked"]
                                             </td>
                                         }
                                         else if (true == true)
                                         {
-                                            <td class="text-success text-start px-2">
+                                            <td class="text-success
+                                                       text-start px-2">
                                                 @localizer["Active"]
                                             </td>
                                         }
@@ -195,15 +238,22 @@
                 {
                     <div class="modal modal-backdrop" tabindex="-1"
                          style="display:block" role="dialog">
-                        <div class="modal-dialog modal-sm modal-dialog-centered">
+                        <div class="modal-dialog modal-sm
+                                    modal-dialog-centered">
                             <div class="modal-content">
-                                <div class="d-flex modal-body align-items-center justify-content-center">
+                                <div class="d-flex modal-body
+                                            align-items-center
+                                            justify-content-center">
                                     <div class="d-flex align-items-center">
-                                        <strong class="pe-2">@localizer["Loading..."]</strong>
-                                        <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+                                        <strong class="pe-2">
+                                            @localizer["Loading..."]
+                                        </strong>
+                                        <div class="spinner-border ms-auto"
+                                             role="status"
+                                             aria-hidden="true">
+                                        </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>

@@ -2,6 +2,7 @@ using Collections.Data;
 using Collections.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 
 
@@ -69,53 +70,15 @@ public partial class AdministratorDashboard
             return;
         }
 
-        //var us = Task.Run(() =>
-        //    _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        //var tryy = Task.Run(() => _UserManager.GetUserAsync(us.User)).Result;
-        //var ew = Task.Run(() =>
-        //    _UserManager.IsInRoleAsync(tryy, roleAdmin)).Result;
-        //var io = tryy.LockoutEnd is not null;
-        //if (!ew)
-        //{
-        //    _ = Task.Run(() => _SignInManager.SignOutAsync());
-        //    _navigationManager.NavigateTo("/Account/Login");
-        //    return;
-        //}
-
-        //if (io)
-        //{
-        //    _ = Task.Run(() => _SignInManager.SignOutAsync());
-        //    _navigationManager.NavigateTo("/Account/Login");
-        //    return;
-        //}
-
-        //var authenticationState = Task.Run(() =>
-        //    _AuthenticationStateProvider.GetAuthenticationStateAsync()).Result;
-        //var currentUser = Task.Run(() =>
-        //    _UserManager.GetUserAsync(authenticationState.User)).Result;
-        //if (currentUser is not null)
-        //{
-        //    var userInRoleBlocked = Task.Run(() =>
-        //        _UserManager.IsInRoleAsync(currentUser, roleBlocked)).Result;
-        //    var userIsBlocked = currentUser.LockoutEnd is not null;
-        //    if (userInRoleBlocked || userIsBlocked)
-        //    {
-        //        await _SignInManager.SignOutAsync();
-        //        _navigationManager.NavigateTo("/Account/Login");
-        //        return;
-        //    }
-        //}
-
-
         GetUsers();
         int i = 0;
         foreach (var user in Users)
         {
             var t = user.LockoutEnd;
-            _UserManager.SetLockoutEndDateAsync(user, t).Wait();
+            //_UserManager.SetLockoutEndDateAsync(user, t).Wait();
             ViewUser viewUser = new();
             viewUser.Id = ++i;
-            viewUser.Name = user.UserName ?? "no name provided";
+            viewUser.Name = user.FullName ?? "no name provided";
             viewUser.Email = user.Email ?? "no Email provided";
             viewUser.LastLoginDate = user.LastLoginDate.ToString();
             viewUser.RegistrationDate = user.RegistrationDate.ToString();
@@ -151,7 +114,10 @@ public partial class AdministratorDashboard
     private void GetUsers()
     {
         Users.Clear();
-        Users.AddRange(_UserManager.Users.AsEnumerable());
+        //Users.AddRange(_UserManager.Users.AsEnumerable());
+        using var adc = _contextFactory.CreateDbContext();
+        Users.AddRange(adc.Users.AsEnumerable());
+        
     }
 
     public void SubmitBlockUser()
@@ -203,48 +169,48 @@ public partial class AdministratorDashboard
             SubmitDeleteUser();
         }
 
-        ViewUsers.Clear();
-        GetUsers();
-        int i = 0;
-        foreach (var user in Users)
-        {
-            var t = user.LockoutEnd;
-            _UserManager.SetLockoutEndDateAsync(user, t).Wait();
-            ViewUser viewUser = new();
-            viewUser.Id = ++i;
-            viewUser.Name = user.UserName ?? "no name provided";
-            viewUser.Email = user.Email ?? "no Email provided";
-            viewUser.LastLoginDate = user.LastLoginDate.ToString();
-            viewUser.RegistrationDate = user.RegistrationDate.ToString();
-            string viewRole = string.Empty;
-            if (await _UserManager.IsInRoleAsync(user, "ToRemove"))
-            {
-                viewRole = "ToRemove";
-            }
-            else if (Task.Run(() =>
-                _UserManager.IsInRoleAsync(user, roleAdmin)).Result)
-            {
-                viewRole = roleAdmin;
-            }
-            else if (Task.Run(() =>
-                _UserManager.IsInRoleAsync(user, roleMember)).Result)
-            {
-                viewRole = roleMember;
-            }
 
-            viewUser.Role = viewRole;
-            if (user.LockoutEnd is null)
-            {
-                viewUser.Status = roleMemberMessage;
-            }
-            else
-            {
-                viewUser.Status = roleLockedMessage;
-            }
+        //ViewUsers.Clear();
+        //GetUsers();
+        //int i = 0;
+        //foreach (var user in Users)
+        //{
+        //    var t = user.LockoutEnd;
+        //    //_UserManager.SetLockoutEndDateAsync(user, t);
+        //    ViewUser viewUser = new();
+        //    viewUser.Id = ++i;
+        //    viewUser.Name = user.UserName ?? "no name provided";
+        //    viewUser.Email = user.Email ?? "no Email provided";
+        //    viewUser.LastLoginDate = user.LastLoginDate.ToString();
+        //    viewUser.RegistrationDate = user.RegistrationDate.ToString();
+        //    string viewRole = string.Empty;
+        //    if (_UserManager.IsInRoleAsync(user, "ToRemove").Result)
+        //    {
+        //        viewRole = "ToRemove";
+        //    }
+        //    else if (_UserManager.IsInRoleAsync(user, roleAdmin).Result)
+        //    {
+        //        viewRole = roleAdmin;
+        //    }
+        //    else if (Task.Run(() =>
+        //        _UserManager.IsInRoleAsync(user, roleMember)).Result)
+        //    {
+        //        viewRole = roleMember;
+        //    }
 
-            ViewUsers.Add(viewUser);
-            Thread.Sleep(300);
-        }
+        //    viewUser.Role = viewRole;
+        //    if (user.LockoutEnd is null)
+        //    {
+        //        viewUser.Status = roleMemberMessage;
+        //    }
+        //    else
+        //    {
+        //        viewUser.Status = roleLockedMessage;
+        //    }
+
+        //    ViewUsers.Add(viewUser);
+        //    Thread.Sleep(300);
+        //}
 
         if (CheckAll)
         {
@@ -253,6 +219,8 @@ public partial class AdministratorDashboard
         }
 
         SubmitRequested = false;
+
+        _navigationManager.Refresh(true);
     }
 
     private void CloseModal()
@@ -287,7 +255,7 @@ public partial class AdministratorDashboard
         List<ApplicationUser> names = [];
         foreach (var item in vu)
         {
-            names.Add(Users.Where(x => x.UserName == item.Name).First());
+            names.Add(Users.Where(x => x.UserName == item.Email).First());
         }
 
         foreach (var item in names)
@@ -301,10 +269,14 @@ public partial class AdministratorDashboard
     private void BlockAUser(ApplicationUser user)
     {
         user.LockoutEnd = DateTime.MaxValue;
-        _ = Task.Run(() => _UserManager
-            .SetLockoutEndDateAsync(user, DateTime.MaxValue)).Result;
-        _ = Task.Run(() => _UserManager
-            .AddToRoleAsync(user, roleBlocked)).Result;
+        using (var adc = _contextFactory.CreateDbContext())
+        {
+            var p = adc.Users.First(x => x.Id == user.Id);
+            p.LockoutEnd = DateTime.MaxValue;
+            adc.SaveChanges();
+        }
+
+        _UserManager.AddToRoleAsync(user, roleBlocked);
 
         var us = Task.Run(() => _AuthenticationStateProvider
             .GetAuthenticationStateAsync()).Result;
@@ -323,7 +295,7 @@ public partial class AdministratorDashboard
         List<ApplicationUser> names = [];
         foreach (var item in vu)
         {
-            names.Add(Users.Where(x => x.UserName == item.Name).First());
+            names.Add(Users.Where(x => x.UserName == item.Email).First());
         }
 
         foreach (var item in names)
@@ -337,10 +309,16 @@ public partial class AdministratorDashboard
     private void UnblockAUser(ApplicationUser user)
     {
         user.LockoutEnd = null;
-        _ = Task.Run(() => _UserManager
-            .SetLockoutEndDateAsync(user, null)).Result;
-        _ = Task.Run(() => _UserManager
-            .RemoveFromRoleAsync(user, roleBlocked)).Result;
+
+        using (var adc = _contextFactory.CreateDbContext())
+        {
+            var p = adc.Users.First(x => x.Id == user.Id);
+            p.LockoutEnd = null;
+            adc.SaveChanges();
+        }
+
+        //var e = _UserManager.SetLockoutEndDateAsync(user, null).Result;
+         _UserManager.RemoveFromRoleAsync(user, roleBlocked);
     }
 
     private void AddUserToAdmins()
@@ -349,7 +327,7 @@ public partial class AdministratorDashboard
         List<ApplicationUser> names = [];
         foreach (var item in vu)
         {
-            names.Add(Users.First(x => x.UserName == item.Name));
+            names.Add(Users.First(x => x.UserName == item.Email));
         }
 
         foreach (var item in names)
@@ -372,7 +350,7 @@ public partial class AdministratorDashboard
         List<ApplicationUser> names2 = [];
         foreach (var item in vu)
         {
-            names2.Add(Users.First(x => x.UserName == item.Name));
+            names2.Add(Users.First(x => x.UserName == item.Email));
         }
 
         foreach (var item in names2)
@@ -409,7 +387,7 @@ public partial class AdministratorDashboard
         List<ApplicationUser> names = [];
         foreach (var item in vu)
         {
-            names.Add(Users.First(x => x.UserName == item.Name));
+            names.Add(Users.First(x => x.UserName == item.Email));
         }
 
         foreach (var item in names)

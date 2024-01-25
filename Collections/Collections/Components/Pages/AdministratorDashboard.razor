@@ -12,6 +12,7 @@
 @rendermode InteractiveServer
 @inject IJSRuntime JsRuntime
 @inject IStringLocalizer<Resource> localizer
+@inject IDbContextFactory<ApplicationDbContext> _contextFactory
 @attribute [Authorize(Roles = "Admin")]
 
 <AuthorizeView Roles="Admin">

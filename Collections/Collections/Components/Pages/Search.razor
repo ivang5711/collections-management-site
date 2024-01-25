@@ -9,19 +9,23 @@
 
 @rendermode InteractiveServer
 
-<PageTitle>@localizer["Search"]</PageTitle>
-
+<PageTitle>
+    @localizer["Search"]
+</PageTitle>
 <div class="container-xxl py-3 ">
-
-    <h3 class="text-center pb-3">@localizer["Search results"]: @totalCountUnique</h3>
+    <h3 class="text-center pb-3">
+        @localizer["Search results"]: @totalCountUnique
+    </h3>
     @if (Collections is not null)
     {
         <div class="d-flex justify-content-center">
             <table class="table table-sm table-hover table-striped
-                              rounded-2 overflow-hidden">
+                          rounded-2 overflow-hidden">
                 <thead class="table-secondary">
                     <tr>
-                        <th class="text-end px-2">@localizer["#"]</th>
+                        <th class="text-end px-2">
+                            @localizer["#"]
+                        </th>
                         <th class="px-2">@localizer["Name"]</th>
                         <th class="px-2">@localizer["Type"]</th>
                         <th class="px-2">@localizer["Link"]</th>
@@ -35,10 +39,14 @@
                             <tr>
                                 <td class="text-end px-2">@(j++)</td>
                                 <td class="px-2">@collection.Name</td>
-                                <td class="px-2">@localizer["Collection"]</td>
+                                <td class="px-2">
+                                    @localizer["Collection"]
+                                </td>
                                 <td class="px-2">
                                     <a class="btn-sm btn-outline-secondary"
-                                       href="/collection-details/@collection.Id">@localizer["Details"]</a>
+                                       href="/collection-details/@collection.Id">
+                                        @localizer["Details"]
+                                    </a>
                                 </td>
                             </tr>
                         }
@@ -51,7 +59,9 @@
                                 <td class="px-2">@localizer["Item"]</td>
                                 <td class="px-2">
                                     <a class="btn-sm btn-outline-secondary"
-                                       href="/item-details/@item.CollectionId/@item.Id">@localizer["Details"]</a>
+                                       href="/item-details/@item.CollectionId/@item.Id">
+                                        @localizer["Details"]
+                                    </a>
                                 </td>
                             </tr>
                         }

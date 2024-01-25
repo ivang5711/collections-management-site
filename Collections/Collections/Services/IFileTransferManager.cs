@@ -14,7 +14,8 @@ public interface IFileTransferManager
     /// Saves IBrowser file to disk
     /// </summary>
     /// <param name="file"></param>
-    /// <returns>Returns new random generated name of the file saved to disk</returns>
+    /// <returns>Returns new random generated name of the file saved to disk
+    /// </returns>
     public Task<string> SaveFileToDisk(IBrowserFile file);
 
     /// <summary>

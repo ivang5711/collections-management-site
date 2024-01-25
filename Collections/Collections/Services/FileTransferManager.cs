@@ -21,7 +21,8 @@ public class FileTransferManager : IFileTransferManager
     /// Saves IBrowser file to disk
     /// </summary>
     /// <param name="file"></param>
-    /// <returns>Returns new random generated name of the file saved to disk</returns>
+    /// <returns>Returns new random generated name of the file saved to disk
+    /// </returns>
     public async Task<string> SaveFileToDisk(IBrowserFile file)
     {
         Directory.CreateDirectory(_directoryPath);
@@ -31,8 +32,6 @@ public class FileTransferManager : IFileTransferManager
         await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
         return newFileName;
     }
-
-
 
     /// <summary>
     /// Set up maximum file size to upload.

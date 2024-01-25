@@ -9,7 +9,6 @@
                 <div class="row">
                     <div class="col-12">
                         <span class="me-1">@localizer["Built By:"]</span>
-                        @* <i class="bi bi-stack" style="font-size: 2rem !important;"></i> *@
                     </div>
                     <div class="col-12">
                         &copy; 2024 Ivan Girsov
@@ -17,7 +16,8 @@
                 </div>
             </div>
             <div class="col text-center">
-                <i class="bi bi-stack main-pic" style="font-size: 3rem !important;"></i>
+                <i class="bi bi-stack main-pic"
+                   style="font-size: 3rem !important;"></i>
                 <div class="d-flex align-items-center justify-content-center
                             flex-wrap gap-1">
                     @localizer["Powered by"] Blazor
@@ -27,10 +27,10 @@
             <div class="col text-md-end">
                 <div class="row">
                     <div class="col-12">
-                        <a href="@youtubeLink"><i class="bg bi-youtube"></i></a>
-                        <a href="@telegramLink"><i class="bg bi-telegram"></i></a>
-                        <a href="@githubLink"><i class="bg bi-github"></i></a>
-                        <a href="@linkedinLink"><i class="bg bi-linkedin"></i></a>
+                        <a href="@youtubeLink"><i class="bg bi-youtube" /></a>
+                        <a href="@telegramLink"><i class="bg bi-telegram" /></a>
+                        <a href="@githubLink"><i class="bg bi-github" /></a>
+                        <a href="@linkedinLink"><i class="bg bi-linkedin" /></a>
                     </div>
                     <div class="col-12">
                         <a href="@portfolioLink">@localizer["Portfolio"]</a>
@@ -51,11 +51,16 @@
 
     protected override void OnInitialized()
     {
-        githubLink = _configuration.GetValue<string>("GithubLink") ?? string.Empty;
-        youtubeLink = _configuration.GetValue<string>("YoutubeLink") ?? string.Empty;
-        telegramLink = _configuration.GetValue<string>("TelegramLink") ?? string.Empty;
-        linkedinLink = _configuration.GetValue<string>("LinkedinLink") ?? string.Empty;
-        portfolioLink = _configuration.GetValue<string>("PortfolioLink") ?? string.Empty;
+        githubLink = _configuration
+        .GetValue<string>("GithubLink") ?? string.Empty;
+        youtubeLink = _configuration
+        .GetValue<string>("YoutubeLink") ?? string.Empty;
+        telegramLink = _configuration
+        .GetValue<string>("TelegramLink") ?? string.Empty;
+        linkedinLink = _configuration
+        .GetValue<string>("LinkedinLink") ?? string.Empty;
+        portfolioLink = _configuration
+        .GetValue<string>("PortfolioLink") ?? string.Empty;
     }
 
 }

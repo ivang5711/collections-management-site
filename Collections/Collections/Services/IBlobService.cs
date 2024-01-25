@@ -36,7 +36,8 @@ public interface IBlobService
     /// <param name="fileName">file name with extension</param>
     /// <param name="containerName">name of container in Azure Storage</param>
     /// <returns></returns>
-    public Task UploadFileBlobAsync(string filePath, string fileName, string containerName);
+    public Task UploadFileBlobAsync(string filePath, 
+        string fileName, string containerName);
 
     /// <summary>
     /// Get Blob Url from Azure storage

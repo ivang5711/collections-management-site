@@ -11,10 +11,14 @@
     {
         <span class="col-1 flag-icon flag-icon-de flag-icon-squared"></span>
     }
-    <select @bind="Culture" class="flex-fill col-md-auto form-select form-select-sm culture-select" style="width: auto;" aria-label="Default select example">
-        @foreach(Locale item in _locales.GetLocales())
+    <select @bind="Culture" class="flex-fill col-md-auto form-select
+            form-select-sm culture-select" style="width: auto;"
+            aria-label="Default select example">
+        @foreach (Locale item in _locales.GetLocales())
         {
-            <option class="options-culture" value="@item.Name">@item.Language</option>
+            <option class="options-culture" value="@item.Name">
+                @item.Language
+            </option>
         }
     </select>
 </div>
@@ -35,13 +39,14 @@
         {
             if (CultureInfo.CurrentCulture != value)
             {
-                var uri = new Uri(Navigation.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+                var uri = new Uri(Navigation.Uri).GetComponents(
+                    UriComponents.PathAndQuery, UriFormat.Unescaped);
                 var cultureEscaped = Uri.EscapeDataString(value.Name);
                 var uriEscaped = Uri.EscapeDataString(uri);
 
-                Navigation.NavigateTo($"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}", true);
+                Navigation.NavigateTo($"Culture/Set?culture=" +
+                    $"{cultureEscaped}&redirectUri={uriEscaped}", true);
             }
         }
-
     }
 }

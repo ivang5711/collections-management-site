@@ -1,12 +1,13 @@
 ﻿@inject NavigationManager Navigation
 @inject IStringLocalizer<Resource> localizer
-@inject IHttpContextAccessor ht
+@inject IHttpContextAccessor _HttpContextAccessor
 
 <div class="d-flex row-cols-3 text-nowrap align-items-center">
 
     <span><i class="bi bi-brightness-high-fill"></i></span>
     <span class="form-check form-switch align-items-center m-0">
-        <input @bind="Style" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+        <input @bind="Style" class="form-check-input" type="checkbox"
+               role="switch" id="flexSwitchCheckDefault">
     </span>
     <span><i class="bi bi-moon-stars-fill"></i></span>
 </div>
@@ -16,7 +17,8 @@
 
     protected override void OnInitialized()
     {
-        style = bool.Parse(ht.HttpContext?.Request.Cookies["style"] ?? "false");
+        style = bool.Parse(_HttpContextAccessor
+            .HttpContext?.Request.Cookies["style"] ?? "false");
     }
 
     public bool Style

@@ -13,21 +13,27 @@
 @if (Item is not null)
 {
     <a href="/item-details/@Collection!.Id/@Item.Id">
-        <div class="card main-card bg-text h-100 card-container item-card-container" style="min-width: 12rem; min-height: 18rem">
+        <div class="card main-card bg-text h-100 card-container 
+                    item-card-container" 
+             style="min-width: 12rem; min-height: 18rem">
             @if (!string.IsNullOrWhiteSpace(@Item.ImageLink))
             {
                 <img class="card-img-top" alt="Collection Item"
                      src="@Item.ImageLink" />
             }
-            <div class="card-img-overlay" style="text-shadow: 1px 1px #000000;">
+            <div class="card-img-overlay" 
+            style="text-shadow: 1px 1px #000000;">
                 <h5 class="card-title">@Item.Name</h5>
-                <p class="card-text"><small>@localizer["Created"]: @Item.CreationDateTime.ToLocalTime()</small></p>
+                <p class="card-text"><small>
+                    @localizer["Created"]: @Item.CreationDateTime.ToLocalTime()
+                    </small></p>
                 @if (Item.StringFields.Count > 0)
                 {
                     @foreach (var item in Item.StringFields)
                     {
                         <div class="row g-3 align-items-center">
-                            <p class="card-text"><small>@(item.Name): @item.Value</small></p>
+                            <p class="card-text"><small>
+                                @(item.Name): @item.Value</small></p>
                         </div>
                     }
                 }
@@ -36,7 +42,8 @@
                     @foreach (var item in Item.DateFields)
                     {
                         <div class="row g-3 align-items-center">
-                            <p class="card-text"><small>@(item.Name): @item.Value</small></p>
+                            <p class="card-text"><small>
+                                @(item.Name): @item.Value</small></p>
                         </div>
                     }
                 }
@@ -72,7 +79,8 @@ else
         string res = string.Empty;
         using (var adc = _contextFactory.CreateDbContext())
         {
-            res = adc.Users.First(x => x.Id == collection.ApplicationUserId).FullName;
+            res = adc.Users.First(x => x.Id == collection.ApplicationUserId)
+                  .FullName;
         }
 
         return res;

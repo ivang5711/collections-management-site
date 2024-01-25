@@ -4,7 +4,8 @@ namespace Collections.Extensions;
 
 public static class FileExtensions
 {
-    private static readonly FileExtensionContentTypeProvider Provider = new FileExtensionContentTypeProvider();
+    private static readonly FileExtensionContentTypeProvider Provider = 
+        new FileExtensionContentTypeProvider();
 
     public static string GetContentType(this string fileName)
     {

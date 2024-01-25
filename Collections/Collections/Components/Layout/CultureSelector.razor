@@ -1,7 +1,6 @@
 ﻿@inject NavigationManager Navigation
 @inject IStringLocalizer<Resource> localizer
-
-<script src=" https://cdn.jsdelivr.net/npm/flag-icon-css@4.1.7/svgo.config.min.js "></script>
+@inject ILocalesOptions _locales
 
 <div class="d-flex text-nowrap gap-1 align-items-center">
     @if (Culture.Name == "en-US")
@@ -13,8 +12,10 @@
         <span class="col-1 flag-icon flag-icon-de flag-icon-squared"></span>
     }
     <select @bind="Culture" class="flex-fill col-md-auto form-select form-select-sm culture-select" style="width: auto;" aria-label="Default select example">
-        <option class="options-culture" value="en-US">@localizer["English"]</option>
-        <option class="options-culture" value="de-CH">@localizer["German"]</option>
+        @foreach(Locale item in _locales.GetLocales())
+        {
+            <option class="options-culture" value="@item.Name">@item.Language</option>
+        }
     </select>
 </div>
 

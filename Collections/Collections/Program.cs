@@ -6,8 +6,8 @@ using Collections.Data;
 using Collections.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +64,9 @@ builder.Services.AddSingleton<IBlobService, BlobService>();
 
 builder.Services.AddScoped<IFileTransferManager, FileTransferManager>();
 
+builder.Services.AddScoped<ILocalesOptions, LocalesOptions>();
+
+
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = true;
@@ -87,14 +90,14 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>,
 var app = builder.Build();
 
 
-string[] supportedCultures = ["en-US", "de-CH"];
+string[] supportedCultures = new LocalesOptions(builder.Configuration)
+    .GetLocaleNames();
 var localizationOptions = new RequestLocalizationOptions()
     .SetDefaultCulture(supportedCultures[0])
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures);
 
 app.UseRequestLocalization(localizationOptions);
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -111,14 +114,9 @@ else
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
-
 app.UseAuthorization();
-
 app.UseAntiforgery();
-
-
 app.MapControllers();
 
 app.MapRazorComponents<App>()

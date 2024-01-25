@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 
-
 namespace Collections.Components.Pages;
 
 public partial class AdministratorDashboard
@@ -17,7 +16,7 @@ public partial class AdministratorDashboard
     private const string roleMemberMessage = "Active";
     private const string loginPageURL = "/Account/Login";
 
-    ElementReference InputToToggle;
+    private ElementReference InputToToggle;
 
     private bool DeleteRequested { get; set; } = false;
     private bool SubmitRequested { get; set; } = false;
@@ -26,7 +25,7 @@ public partial class AdministratorDashboard
     private bool Ticked { get; set; } = false;
     private List<ViewUser> ViewUsers { get; set; } = [];
 
-    async Task ToggleMe()
+    private async Task ToggleMe()
     {
         await JsRuntime.InvokeVoidAsync("toggleCheckbox", InputToToggle);
     }
@@ -59,8 +58,6 @@ public partial class AdministratorDashboard
 
         return false;
     }
-
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -108,7 +105,6 @@ public partial class AdministratorDashboard
 
             ViewUsers.Add(viewUser);
         }
-
     }
 
     private void GetUsers()
@@ -117,7 +113,6 @@ public partial class AdministratorDashboard
         //Users.AddRange(_UserManager.Users.AsEnumerable());
         using var adc = _contextFactory.CreateDbContext();
         Users.AddRange(adc.Users.AsEnumerable());
-        
     }
 
     public void SubmitBlockUser()
@@ -138,7 +133,7 @@ public partial class AdministratorDashboard
         AddUserToAdmins();
     }
 
-    public void SubmitRemoveFromAdmins()    
+    public void SubmitRemoveFromAdmins()
     {
         SubmitRequested = true;
         RemoveUserFromAdmins();
@@ -168,49 +163,6 @@ public partial class AdministratorDashboard
         {
             SubmitDeleteUser();
         }
-
-
-        //ViewUsers.Clear();
-        //GetUsers();
-        //int i = 0;
-        //foreach (var user in Users)
-        //{
-        //    var t = user.LockoutEnd;
-        //    //_UserManager.SetLockoutEndDateAsync(user, t);
-        //    ViewUser viewUser = new();
-        //    viewUser.Id = ++i;
-        //    viewUser.Name = user.UserName ?? "no name provided";
-        //    viewUser.Email = user.Email ?? "no Email provided";
-        //    viewUser.LastLoginDate = user.LastLoginDate.ToString();
-        //    viewUser.RegistrationDate = user.RegistrationDate.ToString();
-        //    string viewRole = string.Empty;
-        //    if (_UserManager.IsInRoleAsync(user, "ToRemove").Result)
-        //    {
-        //        viewRole = "ToRemove";
-        //    }
-        //    else if (_UserManager.IsInRoleAsync(user, roleAdmin).Result)
-        //    {
-        //        viewRole = roleAdmin;
-        //    }
-        //    else if (Task.Run(() =>
-        //        _UserManager.IsInRoleAsync(user, roleMember)).Result)
-        //    {
-        //        viewRole = roleMember;
-        //    }
-
-        //    viewUser.Role = viewRole;
-        //    if (user.LockoutEnd is null)
-        //    {
-        //        viewUser.Status = roleMemberMessage;
-        //    }
-        //    else
-        //    {
-        //        viewUser.Status = roleLockedMessage;
-        //    }
-
-        //    ViewUsers.Add(viewUser);
-        //    Thread.Sleep(300);
-        //}
 
         if (CheckAll)
         {
@@ -317,8 +269,7 @@ public partial class AdministratorDashboard
             adc.SaveChanges();
         }
 
-        //var e = _UserManager.SetLockoutEndDateAsync(user, null).Result;
-         _UserManager.RemoveFromRoleAsync(user, roleBlocked);
+        _UserManager.RemoveFromRoleAsync(user, roleBlocked);
     }
 
     private void AddUserToAdmins()
@@ -340,8 +291,16 @@ public partial class AdministratorDashboard
 
     private void AddAUserToAdmins(ApplicationUser user)
     {
-        _ = Task.Run(() => _UserManager
-            .AddToRoleAsync(user, roleAdmin)).Result;
+        using (var adc = _contextFactory.CreateDbContext())
+        {
+            var p = adc.Users.First(x => x.Id == user.Id);
+            var r = adc.Roles.First(x => x.Name == roleAdmin);
+            var m = adc.UserRoles.Where(x => x.UserId == p.Id).First();
+            var d = m;
+            d.RoleId = r.Id;
+            adc.Add(d);
+            adc.SaveChanges();
+        }
     }
 
     private void RemoveUserFromAdmins()
@@ -363,8 +322,15 @@ public partial class AdministratorDashboard
 
     private void RemoveAUserFromAdmins(ApplicationUser user)
     {
-        _ = Task.Run(() => _UserManager
-            .RemoveFromRoleAsync(user, roleAdmin)).Result;
+        using (var adc = _contextFactory.CreateDbContext())
+        {
+            var p = adc.Users.First(x => x.Id == user.Id);
+            var r = adc.Roles.First(x => x.Name == roleAdmin);
+            var m = adc.UserRoles.Where(x => x.UserId == p.Id).First(x => x.RoleId == r.Id);
+            adc.Remove(m);
+            adc.SaveChanges();
+        }
+
         var us = Task.Run(() => _AuthenticationStateProvider
             .GetAuthenticationStateAsync()).Result;
         var t = us.User;
@@ -376,10 +342,6 @@ public partial class AdministratorDashboard
             return;
         }
     }
-
-
-
-
 
     private void DeleteUser()
     {
@@ -394,7 +356,6 @@ public partial class AdministratorDashboard
         {
             DeleteAUser(item);
         }
-
     }
 
     private void DeleteAUser(ApplicationUser user)

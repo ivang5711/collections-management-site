@@ -4,7 +4,6 @@
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 @using Collections.Data
-
 @inject SignInManager<ApplicationUser> SignInManager
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
@@ -49,7 +48,7 @@
                         @localizer["Password"]
                     </label>
                     <ValidationMessage For="() =>
-Input.Password" class="text-danger" />
+                               Input.Password" class="text-danger" />
                 </div>
                 <div class="checkbox mb-3">
                     <label class="form-label">

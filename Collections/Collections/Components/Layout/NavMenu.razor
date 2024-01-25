@@ -155,22 +155,22 @@
 
     public string UserName { get; set; } = string.Empty;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await GetCurrentUserFullName();
+        GetCurrentUserFullName();
         currentUrl = NavigationManager
             .ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
     }
 
-    private async Task GetCurrentUserFullName()
+    private void GetCurrentUserFullName()
     {
-        var authenticationStatus = await _AuthenticationStateProvider
-            .GetAuthenticationStateAsync();
+        var authenticationStatus = _AuthenticationStateProvider
+            .GetAuthenticationStateAsync().Result;
         if (authenticationStatus.User.Identity!.IsAuthenticated)
         {
-            var user = authenticationStatus.User;
-            var currentUser = await _UserManager.GetUserAsync(user);
+            var currentUser = _UserManager
+                .GetUserAsync(authenticationStatus.User).Result;
             UserName = currentUser!.FullName ?? string.Empty;
         }
     }

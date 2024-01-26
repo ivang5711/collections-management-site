@@ -33,8 +33,24 @@ else
                     @localizer["Theme"]: @collection.Theme!.Name
                 </h5>
                 <div class="card main-card button-box-shadow mb-3 w-100">
-                    <div class="row g-0">
-                        <div class="col-md">
+                    <div class="row g-0" style="max-height: 18rem;">
+                        @if (string.IsNullOrWhiteSpace(collection.ImageLink))
+                        {
+                            <div class="col-md-4">
+                                <canvas class="img-fluid h-100
+                                                   rounded-start" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-auto">
+                                <img src="@collection.ImageLink"
+                                     class="img-fluid h-100 rounded-start"
+                                     style="object-fit:cover; max-height: 18rem;"
+                                     alt="...">
+                            </div>
+                        }
+                        <div class="col-md-8">
                             <h5 class="card-header">
                                 @localizer["Description"]:
                             </h5>
@@ -42,14 +58,6 @@ else
                                 <div class="px-5 py-2">
                                     @((MarkupString)@collection.Description)
                                 </div>
-                                @if (!string.IsNullOrWhiteSpace(collection.ImageLink))
-                                {
-                                    <div>
-                                        <img style="max-width: 200px; max-height: 200px;"
-                                             src="@collection.ImageLink"
-                                             alt="item poster" />
-                                    </div>
-                                }
                             </div>
                         </div>
                     </div>

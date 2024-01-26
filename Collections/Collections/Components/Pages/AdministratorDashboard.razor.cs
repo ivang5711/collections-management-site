@@ -2,7 +2,6 @@ using Collections.Data;
 using Collections.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 
 namespace Collections.Components.Pages;
@@ -72,7 +71,6 @@ public partial class AdministratorDashboard
         foreach (var user in Users)
         {
             var t = user.LockoutEnd;
-            //_UserManager.SetLockoutEndDateAsync(user, t).Wait();
             ViewUser viewUser = new();
             viewUser.Id = ++i;
             viewUser.Name = user.FullName ?? "no name provided";
@@ -110,7 +108,6 @@ public partial class AdministratorDashboard
     private void GetUsers()
     {
         Users.Clear();
-        //Users.AddRange(_UserManager.Users.AsEnumerable());
         using var adc = _contextFactory.CreateDbContext();
         Users.AddRange(adc.Users.AsEnumerable());
     }
@@ -127,10 +124,10 @@ public partial class AdministratorDashboard
         UnblockUser();
     }
 
-    public void SubmitAddToAdmins()
+    public async Task SubmitAddToAdmins()
     {
         SubmitRequested = true;
-        AddUserToAdmins();
+        await AddUserToAdmins();
     }
 
     public void SubmitRemoveFromAdmins()
@@ -167,7 +164,6 @@ public partial class AdministratorDashboard
         if (CheckAll)
         {
             CheckAll = !CheckAll;
-            //await ToggleMe();
         }
 
         SubmitRequested = false;
@@ -220,6 +216,22 @@ public partial class AdministratorDashboard
 
     private void BlockAUser(ApplicationUser user)
     {
+        SetUserLockOutState(user);
+
+        var us = Task.Run(() => _AuthenticationStateProvider
+            .GetAuthenticationStateAsync()).Result;
+
+        var t = us.User;
+        if (user.UserName == t.Identity!.Name)
+        {
+            _navigationManager.Refresh(true);
+            _ = Task.Run(() => _SignInManager.SignOutAsync());
+            return;
+        }
+    }
+
+    private void SetUserLockOutState(ApplicationUser user)
+    {
         user.LockoutEnd = DateTime.MaxValue;
         using (var adc = _contextFactory.CreateDbContext())
         {
@@ -229,16 +241,6 @@ public partial class AdministratorDashboard
         }
 
         _UserManager.AddToRoleAsync(user, roleBlocked);
-
-        var us = Task.Run(() => _AuthenticationStateProvider
-            .GetAuthenticationStateAsync()).Result;
-        var t = us.User;
-        if (user.UserName == t.Identity!.Name)
-        {
-            _navigationManager.Refresh(true);
-            _ = Task.Run(() => _SignInManager.SignOutAsync());
-            return;
-        }
     }
 
     private void UnblockUser()
@@ -272,7 +274,7 @@ public partial class AdministratorDashboard
         _UserManager.RemoveFromRoleAsync(user, roleBlocked);
     }
 
-    private void AddUserToAdmins()
+    private async Task AddUserToAdmins()
     {
         var vu = ViewUsers.Where(x => x.IsChecked).ToList();
         List<ApplicationUser> names = [];
@@ -283,7 +285,10 @@ public partial class AdministratorDashboard
 
         foreach (var item in names)
         {
-            AddAUserToAdmins(item);
+            if (await _UserManager.IsInRoleAsync(item, roleAdmin) == false)
+            {
+                AddAUserToAdmins(item);
+            }
         }
 
         RefreshPage();
@@ -293,9 +298,8 @@ public partial class AdministratorDashboard
     {
         using (var adc = _contextFactory.CreateDbContext())
         {
-            var p = adc.Users.First(x => x.Id == user.Id);
             var r = adc.Roles.First(x => x.Name == roleAdmin);
-            var m = adc.UserRoles.Where(x => x.UserId == p.Id).First();
+            var m = adc.UserRoles.Where(x => x.UserId == user.Id).First();
             var d = m;
             d.RoleId = r.Id;
             adc.Add(d);
@@ -360,14 +364,16 @@ public partial class AdministratorDashboard
 
     private void DeleteAUser(ApplicationUser user)
     {
-        user.LockoutEnd = DateTime.MaxValue;
-        _ = Task.Run(() => _UserManager
-            .SetLockoutEndDateAsync(user, DateTime.MaxValue)).Result;
-
-        IEnumerable<string> ro = [roleBlocked, "ToRemove"];
-
-        _ = Task.Run(() => _UserManager
-            .AddToRolesAsync(user, ro)).Result;
+        SetUserLockOutState(user);
+        using (var adc = _contextFactory.CreateDbContext())
+        {
+            var r = adc.Roles.First(x => x.Name == "ToRemove");
+            var m = adc.UserRoles.Where(x => x.UserId == user.Id).First();
+            var d = m;
+            d.RoleId = r.Id;
+            adc.Add(d);
+            adc.SaveChanges();
+        }
 
         var us = Task.Run(() => _AuthenticationStateProvider
             .GetAuthenticationStateAsync()).Result;

@@ -15,12 +15,15 @@
 </div>
 
 @code {
-    private bool style;
+    private bool style = false;
 
     protected override void OnInitialized()
     {
-        style = bool.Parse(_HttpContextAccessor
-            .HttpContext?.Request.Cookies["style"] ?? "false");
+        if (_HttpContextAccessor.HttpContext is not null)
+        {
+            style = bool.Parse(_HttpContextAccessor
+                .HttpContext?.Request.Cookies["style"] ?? "false");
+        }
     }
 
     public bool Style

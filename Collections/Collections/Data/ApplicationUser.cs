@@ -1,5 +1,6 @@
 using Collections.Models;
 using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Collections.Data;
 
@@ -11,6 +12,7 @@ public class ApplicationUser : IdentityUser
 
     public DateTime RegistrationDate { get; set; }
 
+    [Column(TypeName = "varchar(100)")]
     public string FullName { get; set; } = string.Empty;
 
     public List<Like> Likes { get; } = [];

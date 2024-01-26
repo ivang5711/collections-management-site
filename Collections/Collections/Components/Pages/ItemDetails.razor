@@ -41,38 +41,41 @@ else
                                 <AuthorizeView>
                                     @if (ItemModel is not null)
                                     {
-                                        <div class="row row-cols-1 row-cols-md-2 my-2 d-flex
+                                        @if (ThisUser!.Id == collection.ApplicationUserId || IsAdmin)
+                                        {
+                                            <div class="row row-cols-1 row-cols-md-2 my-2 d-flex
                                                     justify-content-md-end">
-                                            <div class="pe-md-0 mx-0">
-                                                <InputText @bind-Value="NewTag"
-                                                           requred
-                                                           list="datalistOptions"
-                                                           id="exampleDataList"
-                                                           class="search-input input-group-text
+                                                <div class="pe-md-0 mx-0">
+                                                    <InputText @bind-Value="NewTag"
+                                                               requred
+                                                               list="datalistOptions"
+                                                               id="exampleDataList"
+                                                               class="search-input input-group-text
                                                                   input-group-lg w-100"
-                                                           placeholder="@localizer["Tags..."]" />
-                                                <datalist id="datalistOptions">
-                                                    @foreach (var t in Tags)
-                                                    {
-                                                        <option value="@t.Name">
-                                                            @t.Name
-                                                        </option>
-                                                    }
-                                                </datalist>
-                                            </div>
-                                            <div class="mx-0 my-1 ps-md-2 my-md-0
+                                                               placeholder="@localizer["Tags..."]" />
+                                                    <datalist id="datalistOptions">
+                                                        @foreach (var t in Tags)
+                                                        {
+                                                            <option value="@t.Name">
+                                                                @t.Name
+                                                            </option>
+                                                        }
+                                                    </datalist>
+                                                </div>
+                                                <div class="mx-0 my-1 ps-md-2 my-md-0
                                                         d-flex row col-md-auto">
-                                                <button @onclick="SubmitAddTag"
-                                                        class="btn btn-dark text-nowrap
+                                                    <button @onclick="SubmitAddTag"
+                                                            class="btn btn-dark text-nowrap
                                                                button-box-shadow"
-                                                        asp-formaction="Block"
-                                                        name="Block"
-                                                        type="button"
-                                                        value="true">
-                                                    <i class="bi bi-plus-square"></i>
-                                                </button>
+                                                            asp-formaction="Block"
+                                                            name="Block"
+                                                            type="button"
+                                                            value="true">
+                                                        <i class="bi bi-plus-square"></i>
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
+                                        }
                                     }
                                 </AuthorizeView>
                             </div>
@@ -97,13 +100,26 @@ else
                                     {
                                         <AuthorizeView>
                                             <Authorized>
-                                                <button class="badge active-element
+                                                @if (ThisUser!.Id == collection!.ApplicationUserId || IsAdmin)
+                                                {
+                                                    <button class="badge active-element
                                                                text-bg-success ms-1"
-                                                        style="border: none;"
-                                                        type="button"
-                                                        @onclick="() => SubmitRemoveTag(t.Id)">
-                                                    @t.Name
-                                                </button>
+                                                            style="border: none;"
+                                                            type="button"
+                                                            @onclick="() => SubmitRemoveTag(t.Id)">
+                                                        @t.Name
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <button class="badge active-element
+                                                               text-bg-success ms-1"
+                                                            disabled
+                                                            style="border: none;"
+                                                            type="button">
+                                                        @t.Name
+                                                    </button>
+                                                }
                                             </Authorized>
                                             <NotAuthorized>
                                                 <button class="badge active-element
@@ -294,7 +310,7 @@ else
                                                                                       id="exampleFormControlTextarea1"
                                                                                       placeholder="@localizer["Text field content..."]"
                                                                                       @bind="@item.Value" rows="3">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </textarea>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </textarea>
                                                                         </li>
                                                                     }
                                                                 </ul>
@@ -558,32 +574,35 @@ else
                     <AuthorizeView>
                         @if (!(editItemRequested || deleteItemRequested || editPhotoRequested))
                         {
-                            <div class="pb-2 d-flex justify-content-start m-0 row col-md
+                            @if (ThisUser!.Id == collection!.ApplicationUserId || IsAdmin)
+                            {
+                                <div class="pb-2 d-flex justify-content-start m-0 row col-md
                                         row-cols-md-auto gap-1">
-                                <button @onclick="ToggleEditItemRequestStatus"
-                                        class="btn btn-secondary btn-sm text-nowrap
+                                    <button @onclick="ToggleEditItemRequestStatus"
+                                            class="btn btn-secondary btn-sm text-nowrap
                                                button-box-shadow"
-                                        asp-formaction="Block" name="Block"
-                                        type="submit" value="true">
-                                    <i class="bi bi-pencil">
-                                    </i> @localizer["Edit Item"]
-                                </button>
-                                <button @onclick="ToggleEditPhotoRequestStatus"
-                                        class="btn btn-dark btn-sm text-nowrap
+                                            asp-formaction="Block" name="Block"
+                                            type="submit" value="true">
+                                        <i class="bi bi-pencil">
+                                        </i> @localizer["Edit Item"]
+                                    </button>
+                                    <button @onclick="ToggleEditPhotoRequestStatus"
+                                            class="btn btn-dark btn-sm text-nowrap
                                                button-box-shadow"
-                                        asp-formaction="Block" name="Block"
-                                        type="submit" value="true">
-                                    <i class="bi bi-pencil">
-                                    </i> @localizer["Edit Image"]
-                                </button>
-                                <button @onclick="ToggleDeleteItemRequestStatus"
-                                        class="btn btn-danger btn-sm text-nowrap
+                                            asp-formaction="Block" name="Block"
+                                            type="submit" value="true">
+                                        <i class="bi bi-pencil">
+                                        </i> @localizer["Edit Image"]
+                                    </button>
+                                    <button @onclick="ToggleDeleteItemRequestStatus"
+                                            class="btn btn-danger btn-sm text-nowrap
                                                button-box-shadow"
-                                        asp-formaction="Block" name="Block"
-                                        type="submit" value="true">
-                                    <i class="bi bi-trash3-fill"></i>
-                                </button>
-                            </div>
+                                            asp-formaction="Block" name="Block"
+                                            type="submit" value="true">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </button>
+                                </div>
+                            }
                         }
                     </AuthorizeView>
                 </div>
@@ -641,7 +660,7 @@ else
                                                               rows="3"
                                                               disabled>
                                                         @item.Value
-                                                                                                                                                                                                                    </textarea>
+                                                                                                                                                                                                                                                                    </textarea>
                                                 </li>
                                             }
                                         </ul>

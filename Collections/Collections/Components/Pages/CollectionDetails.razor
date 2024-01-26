@@ -48,44 +48,50 @@ else
                 </div>
             </div>
         }
-        <AuthorizeView>
-            @if (!(newItemRequested || editItemRequested || deleteItemRequested))
-            {
-                <div class="pb-2 d-flex justify-content-start m-0 row col-md
+        @if (!(newItemRequested || editItemRequested || deleteItemRequested))
+        {
+            <div class="pb-2 d-flex justify-content-start m-0 row col-md
                         row-cols-md-auto gap-1">
-                    <button @onclick="ToggleNewItemRequestStatus"
-                            class="btn btn-success btn-sm text-nowrap
+                <AuthorizeView Roles="Admin, Member">
+                    @if (ThisUser!.Id == collection.ApplicationUserId || IsAdmin)
+                    {
+
+                        <button @onclick="ToggleNewItemRequestStatus"
+                                class="btn btn-success btn-sm text-nowrap
                                    button-box-shadow"
-                            asp-formaction="Block" name="Block"
-                            type="submit" value="true">
-                        <i class="bi bi-plus-square">
-                        </i> @localizer["New Item"]
-                    </button>
-                    <button @onclick="ToggleEditCollectionRequestStatus"
-                            class="btn btn-secondary btn-sm text-nowrap
+                                asp-formaction="Block" name="Block"
+                                type="submit" value="true">
+                            <i class="bi bi-plus-square">
+                            </i> @localizer["New Item"]
+                        </button>
+                        <button @onclick="ToggleEditCollectionRequestStatus"
+                                class="btn btn-secondary btn-sm text-nowrap
                                    button-box-shadow"
-                            asp-formaction="Block" name="Block"
-                            type="submit" value="true">
-                        <i class="bi bi-pencil">
-                        </i> @localizer["Edit Collection"]
-                    </button>
-                    <button @onclick="ToggleDeleteCollectionRequestStatus"
-                            class="btn btn-danger btn-sm text-nowrap
+                                asp-formaction="Block" name="Block"
+                                type="submit" value="true">
+                            <i class="bi bi-pencil">
+                            </i> @localizer["Edit Collection"]
+                        </button>
+                        <button @onclick="ToggleDeleteCollectionRequestStatus"
+                                class="btn btn-danger btn-sm text-nowrap
                                    button-box-shadow"
-                            asp-formaction="Block" name="Block"
-                            type="submit" value="true">
-                        <i class="bi bi-trash3-fill"></i>
-                    </button>
-                    <button class="btn btn-secondary button-box-shadow"
-                            @onclick="SortItemsAscending" type="button">
-                        <i class="bi bi-sort-up"></i>
-                    </button>
-                    <button class="btn btn-secondary button-box-shadow"
-                            @onclick="SortItemsDescending" type="button">
-                        <i class="bi bi-sort-down"></i>
-                    </button>
-                </div>
-            }
+                                asp-formaction="Block" name="Block"
+                                type="submit" value="true">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                    }
+                </AuthorizeView>
+                <button class="btn btn-secondary button-box-shadow"
+                        @onclick="SortItemsAscending" type="button">
+                    <i class="bi bi-sort-up"></i>
+                </button>
+                <button class="btn btn-secondary button-box-shadow"
+                        @onclick="SortItemsDescending" type="button">
+                    <i class="bi bi-sort-down"></i>
+                </button>
+            </div>
+        }
+        <AuthorizeView>
             @if (newItemRequested && !editItemRequested && !deleteItemRequested)
             {
                 <div class="d-flex justify-content-center py-2">

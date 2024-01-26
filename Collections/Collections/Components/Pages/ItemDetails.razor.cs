@@ -3,6 +3,7 @@ using Collections.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
@@ -28,6 +29,8 @@ public partial class ItemDetails
     public int CollectionId { get; set; }
 
     public int LikeCount { get; set; }
+
+    private bool IsAdmin { get; set; }
     public string? NewTag { get; set; }
     public Item? ItemModel { get; set; }
     private Item? CurrentItem { get; set; }
@@ -41,6 +44,18 @@ public partial class ItemDetails
     public string FileError { get; set; } = string.Empty;
 
     private HubConnection? hubConnection;
+
+
+    private async Task CheckIsAdmin()
+    {
+        if (ThisUser is null)
+        {
+            IsAdmin = false;
+            return;
+        }
+
+        IsAdmin = await _userManager.IsInRoleAsync(ThisUser!, "Admin");
+    }
 
     private void CancelEditItem()
     {
@@ -79,6 +94,7 @@ public partial class ItemDetails
 
         await hubConnection.StartAsync();
         await Task.Run(() => InitializeData());
+        await CheckIsAdmin();
     }
 
     private void InitializeData()

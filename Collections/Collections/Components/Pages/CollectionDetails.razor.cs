@@ -37,6 +37,7 @@ public partial class CollectionDetails
     private string itemBlobContainerName = string.Empty;
     private string blobTempDirectoryPath = string.Empty;
 
+    private bool IsAdmin { get; set; }
     public string? NewTheme { get; set; }
     public string? ThemeNameChoosen { get; set; }
     public string? UploadedFileName { get; set; }
@@ -436,9 +437,21 @@ public partial class CollectionDetails
     protected override async Task OnInitializedAsync()
     {
         await CheckAuthorizationLevel();
+        await CheckIsAdmin();
         GetConfigurationData();
         SetUpFileTransferManager();
         InitializeData();
+    }
+
+    private async Task CheckIsAdmin()
+    {
+        if (ThisUser is null)
+        {
+            IsAdmin = false;
+            return;
+        }
+
+        IsAdmin = await _UserManager.IsInRoleAsync(ThisUser!, "Admin");
     }
 
     private void InitializeData()

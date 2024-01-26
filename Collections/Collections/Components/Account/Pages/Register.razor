@@ -134,8 +134,8 @@
 
         var resultMember = Task.Run(() =>
             UserManager.AddToRoleAsync(user, roleMember)).Result;
-        var resultAdmin = Task.Run(() =>
-            UserManager.AddToRoleAsync(user, roleAdmin)).Result;
+        // var resultAdmin = Task.Run(() =>
+        //     UserManager.AddToRoleAsync(user, roleAdmin)).Result;
 
         if (!result.Succeeded)
         {

@@ -1,9 +1,12 @@
-﻿namespace Collections.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Collections.Models;
 
 public class Item
 {
     public int Id { get; set; }
 
+    [Column(TypeName = "varchar(100)")]
     public string Name { get; set; } = string.Empty;
 
     public List<Tag> Tags { get; } = [];
@@ -11,7 +14,7 @@ public class Item
     public List<NumericalField> NumericalFields { get; } = [];
 
     public List<StringField> StringFields { get; } = [];
-        
+
     public List<TextField> TextFields { get; } = [];
 
     public List<LogicalField> LogicalFields { get; } = [];
@@ -25,6 +28,8 @@ public class Item
     public List<Like> Likes { get; set; } = [];
 
     public List<Comment> Comments { get; set; } = [];
+
+    [Column(TypeName = "varchar(200)")]
 
     public string? ImageLink { get; set; } = null;
 

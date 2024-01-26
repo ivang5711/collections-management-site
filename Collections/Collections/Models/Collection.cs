@@ -1,5 +1,6 @@
 ﻿using Collections.Data;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Collections.Models;
 
@@ -15,14 +16,17 @@ public class Collection
 
     public int TotalItems { get; set; }
 
+    [Column(TypeName = "varchar(100)")]
     public string Name { get; set; } = string.Empty;
 
+    [Column(TypeName = "varchar(300)")]
     public string Description { get; set; } = string.Empty;
 
     public Theme? Theme { get; set; }
 
     public int ThemeID { get; set; }
 
+    [Column(TypeName = "varchar(200)")]
     public string? ImageLink { get; set; } = null;
 
     public DateTime CreationDateTime { get; set; }

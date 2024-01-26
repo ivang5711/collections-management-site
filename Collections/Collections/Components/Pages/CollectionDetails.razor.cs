@@ -565,10 +565,9 @@ public partial class CollectionDetails
             _fileTransferManager.DeleteFileFromDisk(UploadedFileName!);
         }
 
-        //ItemModel!.ImageLink = TempImg;
-
         ItemModel!.CollectionId = collection!.Id;
         CreateNewItem();
+        InitializeData();
         newItemRequested = false;
     }
 

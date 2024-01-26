@@ -298,6 +298,9 @@
   <data name="Error changing user name." xml:space="preserve">
     <value>Error changing user name.</value>
   </data>
+  <data name="for query" xml:space="preserve">
+    <value>for query</value>
+  </data>
   <data name="for this item yet" xml:space="preserve">
     <value>for this item yet</value>
   </data>

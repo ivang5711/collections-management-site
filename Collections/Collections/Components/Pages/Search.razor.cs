@@ -30,13 +30,18 @@ public partial class Search
     private async Task LoadStateAsync()
     {
         var result = await GetBrowserLocalStoreData("searchText");
-        searchQuery = !string.IsNullOrWhiteSpace(result) ?
-            result : string.Empty;
+        searchQuery = result;
         await DeleteBrowserLocalStoreData("searchText");
         if (!string.IsNullOrWhiteSpace(searchQuery))
         {
             SubmitSearch();
         }
+        else
+        {
+            searchQuery = null;
+        }
+
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task<string> GetBrowserLocalStoreData(string key) 

@@ -575,6 +575,9 @@
   <data name="Use a local account to log in." xml:space="preserve">
     <value>Use a local account to log in.</value>
   </data>
+  <data name="Use input field in navigation menu to perform a search request" xml:space="preserve">
+    <value>Use input field in navigation menu to perform a search request</value>
+  </data>
   <data name="User name" xml:space="preserve">
     <value>User name</value>
   </data>

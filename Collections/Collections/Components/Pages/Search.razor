@@ -1,11 +1,11 @@
 ﻿@page "/search/"
-@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using Collections.Models
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject IJSRuntime JSRuntime
+@inject NavigationManager _navigationManager
+@inject IStringLocalizer<Resource> localizer
 @inject ProtectedLocalStorage ProtectedLocalStore
 @inject IDbContextFactory<ApplicationDbContext> _contextFactory
-@inject NavigationManager _navigationManager
-@inject IJSRuntime JSRuntime
-@inject IStringLocalizer<Resource> localizer
 
 @rendermode InteractiveServer
 
@@ -16,10 +16,21 @@
     <h3 class="text-center pb-3">
         @localizer["Search results"]: @totalCountUnique
     </h3>
-    <h5 class="text-center pb-3">
-        @localizer["for query"]: @SearchQuery
-    </h5>
-    @if (Collections is not null)
+
+    @if (!string.IsNullOrWhiteSpace(searchQuery))
+    {
+        <h5 class="text-center pb-3">
+            @localizer["for query"]: @searchQuery
+        </h5>
+    }
+    else
+    {
+        <h5 class="text-center pb-3">
+            @localizer["Use input field in navigation menu to perform a search request"]
+        </h5>
+    }
+
+    @if (collections is not null && !string.IsNullOrWhiteSpace(searchQuery))
     {
         <div class="d-flex justify-content-center">
             <table class="table table-sm table-hover table-striped
@@ -37,7 +48,7 @@
                 <tbody>
                     @{
                         int j = 1;
-                        foreach (Collection collection in Collections)
+                        foreach (Collection collection in collections)
                         {
                             <tr>
                                 <td class="text-end px-2">@(j++)</td>
@@ -54,7 +65,7 @@
                             </tr>
                         }
 
-                        foreach (Item item in Items)
+                        foreach (Item item in items)
                         {
                             <tr>
                                 <td class="text-end px-2">@(j++)</td>

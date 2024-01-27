@@ -15,7 +15,6 @@
 @inject IConfiguration _configuration
 @inject IStringLocalizer<Resource> localizer
 
-@* @rendermode InteractiveServer *@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>@localizer["My Collections"]</PageTitle>

@@ -8,8 +8,7 @@
 @inject SignInManager<ApplicationUser> _SignInManager
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject NavigationManager _navigationManager
-@* @rendermode @(new InteractiveServerRenderMode(false)) *@
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
 @inject IJSRuntime JsRuntime
 @inject IStringLocalizer<Resource> localizer
 @inject IDbContextFactory<ApplicationDbContext> _contextFactory

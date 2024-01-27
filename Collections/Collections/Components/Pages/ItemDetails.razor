@@ -15,7 +15,7 @@
 @inject IFileTransferManager _fileTransferManager
 @inject IStringLocalizer<Resource> localizer
 
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @if (CurrentItem is null || ItemModel is null)
 {

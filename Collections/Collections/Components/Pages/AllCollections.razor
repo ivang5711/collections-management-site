@@ -12,7 +12,7 @@
 @inject ILogger<CollectionsPage> Logger
 @inject IStringLocalizer<Resource> localizer
 
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>@localizer["All Collections"]</PageTitle>
 

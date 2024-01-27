@@ -7,7 +7,8 @@
 @inject ProtectedLocalStorage ProtectedLocalStore
 @inject IDbContextFactory<ApplicationDbContext> _contextFactory
 
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
 
 <PageTitle>
     @localizer["Search"]

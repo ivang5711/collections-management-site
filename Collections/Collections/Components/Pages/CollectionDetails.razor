@@ -13,7 +13,7 @@
 @inject IFileTransferManager _fileTransferManager
 @inject IStringLocalizer<Resource> localizer
 
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>@localizer["Collection details"]</PageTitle>
     @if (collection is null)

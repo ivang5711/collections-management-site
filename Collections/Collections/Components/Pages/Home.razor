@@ -9,7 +9,7 @@
 @inject IDbContextFactory<ApplicationDbContext> _contextFactory
 @inject IStringLocalizer<Resource> localizer
 
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>@localizer["Collections home page"]</PageTitle>
     <div class="container-xxl py-3 text-between ">

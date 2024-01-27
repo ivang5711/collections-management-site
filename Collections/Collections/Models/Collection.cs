@@ -19,7 +19,6 @@ public class Collection
     [Column(TypeName = "varchar(100)")]
     public string Name { get; set; } = string.Empty;
 
-    [Column(TypeName = "varchar(300)")]
     public string Description { get; set; } = string.Empty;
 
     public Theme? Theme { get; set; }

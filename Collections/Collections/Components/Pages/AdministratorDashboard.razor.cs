@@ -130,10 +130,10 @@ public partial class AdministratorDashboard
         await AddUserToAdmins();
     }
 
-    public void SubmitRemoveFromAdmins()
+    public async Task SubmitRemoveFromAdmins()
     {
         SubmitRequested = true;
-        RemoveUserFromAdmins();
+        await RemoveUserFromAdmins();
     }
 
     private void SubmitDeleteUser()
@@ -285,7 +285,7 @@ public partial class AdministratorDashboard
 
         foreach (var item in names)
         {
-            if (await _UserManager.IsInRoleAsync(item, roleAdmin) == false)
+            if (!(await _UserManager.IsInRoleAsync(item, roleAdmin)))
             {
                 AddAUserToAdmins(item);
             }
@@ -307,7 +307,7 @@ public partial class AdministratorDashboard
         }
     }
 
-    private void RemoveUserFromAdmins()
+    private async Task RemoveUserFromAdmins()
     {
         var vu = ViewUsers.Where(x => x.IsChecked).ToList();
         List<ApplicationUser> names2 = [];
@@ -318,7 +318,10 @@ public partial class AdministratorDashboard
 
         foreach (var item in names2)
         {
-            RemoveAUserFromAdmins(item);
+            if (await _UserManager.IsInRoleAsync(item, roleAdmin))
+            {
+                RemoveAUserFromAdmins(item);
+            }
         }
 
         RefreshPage();

@@ -154,7 +154,7 @@ public partial class CollectionDetails
         addSomeFieldRequested = false;
         if (FieldToAdd == typeof(NumericalField).FullName)
         {
-            Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
+            //Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
             if (!string.IsNullOrWhiteSpace(NewNumericField.Name))
             {
                 ItemModel!.NumericalFields.Add(NewNumericField);
@@ -163,7 +163,7 @@ public partial class CollectionDetails
         }
         else if (FieldToAdd == typeof(StringField).FullName)
         {
-            Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
+            //Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
             if (!string.IsNullOrWhiteSpace(NewStringField.Name))
             {
                 ItemModel!.StringFields.Add(NewStringField);
@@ -172,7 +172,7 @@ public partial class CollectionDetails
         }
         else if (FieldToAdd == typeof(TextField).FullName)
         {
-            Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
+            //Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
             if (!string.IsNullOrWhiteSpace(NewTextField.Name))
             {
                 ItemModel!.TextFields.Add(NewTextField);
@@ -181,7 +181,7 @@ public partial class CollectionDetails
         }
         else if (FieldToAdd == typeof(LogicalField).FullName)
         {
-            Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
+            //Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
             if (!string.IsNullOrWhiteSpace(NewLogicalField.Name))
             {
                 ItemModel!.LogicalFields.Add(NewLogicalField);
@@ -190,7 +190,7 @@ public partial class CollectionDetails
         }
         else if (FieldToAdd == typeof(DateField).FullName)
         {
-            Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
+            //Console.WriteLine("Hey!!!!!!!!!!!!!!! Numeric field requested!");
             if (!string.IsNullOrWhiteSpace(NewDateField.Name))
             {
                 ItemModel!.DateFields.Add(NewDateField);
@@ -494,33 +494,33 @@ public partial class CollectionDetails
         deleteItemRequested = !deleteItemRequested;
     }
 
-    private List<Collection> GetCollectionsFromDataSource()
-    {
-        List<Collection> t;
-        using (var adc = _contextFactory.CreateDbContext())
-        {
-            t =
-            [
-                .. adc.Collections
-                           .Include(e => e.Theme)
-                           .Include(e => e.Items)
-                           .ThenInclude(e => e.Tags)
-                           .Include(e => e.Items)
-                           .ThenInclude(e => e.Likes)
-                           .Include(e => e.Items)
-                           .ThenInclude(e => e.NumericalFields)
-                           .Include(e => e.Items)
-                           .ThenInclude(e => e.StringFields)
-                           .Include(e => e.Items)
-                           .ThenInclude(e => e.TextFields)
-                           .Include(e => e.Items)
-                           .ThenInclude(e => e.LogicalFields)
-                           .Include(e => e.Items)
-                           .ThenInclude(e => e.DateFields)
-            ];
-        }
-        return t;
-    }
+    //private List<Collection> GetCollectionsFromDataSource()
+    //{
+    //    List<Collection> t;
+    //    using (var adc = _contextFactory.CreateDbContext())
+    //    {
+    //        t =
+    //        [
+    //            .. adc.Collections
+    //                       .Include(e => e.Theme)
+    //                       .Include(e => e.Items)
+    //                       .ThenInclude(e => e.Tags)
+    //                       .Include(e => e.Items)
+    //                       .ThenInclude(e => e.Likes)
+    //                       .Include(e => e.Items)
+    //                       .ThenInclude(e => e.NumericalFields)
+    //                       .Include(e => e.Items)
+    //                       .ThenInclude(e => e.StringFields)
+    //                       .Include(e => e.Items)
+    //                       .ThenInclude(e => e.TextFields)
+    //                       .Include(e => e.Items)
+    //                       .ThenInclude(e => e.LogicalFields)
+    //                       .Include(e => e.Items)
+    //                       .ThenInclude(e => e.DateFields)
+    //        ];
+    //    }
+    //    return t;
+    //}
 
     private void CreateItem(ItemCandidate itemCandidate)
     {
@@ -670,9 +670,27 @@ public partial class CollectionDetails
     private void FetchCollectionsDataFromDataSource()
     {
         itemsBunch = [];
-        var t = GetCollectionsFromDataSource().ToList();
-        collection = t.First(x => x.Id == Id);
+        //var t = GetCollectionsFromDataSource().ToList();
+        //collection = t.First(x => x.Id == Id);
+        GetCollection();
         itemsBunch.AddRange(collection.Items.OrderByDescending(u => u.CreationDateTime));
+    }
+
+    private void GetCollection()
+    {
+        using var adc = _contextFactory.CreateDbContext();
+        //collection = adc.Collections.First(x => x.Id == Id);
+        //collection.Items.AddRange(adc.Items.Where(x => x.CollectionId == Id));
+
+        var u = adc.Collections.Include(e => e.Theme)
+            .Include(x => x.Items)
+            .ThenInclude(u => u.LogicalFields)
+            .Include(u => u.Items)
+            .ThenInclude(i => i.StringFields);
+
+        collection = u.First(x => x.Id == Id);
+        adc.SaveChanges();
+
     }
 
     private async Task CheckAuthorizationLevel()
